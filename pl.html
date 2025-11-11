@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEACELOVE | Innovate. Collaborate. Inspire.</title>
+    <!-- 載入 Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- 載入 Google Fonts --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@700;800&family=Poppins:wght@700;800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 自定義漸變和字體 */
+        :root {
+            --color-core-start: #00c6ff; /* 科技藍 */
+            --color-core-end: #0072ff; /* 科技深藍/綠 (調整為更和諧的漸變) */
+            --color-hues-start: #ffafbd; /* 柔和粉 */
+            --color-hues-end: #c94b4b; /* 柔和紫/紅 (調整為更和諧的漸變) */
+        }
+        
+        .font-heading {
+            font-family: 'Montserrat', 'Poppins', sans-serif;
+        }
+        
+        .font-body {
+            font-family: 'Inter', 'Roboto', sans-serif;
+        }
+        
+        /* 漸變文字 */
+        .text-gradient-core {
+            background: linear-gradient(to right, var(--color-core-start), var(--color-core-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .text-gradient-hues {
+            background: linear-gradient(to right, var(--color-hues-start), var(--color-hues-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* 漸變背景 */
+        .bg-gradient-core {
+            background: linear-gradient(135deg, var(--color-core-start), var(--color-core-end));
+        }
+        
+        .bg-gradient-hues {
+            background: linear-gradient(135deg, var(--color-hues-start), var(--color-hues-end));
+        }
+        
+        /* 漸變邊框 (用於靈感誌) */
+        .border-gradient-core {
+            border: 2px solid;
+            border-image-slice: 1;
+            border-image-source: linear-gradient(to right, var(--color-core-start), var(--color-core-end));
+        }
+        
+        .border-gradient-hues {
+            border: 2px solid;
+            border-image-slice: 1;
+            border-image-source: linear-gradient(to right, var(--color-hues-start), var(--color-hues-end));
+        }
+
+        /* Logo 緩慢循環動畫 */
+        @keyframes slowPulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.9;
+                transform: scale(1.02);
+            }
+        }
+        
+        .animate-slowPulse {
+            animation: slowPulse 6s ease-in-out infinite;
+        }
+
+        /* 心形曲線分隔 (使用 SVG) */
+        .heart-divider {
+            width: 100%;
+            height: 100px;
+            fill: #ffffff; /* 填滿顏色以匹配背景 */
+            stroke: #e5e7eb; /* 邊框顏色 */
+            stroke-width: 1;
+        }
+        
+        /* 確保捲動時的錨點偏移 (避免被固定的 header 擋住) */
+        section[id] {
+            scroll-margin-top: 80px; 
+        }
+
+        /* Logo 陰影 */
+        .logo-shadow {
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+        }
+    </style>
+</head>
+<body class="font-body bg-gray-50 text-gray-800">
+
+    <!-- I. 頂部導覽列 --><header class="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 rounded-b-lg mx-auto max-w-7xl px-4">
+        <nav class="container mx-auto flex items-center justify-between h-20">
+            <!-- Logo --><a href="#home" class="flex items-center space-x-2">
+                <img src="透明背景.jpg" alt="PEACELOVE Logo" class="h-12 w-auto logo-shadow" 
+                     onerror="this.src='https://placehold.co/200x80/f0f0f0/333?text=PEACELOVE+Logo&font=montserrat'; this.onerror=null;">
+            </a>
+            
+            <!-- 導覽連結 (桌面) --><div class="hidden md:flex items-center space-x-6 lg:space-x-8 font-medium">
+                <a href="#home" class="hover:text-gradient-core transition-colors">首頁</a>
+                <a href="#about" class="hover:text-gradient-core transition-colors">關於我們</a>
+                <a href="#core" class="hover:text-gradient-core transition-colors">P.L. CORE</a>
+                <a href="#hues" class="hover:text-gradient-hues transition-colors">P.L. HUES</a>
+                <a href="#insights" class="hover:text-gradient-hues transition-colors">靈感誌</a>
+                <a href="#contact" class="bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">聯絡我們</a>
+            </div>
+            
+            <!-- 漢堡選單 (行動裝置) --><div class="md:hidden">
+                <button id="menu-btn" class="text-gray-700 focus:outline-none">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-8 6h8"></path></svg>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- 行動裝置選單 (隱藏) --><div id="mobile-menu" class="hidden md:hidden flex-col items-center space-y-4 py-6 text-center font-medium">
+            <a href="#home" class="block w-full py-2 hover:bg-gray-100 rounded-lg">首頁</a>
+            <a href="#about" class="block w-full py-2 hover:bg-gray-100 rounded-lg">關於我們</a>
+            <a href="#core" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. CORE</a>
+            <a href="#hues" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. HUES</a>
+            <a href="#insights" class="block w-full py-2 hover:bg-gray-100 rounded-lg">靈感誌</a>
+            <a href="#contact" class="block w-full bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg">聯絡我們</a>
+        </div>
+    </header>
+
+    <!-- II. 主要內容 --><main>
+        
+        <!-- 1. 首頁 (Home) --><section id="home" class="relative overflow-hidden min-h-screen flex items-center justify-center py-20 bg-white">
+            <!-- 背景漸變圓形 --><div class="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-gradient-core rounded-full opacity-30 blur-3xl animate-pulse"></div>
+            <div class="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-gradient-hues rounded-full opacity-30 blur-3xl animate-pulse" style="animation-delay: 3s;"></div>
+            
+            <div class="container mx-auto px-6 text-center z-10">
+                <div class="flex justify-center mb-10">
+                    <img src="透明背景.jpg" alt="PEACELOVE 核心標誌" 
+                         class="h-40 md:h-64 w-auto animate-slowPulse logo-shadow"
+                         onerror="this.src='https://placehold.co/400x160/f0f0f0/333?text=PEACELOVE+Logo&font=montserrat'; this.onerror=null;">
+                </div>
+                <h1 class="font-heading text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6">
+                    <span class="text-gradient-core">PEACE</span><span class="text-gray-800">LOVE</span>.
+                </h1>
+                <p class="font-heading text-2xl md:text-4xl text-gray-600">
+                    Innovate. Collaborate. Inspire.
+                </p>
+                <p class="mt-8 text-lg max-w-2xl mx-auto text-gray-700">
+                    我們相信，真正的創新來自於熱情與安全的完美平衡。
+                </p>
+                
+                <!-- 產品預覽按鈕 --><div class="mt-12 flex flex-col md:flex-row justify-center items-center gap-6">
+                    <a href="#core" class="w-full md:w-auto px-8 py-4 rounded-full bg-gradient-core text-white font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all">
+                        探索 P.L. CORE (科技)
+                    </a>
+                    <a href="#hues" class="w-full md:w-auto px-8 py-4 rounded-full bg-gradient-hues text-white font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all">
+                        探索 P.L. HUES (美妝)
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 關於我們 (About Us) --><section id="about" class="py-24 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">關於 PEACELOVE</h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                        「我們相信，真正的創新來自於熱情與安全的完美平衡。」
+                    </p>
+                </div>
+                
+                <!-- 品牌宣言 --><div class="bg-white p-10 md:p-16 rounded-3xl shadow-lg mb-20 max-w-5xl mx-auto">
+                    <h3 class="font-heading text-3xl font-bold mb-6 text-center">我們的使命</h3>
+                    <!-- 三欄式使命佈局 --><div class="grid md:grid-cols-3 gap-8 text-center">
+                        <div class="p-6 bg-gray-50 rounded-2xl">
+                            <h4 class="font-heading text-2xl font-bold text-gradient-core mb-3">Innovate (創新)</h4>
+                            <p class="text-gray-700">以前瞻科技 (CORE) 打造安全基礎，以無限創意 (HUES) 引領美妝未來。</p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-2xl">
+                            <h4 class="font-heading text-2xl font-bold text-gray-700 mb-3">Collaborate (協作)</h4>
+                            <p class="text-gray-700">連結科技與美妝社群，建立一個透明、共創、互信的生態系統。</p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-2xl">
+                            <h4 class="font-heading text-2xl font-bold text-gradient-hues mb-3">Inspire (啟發)</h4>
+                            <p class="text-gray-700">啟發每個人探索真實的自我，無論是透過數據安全還是色彩表達。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 雙核心架構 --><h3 class="font-heading text-3xl font-bold mb-12 text-center">雙核心架構</h3>
+                <div class="grid lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
+                    <!-- CORE 區域 --><div class="bg-gradient-core text-white p-10 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                        <h4 class="font-heading text-4xl font-extrabold mb-4">P.L. CORE</h4>
+                        <p class="text-xl font-medium mb-6">科技驅動信任</p>
+                        <p class="text-lg">
+                            代表 PEACE (和平、安全)。我們提供頂尖的數據安全與區塊鏈溯源技術，為美妝產業建立堅不可摧的信任基礎。
+                        </p>
+                        <a href="#core" class="inline-block mt-8 bg-white text-blue-700 font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                            深入了解 CORE 產品
+                        </a>
+                    </div>
+                    <!-- HUES 區域 --><div class="bg-gradient-hues text-white p-10 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                        <h4 class="font-heading text-4xl font-extrabold mb-4">P.L. HUES</h4>
+                        <p class="text-xl font-medium mb-6">熱情點燃美麗</p>
+                        <p class="text-lg">
+                            代表 LOVE (熱情、美妝)。我們運用 AI 與社群力量，提供個人化的美妝推薦與共創平台，釋放每個人的獨特魅力。
+                        </p>
+                        <a href="#hues" class="inline-block mt-8 bg-white text-pink-700 font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                            探索 HUES 服務
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 3. P.L. CORE (產品) --><section id="core" class="py-24 bg-white relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-core opacity-10 blur-3xl"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-16 max-w-3xl mx-auto">
+                    <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">
+                        P.L. <span class="text-gradient-core">CORE</span>
+                    </h2>
+                    <p class="text-lg text-gray-600">
+                        以科技守護安全，以數據建立透明。專業、安全、可信賴的解決方案。
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- 產品卡片 --><div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-gradient-core rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <!-- 科技盾牌 Icon --><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">ShieldOS™ (安全系統)</h3>
+                        <p class="text-gray-600">
+                            專為美妝品牌設計的企業級數據安全系統，保護消費者隱私與企業核心資產。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-gradient-core rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <!-- 區塊鏈 Icon --><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.102 1.101m-2.25 2.25l-5.656 5.656" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">Veritas Chain (真實鏈)</h3>
+                        <p class="text-gray-600">
+                            基於區塊鏈的產品溯源系統，從原料到成品，提供完全透明且不可篡改的履歷。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-gradient-core rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <!-- 分析 Icon --><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M3 4h18v12a2 2 0 01-2 2H5a2 2 0 01-2-2V4z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">Insight Engine (分析工具)</h3>
+                        <p class="text-gray-600">
+                            強大的市場趨勢與消費者行為分析引擎，幫助品牌精準決策。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. P.L. HUES (產品) --><section id="hues" class="py-24 bg-gray-50 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-hues opacity-10 blur-3xl"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-16 max-w-3xl mx-auto">
+                    <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">
+                        P.L. <span class="text-gradient-hues">HUES</span>
+                    </h2>
+                    <p class="text-lg text-gray-600">
+                        以熱情點燃美麗，以創意定義自我。個人化、社群共創的美妝平台。
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- 產品卡片 --><div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-gradient-hues rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <!-- AI/色彩 Icon --><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">Chroma AI (色彩推薦)</h3>
+                        <p class="text-gray-600">
+                            基於 AI 深度學習的個人化色彩分析與產品推薦，找到最適合您的命定彩妝。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-gradient-hues rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <!-- 美妝工具 Icon --><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2.5m0 0V17m0 0a1.5 1.5 0 003 0m-3 0a1.5 1.5 0 00-3 0m6 0V17m0 0a1.5 1.5 0 003 0m-3 0a1.5 1.5 0 00-3 0m0 0V14m0-2.5v-6a1.5 1.5 0 013 0m-3 6a1.5 1.5 0 00-3 0v2.5m0 0V17m0 0a1.5 1.5 0 003 0m-3 0a1.5 1.5 0 00-3 0m6 0V17m0 0a1.5 1.5 0 003 0m-3 0a1.5 1.5 0 00-3 0" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">Affinity Series (限量彩妝)</h3>
+                        <p class="text-gray-600">
+                            與頂尖創作者聯名的限量彩妝系列，每件產品都蘊含獨特的故事與創意。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-gradient-hues rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <!-- 社群/愛心 Icon --><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">Creator Hub (創作者中心)</h3>
+                        <p class="text-gray-600">
+                            專屬美妝創作者的協作平台，提供資源、數據和機會，共同創造價值。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 靈感誌 (Insights) --><section id="insights" class="py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">靈感誌 (Insights)</h2>
+                    <p class="text-lg text-gray-600">
+                        平衡 CORE (科技) 與 HUES (美妝) 的最新動態與深度文章。
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- 文章卡片 1 (CORE) --><div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                        <div class="relative overflow-hidden h-56">
+                            <img src="https://placehold.co/600x400/0072FF/FFFFFF?text=CORE+Tech&font=montserrat" alt="科技文章" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-3 self-start">P.L. CORE</span>
+                            <h3 class="font-heading text-xl font-bold mb-3 flex-grow">Veritas Chain 如何為美妝產業帶來革命？</h3>
+                            <p class="text-gray-600 mb-4">深入探討區塊鏈如何解決仿冒品與信任危機。</p>
+                            <a href="#" class="font-bold text-gradient-core self-start">閱讀更多 &rarr;</a>
+                        </div>
+                        <div class="border-t-4 border-gradient-core"></div>
+                    </div>
+                    
+                    <!-- 文章卡片 2 (HUES) --><div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                        <div class="relative overflow-hidden h-56">
+                            <img src="https://placehold.co/600x400/C94B4B/FFFFFF?text=HUES+Beauty&font=montserrat" alt="美妝文章" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <span class="inline-block bg-pink-100 text-pink-800 text-xs font-semibold px-3 py-1 rounded-full mb-3 self-start">P.L. HUES</span>
+                            <h3 class="font-heading text-xl font-bold mb-3 flex-grow">Chroma AI：找到您 2025 年的命定色彩</h3>
+                            <p class="text-gray-600 mb-4">AI 如何比您更懂您的膚色與風格？</p>
+                            <a href="#" class="font-bold text-gradient-hues self-start">閱讀更多 &rarr;</a>
+                        </div>
+                        <div class="border-t-4 border-gradient-hues"></div>
+                    </div>
+                    
+                    <!-- 文章卡片 3 (綜合) --><div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                        <div class="relative overflow-hidden h-56">
+                            <img src="https://placehold.co/600x400/909090/FFFFFF?text=Brand+Story&font=montserrat" alt="品牌故事" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <span class="inline-block bg-gray-100 text-gray-800 text-xs font-semibold px-3 py-1 rounded-full mb-3 self-start">品牌故事</span>
+                            <h3 class="font-heading text-xl font-bold mb-3 flex-grow">安全與熱情的平衡：PEACELOVE 的創始理念</h3>
+                            <p class="text-gray-600 mb-4">專訪創辦人，談論科技與美妝的火花。</p>
+                            <a href="#" class="font-bold text-gray-600 hover:text-black self-start">閱讀更多 &rarr;</a>
+                        </div>
+                        <div class="border-t-4 border-gray-300"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. 聯絡我們 (Contact) --><section id="contact" class="py-24 bg-gray-100 relative">
+            <!-- 心形曲線分隔 (SVG) --><div class="absolute top-0 left-0 w-full" style="transform: translateY(-99px);">
+                <svg class="heart-divider" viewBox="0 0 1440 100" preserveAspectRatio="none">
+                    <path d="M0 100 C 360 0, 1080 0, 1440 100 L 1440 100 L 0 100 Z" />
+                </svg>
+            </div>
+            
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">聯絡我們</h2>
+                    <p class="text-lg text-gray-600">
+                        選擇您的洽談類型，我們將有專人盡速與您聯繫。
+                    </p>
+                </div>
+                
+                <!-- 雙軌道表單容器 --><div class="max-w-6xl mx-auto bg-white p-10 md:p-16 rounded-3xl shadow-2xl">
+                    <div class="grid lg:grid-cols-2 gap-16">
+                        
+                        <!-- CORE 洽談 --><div class="p-8 rounded-2xl bg-gradient-core text-white">
+                            <h3 class="font-heading text-3xl font-bold mb-6">CORE 企業洽談</h3>
+                            <p class="mb-8">
+                                適用於 ShieldOS™、Veritas Chain 或其他企業級安全與數據方案諮詢。
+                            </p>
+                            <form action="#" method="POST" class="space-y-6">
+                                <div>
+                                    <label for="core-name" class="block text-sm font-medium mb-2">公司/組織名稱</label>
+                                    <input type="text" id="core-name" class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none" placeholder="請輸入您的公司名稱">
+                                </div>
+                                <div>
+                                    <label for="core-email" class="block text-sm font-medium mb-2">聯絡信箱</label>
+                                    <input type="email" id="core-email" class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none" placeholder="example@company.com">
+                                </div>
+                                <div>
+                                    <label for="core-message" class="block text-sm font-medium mb-2">洽詢內容</label>
+                                    <textarea id="core-message" rows="4" class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none" placeholder="請簡述您的需求..."></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-white text-blue-700 font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                                    提交 CORE 諮詢
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <!-- HUES 洽談 --><div class="p-8 rounded-2xl bg-gradient-hues text-white">
+                            <h3 class="font-heading text-3xl font-bold mb-6">HUES 合作/客服</h3>
+                            <p class="mb-8">
+                                適用於 Chroma AI、Affinity Series、創作者合作或一般客服問題。
+                            </p>
+                            <form action="#" method="POST" class="space-y-6">
+                                <div>
+                                    <label for="hues-name" class="block text-sm font-medium mb-2">您的姓名/暱稱</label>
+                                    <input type="text" id="hues-name" class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none" placeholder="請輸入您的姓名">
+                                </div>
+                                <div>
+                                    <label for="hues-email" class="block text-sm font-medium mb-2">聯絡信箱</label>
+                                    <input type="email" id="hues-email" class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none" placeholder="example@mail.com">
+                                </div>
+                                <div>
+                                    <label for="hues-message" class="block text-sm font-medium mb-2">您的訊息</label>
+                                    <textarea id="hues-message" rows="4" class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none" placeholder="請告訴我們您的想法..."></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-white text-pink-700 font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                                    提交 HUES 訊息
+                                </button>
+                            </form>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- III. 頁尾 --><footer class="bg-gray-800 text-gray-300 py-16">
+        <div class="container mx-auto px-6 text-center">
+            <img src="透明背景.jpg" alt="PEACELOVE Logo" 
+                 class="h-16 w-auto mx-auto mb-6 logo-shadow" 
+                 style="filter: brightness(0) invert(1) opacity(0.8);"
+                 onerror="this.src='https://placehold.co/200x80/888/eee?text=PEACELOVE+Logo&font=montserrat'; this.onerror=null;">
+            
+            <p class="font-heading text-2xl font-bold text-white mb-4">
+                Innovate. Collaborate. Inspire.
+            </p>
+            
+            <!-- 社群媒體 Icon --><div class="flex justify-center space-x-6 my-8">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors" title="Instagram">
+                    <!-- Instagram Icon --><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.069-4.85.069s-3.584-.011-4.85-.069c-3.252-.149-4.771-1.664-4.919-4.919-.058-1.265-.069-1.644-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919C8.416 2.175 8.796 2.163 12 2.163zM12 0C8.741 0 8.333.014 7.053.072 2.69 1.106 1.106 2.69 1.072 7.053.014 8.333 0 8.741 0 12s.014 3.667.072 4.947c.149 3.225 1.664 4.771 4.919 4.919C8.333 23.986 8.741 24 12 24s3.667-.014 4.947-.072c3.225-.149 4.771-1.664 4.919-4.919C23.986 15.667 24 15.259 24 12s-.014-3.667-.072-4.947c-.149-3.225-1.664-4.771-4.919-4.919C15.667.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"></path>
+                    </svg>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors" title="X/Facebook (使用 X Icon)">
+                    <!-- X Icon --><svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.93L18.901 1.153zm-3.68 19.5h2.15l-12.3-17.1H2.7l12.52 17.1z"></path>
+                    </svg>
+                </a>
+            </div>
+            
+            <p class="text-sm text-gray-500">
+                &copy; 2025 PEACELOVE Inc. All Rights Reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // 行動裝置選單開關
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+        });
+        
+        // 點擊行動裝置選單連結時自動關閉選單
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+            });
+        });
+    </script>
+</body>
+</html>
