@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PEACELOVE | Innovate. Collaborate. Inspire.</title>
-    <!-- 載入 Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
-    <!-- 載入 Google Fonts --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 載入 Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@700;800&family=Poppins:wght@700;800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     
@@ -81,7 +83,7 @@
         .heart-divider {
             width: 100%;
             height: 100px;
-            fill: #ffffff; /* 填滿顏色以匹配背景 */
+            fill: #ffffff; /* 填滿顏色以匹配 bg-white */
             stroke: #e5e7eb; /* 邊框顏色 */
             stroke-width: 1;
         }
@@ -91,22 +93,29 @@
             scroll-margin-top: 80px; 
         }
 
-        /* Logo 陰影 */
+        /* Logo 陰影 (移除) */
         .logo-shadow {
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+            /* filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); */
         }
     </style>
 </head>
 <body class="font-body bg-gray-50 text-gray-800">
 
-    <!-- I. 頂部導覽列 --><header class="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 rounded-b-lg mx-auto max-w-7xl px-4">
+    <!-- I. 頂部導覽列 -->
+    <header class="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 rounded-b-lg mx-auto max-w-7xl px-4">
         <nav class="container mx-auto flex items-center justify-between h-20">
-            <!-- Logo --><a href="#home" class="flex items-center space-x-2">
-                <img src="white.png" alt="PEACELOVE Logo" class="h-12 w-auto logo-shadow" 
-                     onerror="this.src='https://placehold.co/200x80/f0f0f0/333?text=PEACELOVE+Logo&font=montserrat'; this.onerror=null;">
+            <!-- Logo -->
+            <a href="#home" class="flex items-center space-x-2">
+                <!-- Wrapper for cropping. Set height to h-12 (48px) -->
+                <div class="h-12 w-auto overflow-hidden">
+                    <img src="https://popokoko.github.io/white.png" alt="PEACELOVE Logo" 
+                         class="h-16 w-auto" <!-- Set image height to h-16 (64px) so text overflows -->
+                         onerror="this.src='https://placehold.co/200x80/f0f0f0/333?text=PEACELOVE+Logo&font=montserrat'; this.onerror=null;">
+                </div>
             </a>
             
-            <!-- 導覽連結 (桌面) --><div class="hidden md:flex items-center space-x-6 lg:space-x-8 font-medium">
+            <!-- 導覽連結 (桌面) -->
+            <div class="hidden md:flex items-center space-x-6 lg:space-x-8 font-medium">
                 <a href="#home" class="hover:text-gradient-core transition-colors">首頁</a>
                 <a href="#about" class="hover:text-gradient-core transition-colors">關於我們</a>
                 <a href="#core" class="hover:text-gradient-core transition-colors">P.L. CORE</a>
@@ -115,14 +124,16 @@
                 <a href="#contact" class="bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">聯絡我們</a>
             </div>
             
-            <!-- 漢堡選單 (行動裝置) --><div class="md:hidden">
+            <!-- 漢堡選單 (行動裝置) -->
+            <div class="md:hidden">
                 <button id="menu-btn" class="text-gray-700 focus:outline-none">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-8 6h8"></path></svg>
                 </button>
             </div>
         </nav>
         
-        <!-- 行動裝置選單 (隱藏) --><div id="mobile-menu" class="hidden md:hidden flex-col items-center space-y-4 py-6 text-center font-medium">
+        <!-- 行動裝置選單 (隱藏) -->
+        <div id="mobile-menu" class="hidden md:hidden flex-col items-center space-y-4 py-6 text-center font-medium">
             <a href="#home" class="block w-full py-2 hover:bg-gray-100 rounded-lg">首頁</a>
             <a href="#about" class="block w-full py-2 hover:bg-gray-100 rounded-lg">關於我們</a>
             <a href="#core" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. CORE</a>
@@ -132,16 +143,19 @@
         </div>
     </header>
 
-    <!-- II. 主要內容 --><main>
+    <!-- II. 主要內容 -->
+    <main>
         
-        <!-- 1. 首頁 (Home) --><section id="home" class="relative overflow-hidden min-h-screen flex items-center justify-center py-20 bg-white">
-            <!-- 背景漸變圓形 --><div class="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-gradient-core rounded-full opacity-30 blur-3xl animate-pulse"></div>
+        <!-- 1. 首頁 (Home) -->
+        <section id="home" class="relative overflow-hidden min-h-screen flex items-center justify-center py-20 bg-white">
+            <!-- 背景漸變圓形 -->
+            <div class="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-gradient-core rounded-full opacity-30 blur-3xl animate-pulse"></div>
             <div class="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-gradient-hues rounded-full opacity-30 blur-3xl animate-pulse" style="animation-delay: 3s;"></div>
             
             <div class="container mx-auto px-6 text-center z-10">
                 <div class="flex justify-center mb-10">
-                    <img src="white.png" alt="PEACELOVE 核心標誌" 
-                         class="h-40 md:h-64 w-auto animate-slowPulse logo-shadow"
+                    <img src="https://popokoko.github.io/white.png" alt="PEACELOVE 核心標誌" 
+                         class="h-64 md:h-80 lg:h-96 w-auto animate-slowPulse"
                          onerror="this.src='https://placehold.co/400x160/f0f0f0/333?text=PEACELOVE+Logo&font=montserrat'; this.onerror=null;">
                 </div>
                 <h1 class="font-heading text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6">
@@ -154,7 +168,8 @@
                     我們相信，真正的創新來自於熱情與安全的完美平衡。
                 </p>
                 
-                <!-- 產品預覽按鈕 --><div class="mt-12 flex flex-col md:flex-row justify-center items-center gap-6">
+                <!-- 產品預覽按鈕 -->
+                <div class="mt-12 flex flex-col md:flex-row justify-center items-center gap-6">
                     <a href="#core" class="w-full md:w-auto px-8 py-4 rounded-full bg-gradient-core text-white font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all">
                         探索 P.L. CORE (科技)
                     </a>
@@ -165,7 +180,8 @@
             </div>
         </section>
 
-        <!-- 2. 關於我們 (About Us) --><section id="about" class="py-24 bg-gray-100">
+        <!-- 2. 關於我們 (About Us) -->
+        <section id="about" class="py-24 bg-gray-100">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
                     <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">關於 PEACELOVE</h2>
@@ -174,9 +190,11 @@
                     </p>
                 </div>
                 
-                <!-- 品牌宣言 --><div class="bg-white p-10 md:p-16 rounded-3xl shadow-lg mb-20 max-w-5xl mx-auto">
+                <!-- 品牌宣言 -->
+                <div class="bg-white p-10 md:p-16 rounded-3xl shadow-lg mb-20 max-w-5xl mx-auto">
                     <h3 class="font-heading text-3xl font-bold mb-6 text-center">我們的使命</h3>
-                    <!-- 三欄式使命佈局 --><div class="grid md:grid-cols-3 gap-8 text-center">
+                    <!-- 三欄式使命佈局 -->
+                    <div class="grid md:grid-cols-3 gap-8 text-center">
                         <div class="p-6 bg-gray-50 rounded-2xl">
                             <h4 class="font-heading text-2xl font-bold text-gradient-core mb-3">Innovate (創新)</h4>
                             <p class="text-gray-700">以前瞻科技 (CORE) 打造安全基礎，以無限創意 (HUES) 引領美妝未來。</p>
@@ -192,9 +210,11 @@
                     </div>
                 </div>
 
-                <!-- 雙核心架構 --><h3 class="font-heading text-3xl font-bold mb-12 text-center">雙核心架構</h3>
+                <!-- 雙核心架構 -->
+                <h3 class="font-heading text-3xl font-bold mb-12 text-center">雙核心架構</h3>
                 <div class="grid lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
-                    <!-- CORE 區域 --><div class="bg-gradient-core text-white p-10 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                    <!-- CORE 區域 -->
+                    <div class="bg-gradient-core text-white p-10 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-300">
                         <h4 class="font-heading text-4xl font-extrabold mb-4">P.L. CORE</h4>
                         <p class="text-xl font-medium mb-6">科技驅動信任</p>
                         <p class="text-lg">
@@ -204,7 +224,8 @@
                             深入了解 CORE 產品
                         </a>
                     </div>
-                    <!-- HUES 區域 --><div class="bg-gradient-hues text-white p-10 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                    <!-- HUES 區域 -->
+                    <div class="bg-gradient-hues text-white p-10 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-300">
                         <h4 class="font-heading text-4xl font-extrabold mb-4">P.L. HUES</h4>
                         <p class="text-xl font-medium mb-6">熱情點燃美麗</p>
                         <p class="text-lg">
@@ -218,7 +239,8 @@
             </div>
         </section>
         
-        <!-- 3. P.L. CORE (產品) --><section id="core" class="py-24 bg-white relative overflow-hidden">
+        <!-- 3. P.L. CORE (產品) -->
+        <section id="core" class="py-24 bg-white relative overflow-hidden">
             <div class="absolute inset-0 bg-gradient-core opacity-10 blur-3xl"></div>
             <div class="container mx-auto px-6 relative z-10">
                 <div class="text-center mb-16 max-w-3xl mx-auto">
@@ -231,9 +253,11 @@
                 </div>
                 
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- 產品卡片 --><div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                    <!-- 產品卡片 -->
+                    <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
                         <div class="w-16 h-16 bg-gradient-core rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                            <!-- 科技盾牌 Icon --><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <!-- 科技盾牌 Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                             </svg>
                         </div>
@@ -245,7 +269,8 @@
                     
                     <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
                         <div class="w-16 h-16 bg-gradient-core rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                            <!-- 區塊鏈 Icon --><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <!-- 區塊鏈 Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.102 1.101m-2.25 2.25l-5.656 5.656" />
                             </svg>
                         </div>
@@ -257,7 +282,8 @@
                     
                     <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
                         <div class="w-16 h-16 bg-gradient-core rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                            <!-- 分析 Icon --><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <!-- 分析 Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M3 4h18v12a2 2 0 01-2 2H5a2 2 0 01-2-2V4z" />
                             </svg>
                         </div>
@@ -270,7 +296,8 @@
             </div>
         </section>
 
-        <!-- 4. P.L. HUES (產品) --><section id="hues" class="py-24 bg-gray-50 relative overflow-hidden">
+        <!-- 4. P.L. HUES (產品) -->
+        <section id="hues" class="py-24 bg-gray-50 relative overflow-hidden">
             <div class="absolute inset-0 bg-gradient-hues opacity-10 blur-3xl"></div>
             <div class="container mx-auto px-6 relative z-10">
                 <div class="text-center mb-16 max-w-3xl mx-auto">
@@ -283,9 +310,11 @@
                 </div>
                 
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- 產品卡片 --><div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                    <!-- 產品卡片 -->
+                    <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
                         <div class="w-16 h-16 bg-gradient-hues rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                            <!-- AI/色彩 Icon --><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <!-- AI/色彩 Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
                         </div>
@@ -297,7 +326,8 @@
                     
                     <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
                         <div class="w-16 h-16 bg-gradient-hues rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                            <!-- 美妝工具 Icon --><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <!-- 美妝工具 Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2.5m0 0V17m0 0a1.5 1.5 0 003 0m-3 0a1.5 1.5 0 00-3 0m6 0V17m0 0a1.5 1.5 0 003 0m-3 0a1.5 1.5 0 00-3 0m0 0V14m0-2.5v-6a1.5 1.5 0 013 0m-3 6a1.5 1.5 0 00-3 0v2.5m0 0V17m0 0a1.5 1.5 0 003 0m-3 0a1.5 1.5 0 00-3 0m6 0V17m0 0a1.5 1.5 0 003 0m-3 0a1.5 1.5 0 00-3 0" />
                             </svg>
                         </div>
@@ -309,7 +339,8 @@
                     
                     <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
                         <div class="w-16 h-16 bg-gradient-hues rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                            <!-- 社群/愛心 Icon --><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <!-- 社群/愛心 Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                             </svg>
                         </div>
@@ -322,7 +353,8 @@
             </div>
         </section>
 
-        <!-- 5. 靈感誌 (Insights) --><section id="insights" class="py-24 bg-white">
+        <!-- 5. 靈感誌 (Insights) -->
+        <section id="insights" class="py-24 bg-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
                     <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">靈感誌 (Insights)</h2>
@@ -332,7 +364,8 @@
                 </div>
                 
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    <!-- 文章卡片 1 (CORE) --><div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                    <!-- 文章卡片 1 (CORE) -->
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
                         <div class="relative overflow-hidden h-56">
                             <img src="https://placehold.co/600x400/0072FF/FFFFFF?text=CORE+Tech&font=montserrat" alt="科技文章" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                         </div>
@@ -345,7 +378,8 @@
                         <div class="border-t-4 border-gradient-core"></div>
                     </div>
                     
-                    <!-- 文章卡片 2 (HUES) --><div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                    <!-- 文章卡片 2 (HUES) -->
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
                         <div class="relative overflow-hidden h-56">
                             <img src="https://placehold.co/600x400/C94B4B/FFFFFF?text=HUES+Beauty&font=montserrat" alt="美妝文章" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                         </div>
@@ -358,7 +392,8 @@
                         <div class="border-t-4 border-gradient-hues"></div>
                     </div>
                     
-                    <!-- 文章卡片 3 (綜合) --><div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                    <!-- 文章卡片 3 (綜合) -->
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
                         <div class="relative overflow-hidden h-56">
                             <img src="https://placehold.co/600x400/909090/FFFFFF?text=Brand+Story&font=montserrat" alt="品牌故事" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                         </div>
@@ -374,8 +409,10 @@
             </div>
         </section>
 
-        <!-- 6. 聯絡我們 (Contact) --><section id="contact" class="py-24 bg-gray-100 relative">
-            <!-- 心形曲線分隔 (SVG) --><div class="absolute top-0 left-0 w-full" style="transform: translateY(-99px);">
+        <!-- 6. 聯絡我們 (Contact) -->
+        <section id="contact" class="py-24 bg-gray-100 relative">
+            <!-- 心形曲線分隔 (SVG) -->
+            <div class="absolute top-0 left-0 w-full" style="transform: translateY(-99px);">
                 <svg class="heart-divider" viewBox="0 0 1440 100" preserveAspectRatio="none">
                     <path d="M0 100 C 360 0, 1080 0, 1440 100 L 1440 100 L 0 100 Z" />
                 </svg>
@@ -389,10 +426,12 @@
                     </p>
                 </div>
                 
-                <!-- 雙軌道表單容器 --><div class="max-w-6xl mx-auto bg-white p-10 md:p-16 rounded-3xl shadow-2xl">
+                <!-- 雙軌道表單容器 -->
+                <div class="max-w-6xl mx-auto bg-white p-10 md:p-16 rounded-3xl shadow-2xl">
                     <div class="grid lg:grid-cols-2 gap-16">
                         
-                        <!-- CORE 洽談 --><div class="p-8 rounded-2xl bg-gradient-core text-white">
+                        <!-- CORE 洽談 -->
+                        <div class="p-8 rounded-2xl bg-gradient-core text-white">
                             <h3 class="font-heading text-3xl font-bold mb-6">CORE 企業洽談</h3>
                             <p class="mb-8">
                                 適用於 ShieldOS™、Veritas Chain 或其他企業級安全與數據方案諮詢。
@@ -416,7 +455,8 @@
                             </form>
                         </div>
                         
-                        <!-- HUES 洽談 --><div class="p-8 rounded-2xl bg-gradient-hues text-white">
+                        <!-- HUES 洽談 -->
+                        <div class="p-8 rounded-2xl bg-gradient-hues text-white">
                             <h3 class="font-heading text-3xl font-bold mb-6">HUES 合作/客服</h3>
                             <p class="mb-8">
                                 適用於 Chroma AI、Affinity Series、創作者合作或一般客服問題。
@@ -446,25 +486,28 @@
         </section>
     </main>
 
-    <!-- III. 頁尾 --><footer class="bg-gray-800 text-gray-300 py-16">
+    <!-- III. 頁尾 -->
+    <footer class="bg-gray-800 text-gray-300 py-16">
         <div class="container mx-auto px-6 text-center">
-            <img src="透明背景.png" alt="PEACELOVE Logo" 
-                 class="h-16 w-auto mx-auto mb-6 logo-shadow" 
-                 style="filter: brightness(0) invert(1) opacity(0.8);"
-                 onerror="this.src='https://placehold.co/200x80/888/eee?text=PEACELOVE+Logo&font=montserrat'; this.onerror=null;">
+            <!-- Wrapper for cropping. Set height to h-12 (48px) -->
+            <!-- Added mx-auto and mb-6 for layout -->
+            <!-- Logo container removed as requested -->
             
             <p class="font-heading text-2xl font-bold text-white mb-4">
                 Innovate. Collaborate. Inspire.
             </p>
             
-            <!-- 社群媒體 Icon --><div class="flex justify-center space-x-6 my-8">
+            <!-- 社群媒體 Icon -->
+            <div class="flex justify-center space-x-6 my-8">
                 <a href="#" class="text-gray-400 hover:text-white transition-colors" title="Instagram">
-                    <!-- Instagram Icon --><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Instagram Icon -->
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.069-4.85.069s-3.584-.011-4.85-.069c-3.252-.149-4.771-1.664-4.919-4.919-.058-1.265-.069-1.644-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919C8.416 2.175 8.796 2.163 12 2.163zM12 0C8.741 0 8.333.014 7.053.072 2.69 1.106 1.106 2.69 1.072 7.053.014 8.333 0 8.741 0 12s.014 3.667.072 4.947c.149 3.225 1.664 4.771 4.919 4.919C8.333 23.986 8.741 24 12 24s3.667-.014 4.947-.072c3.225-.149 4.771-1.664 4.919-4.919C23.986 15.667 24 15.259 24 12s-.014-3.667-.072-4.947c-.149-3.225-1.664-4.771-4.919-4.919C15.667.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"></path>
                     </svg>
                 </a>
                 <a href="#" class="text-gray-400 hover:text-white transition-colors" title="X/Facebook (使用 X Icon)">
-                    <!-- X Icon --><svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <!-- X Icon -->
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.93L18.901 1.153zm-3.68 19.5h2.15l-12.3-17.1H2.7l12.52 17.1z"></path>
                     </svg>
                 </a>
@@ -495,8 +538,4 @@
         });
     </script>
 </body>
-
 </html>
-
-
-
