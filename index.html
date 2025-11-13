@@ -94,6 +94,61 @@
         section[id] {
             scroll-margin-top: 80px; 
         }
+
+        /* --- 新增：訪客計數器樣式 --- */
+        #bottle-container {
+            position: relative;
+            width: 250px;
+            height: 350px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 4px solid var(--color-core-start);
+            border-radius: 20px 20px 40px 40px; /* 水瓶形狀 */
+            border-top: 10px solid var(--color-core-end); /* 水瓶頸 */
+            background: rgba(249, 250, 251, 0.7); /* 半透明背景 */
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
+            overflow: hidden; /* 隱藏溢出的愛心 */
+        }
+
+        #hearts-wrapper {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap; /* 換行 */
+            justify-content: center;
+            align-content: flex-end; /* 從底部開始堆疊 */
+            padding: 10px;
+            overflow: hidden; 
+        }
+
+        .heart-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--color-hues-end); /* HUES 顏色 */
+            margin: 2px;
+            flex-shrink: 0;
+            /* 動畫會由 JS 動態添加 */
+        }
+        
+        /* 愛心掉落動畫 */
+        @keyframes dropIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-200px) rotate(0deg);
+            }
+            60% {
+                opacity: 1;
+                transform: translateY(10px) rotate(0deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+        /* --- 樣式結束 --- */
     </style>
 </head>
 <body class="font-body bg-white text-gray-800">
@@ -150,11 +205,17 @@
                          class="h-64 md:h-80 lg:h-96 w-auto animate-slowPulse"
                          onerror="this.src='https://placehold.co/400x160/f0f0f0/333?text=PEACELOVE+Logo&font=montserrat'; this.onerror=null;">
                 </div>
+                
+                 <!-- 
+                  移除了 H1 (PEACELOVE.) 和 P (Innovate...) 
+                  因為 Logo 圖片 "white.png" 中已包含這些文字 
+                -->
                 <h1 class="font-heading text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6">
                     <span class="text-gradient-core">PEACE</span><span class="text-gray-800">LOVE</span>.
                 </h1>
                 <p class="font-heading text-2xl md:text-4xl text-gray-600">
                     Innovate. Collaborate. Inspire.
+                </p>
                 
                 <p class="mt-8 text-lg max-w-2xl mx-auto text-gray-700">
                     我們相信，真正的創新來自於熱情與安全的完美平衡。
@@ -169,24 +230,6 @@
                         探索 P.L. HUES (時尚)
                     </a>
                 </div>
-            </div>
-            <!-- --- 新增：訪客計數器 --- -->
-                <div class="mt-24 max-w-lg mx-auto text-center">
-                    <h3 class="font-heading text-3xl font-bold mb-8 text-center">社群足跡</h3>
-                    <p class="text-gray-600 mb-8 max-w-md mx-auto">感謝每一位訪客的蒞臨，您的支持是我們創新的動力！</p>
-                    
-                    <!-- 水瓶容器 -->
-                    <div id="bottle-container">
-                        <!-- 愛心將由 JS 添加到這裡 -->
-                        <div id="hearts-wrapper"></div>
-                    </div>
-                    
-                    <p class="mt-6 text-2xl font-bold">
-                        <span id="visitor-count-text" class="text-gradient-hues text-3xl">0</span> 顆心 (位訪客)
-                    </p>
-                </div>
-                <!-- --- 區塊結束 --- -->
-
             </div>
         </section>
 
@@ -246,6 +289,24 @@
                         </a>
                     </div>
                 </div>
+
+                <!-- --- 新增：訪客計數器 --- -->
+                <div class="mt-24 max-w-lg mx-auto text-center">
+                    <h3 class="font-heading text-3xl font-bold mb-8 text-center">社群足跡</h3>
+                    <p class="text-gray-600 mb-8 max-w-md mx-auto">感謝每一位訪客的蒞臨，您的支持是我們創新的動力！</p>
+                    
+                    <!-- 水瓶容器 -->
+                    <div id="bottle-container">
+                        <!-- 愛心將由 JS 添加到這裡 -->
+                        <div id="hearts-wrapper"></div>
+                    </div>
+                    
+                    <p class="mt-6 text-2xl font-bold">
+                        <span id="visitor-count-text" class="text-gradient-hues text-3xl">0</span> 顆心 (位訪客)
+                    </p>
+                </div>
+                <!-- --- 區塊結束 --- -->
+
             </div>
         </section>
         
@@ -448,14 +509,8 @@
                         <div class="p-8 rounded-2xl bg-gradient-core text-white">
                             <h3 class="font-heading text-3xl font-bold mb-6">CORE 企業洽談</h3>
                             <p class="mb-8">
-                                企業安全與數據方案諮詢。
+                                適用於企業安全與數據方案諮詢。
                             </p>
-                            <!-- 
-                                修正：
-                                1. 新增 action="mailto:..." 來開啟 email 用戶端
-                                2. 新增 enctype="text/plain" 讓信件內文格式正確
-                                3. 為 input 和 textarea 新增 name 屬性
-                            -->
                             <form action="mailto:bohui2944@gmail.com?subject=PEACELOVE%20CORE%20%E4%BC%81%E6%A5%AD%E6%B4%BD%E8%AB%87" method="POST" enctype="text/plain" class="space-y-6">
                                 <div>
                                     <label for="core-name" class="block text-sm font-medium mb-2">公司/組織名稱</label>
@@ -479,14 +534,8 @@
                         <div class="p-8 rounded-2xl bg-gradient-hues text-white">
                             <h3 class="font-heading text-3xl font-bold mb-6">HUES 合作/客服</h3>
                             <p class="mb-8">
-                                合作或一般客服問題。
+                                適用於 Chroma AI、Affinity Series、創作者合作或一般客服問題。
                             </p>
-                            <!-- 
-                                修正：
-                                1. 新增 action="mailto:..." 來開啟 email 用戶端
-                                2. 新增 enctype="text/plain" 讓信件內文格式正確
-                                3. 為 input 和 textarea 新增 name 屬性
-                            -->
                             <form action="mailto:bohui2944@gmail.com?subject=PEACELOVE%20HUES%20%E5%90%88%E4%BD%9C/%E5%AE%A2%E6%9C%8D" method="POST" enctype="text/plain" class="space-y-6">
                                 <div>
                                     <label for="hues-name" class="block text-sm font-medium mb-2">您的姓名/暱稱</label>
@@ -560,7 +609,139 @@
             });
         });
     </script>
+
+    <!-- 
+      新增：Firebase 訪客計數器模組
+    -->
+    <script type="module">
+        // 匯入 Firebase 模組
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, setDoc, increment, enableIndexedDbPersistence, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // 獲取 Firebase 配置和 App ID (由 Canvas 環境提供)
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'peacelove-visitor-counter';
+
+        // 初始化 Firebase
+        let app, db, auth;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            // setLogLevel('debug'); // 取消註解以查看詳細日誌
+        } catch (e) {
+            console.error("Firebase 初始化失敗:", e);
+            // 修正：移除了不合法的 return 敘述
+        }
+
+        // DOM 元素
+        const heartWrapper = document.getElementById('hearts-wrapper');
+        const countText = document.getElementById('visitor-count-text');
+
+        let visitorCountDocRef;
+        let currentHeartCount = 0; // 追蹤目前顯示的愛心數量
+
+        // 1. 監聽認證狀態
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // console.log("Firebase 使用者已認證:", user.uid);
+                setupCounter();
+            } else {
+                // console.log("Firebase 尚未認證，嘗試登入...");
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    // onAuthStateChanged 會再次觸發並執行 setupCounter()
+                } catch (error) {
+                    console.error("Firebase 登入失敗:", error);
+                }
+            }
+        });
+
+        // 2. 設置計數器
+        function setupCounter() {
+            if (!db || !appId) {
+                console.error("Firestore 或 AppID 未準備就緒");
+                return;
+            }
+            
+            // 定義計數器文檔的路徑 (使用 public 集合)
+            visitorCountDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'site_stats', 'visitor_count');
+
+            // 設置即時監聽器
+            setupVisitorListener();
+
+            // 檢查是否為新訪客 (僅在 session 期間)
+            incrementVisitCount();
+        }
+
+        // 3. 設置即時監聽器 (
+        function setupVisitorListener() {
+            onSnapshot(visitorCountDocRef, (docSnap) => {
+                let count = 0;
+                if (docSnap.exists()) {
+                    count = docSnap.data().count;
+                }
+                // console.log("即時總數:", count);
+                updateHeartBottle(count);
+            }, (error) => {
+                console.error("Firestore 監聽失敗:", error);
+            });
+        }
+
+        // 4. 增加訪問次數 (如果需要)
+        async function incrementVisitCount() {
+            // 使用 sessionStorage 確保只在
+            if (sessionStorage.getItem('peacelove_has_visited')) {
+                // console.log("本此瀏覽已計數");
+                return;
+            }
+
+            // console.log("新訪客，計數 +1");
+            sessionStorage.setItem('peacelove_has_visited', 'true');
+            
+            try {
+                // 使用 setDoc + merge + increment 確保文檔不存在時也能安全建立
+                await setDoc(visitorCountDocRef, { 
+                    count: increment(1) 
+                }, { merge: true });
+            } catch (e) {
+                console.error("Firestore 更新計數失敗:", e);
+            }
+        }
+
+        // 5. 更新 UI
+        function updateHeartBottle(count) {
+            if (countText) {
+                countText.textContent = count;
+            }
+
+            if (!heartWrapper) return;
+
+            const heartsToAdd = count - currentHeartCount;
+            if (heartsToAdd <= 0) return;
+
+            // console.log(`新增 ${heartsToAdd} 顆愛心`);
+
+            for (let i = 0; i < heartsToAdd; i++) {
+                const heartEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                heartEl.setAttribute('class', 'heart-icon');
+                heartEl.setAttribute('viewBox', '0 0 20 20');
+                heartEl.setAttribute('fill', 'currentColor');
+                heartEl.innerHTML = '<path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />';
+                
+                // 設置動畫
+                heartEl.style.opacity = '0'; // 動畫初始狀態
+                heartEl.style.animation = `dropIn 0.5s ease-out ${i * 0.05}s forwards`;
+                
+                heartWrapper.appendChild(heartEl);
+                currentHeartCount++;
+            }
+        }
+    </script>
 </body>
 </html>
-
-
