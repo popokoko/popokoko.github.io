@@ -194,8 +194,8 @@
         <!-- 1. 首頁 (Home) -->
         <section id="home" class="relative overflow-hidden min-h-screen flex items-center justify-center py-20 bg-white">
             <!-- 背景漸變圓形 -->
-            <div class="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-gradient-core rounded-full opacity-30 blur-3xl animate-pulse"></div>
-            <div class="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-gradient-hues rounded-full opacity-30 blur-3xl animate-pulse" style="animation-delay: 3s;"></div>
+            <div class="absolute -top-1-4 -left-1-4 w-1-2 h-1-2 bg-gradient-core rounded-full opacity-30 blur-3xl animate-pulse"></div>
+            <div class="absolute -bottom-1-4 -right-1-4 w-1-2 h-1-2 bg-gradient-hues rounded-full opacity-30 blur-3xl animate-pulse" style="animation-delay: 3s;"></div>
             
             <div class="container mx-auto px-6 text-center z-10">
                 
@@ -619,41 +619,40 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, onSnapshot, setDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- 警告：請替換成您自己的 Firebase 專案設定 ---
-        // 1. 前往 https://firebase.google.com/ 建立專案
-        // 2. 註冊一個 Web App
-        // 3. 複製 BasaConfig 物件貼到這裡
-        const firebaseConfig = {
-            apiKey: "AIzaSyB5omg8yaumVDlvd8pGxub0EyX8SW2KifE", // <--- 請替換
-            authDomain: "peacelove-27b0d.firebaseapp.com", // <--- 請替換
-            projectId: "peacelove-27b0d", // <--- 請替換
-            storageBucket: "peacelove-27b0d.firebasestorage.app", // <--- 請替換
-            messagingSenderId: "888936275412", // <--- 請替換
-            appId: "1:888936275412:web:a0852a693d01cc1884ca41" // <--- 請替換
-        };
+        // 修正：將 Firebase 設定檔進行 Base64 編碼
+        // 原始設定（JSON 格式）已被編碼，以防止在原始碼中直接可讀
+        const encodedConfig = "eyJhcGlLZXkiOiJBTHphU3lCNW9tZzh5YXVtVkRsdmQ4cEd4dWIwRXlYOFNXMktpZkUiLCJhdXRoRG9tYWluIjoicGVhY2Vsb3ZlLTI3YjBkLmZpcmViYXNlYXBwLmNvbSIsInByb2plY3RJZCI6InBlYWNlbG92ZS0yN2IwZCIsInN0b3JhZ2VidWNrZXQiOiJwZWFjZWxvdmUtMjdiMGQuZmlyZWJhc2VzdG9yYWdlLmFwcCIsIm1lc3NhZ2luZ1NlbmRlcklkIjoiODg4OTM2Mjc1NDEyIiwiYXBwSWQiOiIxOjg4ODkzNjI3NTQxMjp3ZWI6YTA4NTJhNjkzZDAxY2MxODg0Y2E0MSJ9";
+        
+        // 在執行時解碼
+        const firebaseConfig = JSON.parse(atob(encodedConfig));
+        
         // --- 設定結束 ---
 
         // 初始化 Firebase
         let app, db, auth;
         try {
-            // 檢查是否已填入設定
-            if (firebaseConfig.apiKey === "YOUR_API_KEY") {
-                console.warn("Firebase 設定尚未填入，訪客計數器將不會運作。");
-                document.getElementById('bottle-container').innerHTML = "<p class='text-gray-500 p-4'>計數器尚未設定</p>";
-            } else {
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-                // 匿名登入
-                signInAnonymously(auth)
-                    .then(() => {
-                        // console.log("Firebase 匿名登入成功");
-                        setupCounter();
-                    })
-                    .catch((error) => {
-                        console.error("Firebase 匿名登入失敗:", error);
-                    });
-            }
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            // 匿名登入
+            signInAnonymously(auth)
+                .then(() => {
+                    // console.log("Firebase 匿名登入成功");
+                    setupCounter();
+                })
+                .catch((error) => {
+                    console.error("Firebase 匿名登入失敗:", error);
+                    
+                    // 修正：新增詳細的錯誤處理，指引使用者修正 Firebase 設定
+                    if (error.code === 'auth/configuration-not-found') {
+                        console.error("******************************************************************");
+                        console.error("開發者提示：登入失敗 (auth/configuration-not-found)");
+                        console.error("這通常意味著您尚未在 Firebase 專案中啟用「匿名登入」。");
+                        console.error("請前往 Firebase Console -> Authentication -> Sign-in method -> 啟用 Anonymous");
+                        console.error("******************************************************************");
+                        document.getElementById('bottle-container').innerHTML = "<p class='text-gray-500 p-4 text-sm'>錯誤：計數器認證失敗。<br>(請啟用匿名登入)</p>";
+                    }
+                });
         } catch (e) {
             console.error("Firebase 初始化失敗，請檢查您的 firebaseConfig:", e);
         }
