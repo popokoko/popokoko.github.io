@@ -574,7 +574,7 @@
                 <a href="#" class="text-gray-400 hover:text-white transition-colors" title="Instagram">
                     <!-- Instagram Icon -->
                     <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.069-4.85.069s-3.584-.011-4.85-.069c-3.252-.149-4.771-1.664-4.919-4.919-.058-1.265-.069-1.644-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919C8.416 2.175 8.796 2.163 12 2.163zM12 0C8.741 0 8.333.014 7.053.072 2.69 1.106 1.106 2.69 1.072 7.053.014 8.333 0 8.741 0 12s.014 3.667.072 4.947c.149 3.225 1.664 4.771 4.919 4.919C8.333 23.986 8.741 24 12 24s3.667-.014 4.947-.072c3.225-.149 4.771-1.664 4.919-4.919C23.986 15.667 24 15.259 24 12s-.014-3.667-.072-4.947c-.149-3.225-1.664-4.771-4.919-4.919C15.667.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"></path>
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.069-4.85.069s-3.584-.011-4.85-.069c-3.252-.149-4.771-1.664-4.919-4.919-.058-1.265-.069-1.644-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919 4.919C8.416 2.175 8.796 2.163 12 2.163zM12 0C8.741 0 8.333.014 7.053.072 2.69 1.106 1.106 2.69 1.072 7.053.014 8.333 0 8.741 0 12s.014 3.667.072 4.947c.149 3.225 1.664 4.771 4.919 4.919C8.333 23.986 8.741 24 12 24s3.667-.014 4.947-.072c3.225-.149 4.771-1.664 4.919-4.919C23.986 15.667 24 15.259 24 12s-.014-3.667-.072-4.947c-.149-3.225-1.664-4.771-4.919-4.919C15.667.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"></path>
                     </svg>
                 </a>
                 <a href="#" class="text-gray-400 hover:text-white transition-colors" title="X/Facebook (使用 X Icon)">
@@ -611,28 +611,51 @@
     </script>
 
     <!-- 
-      新增：Firebase 訪客計數器模組
+      修正：Firebase 訪客計數器模組 (適用於 GitHub Pages)
     -->
     <script type="module">
         // 匯入 Firebase 模組
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot, setDoc, increment, enableIndexedDbPersistence, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, setDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // 獲取 Firebase 配置和 App ID (由 Canvas 環境提供)
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'peacelove-visitor-counter';
+        // --- 警告：請替換成您自己的 Firebase 專案設定 ---
+        // 1. 前往 https://firebase.google.com/ 建立專案
+        // 2. 註冊一個 Web App
+        // 3. 複製 BasaConfig 物件貼到這裡
+        const firebaseConfig = {
+            apiKey: "AIzaSyB5omg8yaumVDlvd8pGxub0EyX8SW2KifE", // <--- 請替換
+            authDomain: "peacelove-27b0d.firebaseapp.com", // <--- 請替換
+            projectId: "peacelove-27b0d", // <--- 請替換
+            storageBucket: "peacelove-27b0d.firebasestorage.app", // <--- 請替換
+            messagingSenderId: "888936275412", // <--- 請替換
+            appId: "1:888936275412:web:a0852a693d01cc1884ca41" // <--- 請替換
+        };
+        // --- 設定結束 ---
 
         // 初始化 Firebase
         let app, db, auth;
         try {
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-            // setLogLevel('debug'); // 取消註解以查看詳細日誌
+            // 檢查是否已填入設定
+            if (firebaseConfig.apiKey === "YOUR_API_KEY") {
+                console.warn("Firebase 設定尚未填入，訪客計數器將不會運作。");
+                document.getElementById('bottle-container').innerHTML = "<p class='text-gray-500 p-4'>計數器尚未設定</p>";
+            } else {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                // 匿名登入
+                signInAnonymously(auth)
+                    .then(() => {
+                        // console.log("Firebase 匿名登入成功");
+                        setupCounter();
+                    })
+                    .catch((error) => {
+                        console.error("Firebase 匿名登入失敗:", error);
+                    });
+            }
         } catch (e) {
-            console.error("Firebase 初始化失敗:", e);
-            // 修正：移除了不合法的 return 敘述
+            console.error("Firebase 初始化失敗，請檢查您的 firebaseConfig:", e);
         }
 
         // DOM 元素
@@ -642,35 +665,17 @@
         let visitorCountDocRef;
         let currentHeartCount = 0; // 追蹤目前顯示的愛心數量
 
-        // 1. 監聽認證狀態
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // console.log("Firebase 使用者已認證:", user.uid);
-                setupCounter();
-            } else {
-                // console.log("Firebase 尚未認證，嘗試登入...");
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    // onAuthStateChanged 會再次觸發並執行 setupCounter()
-                } catch (error) {
-                    console.error("Firebase 登入失敗:", error);
-                }
-            }
-        });
-
         // 2. 設置計數器
         function setupCounter() {
-            if (!db || !appId) {
-                console.error("Firestore 或 AppID 未準備就緒");
+            if (!db) {
+                console.error("Firestore 未準備就緒");
                 return;
             }
             
-            // 定義計數器文檔的路徑 (使用 public 集合)
-            visitorCountDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'site_stats', 'visitor_count');
+            // 修正：使用您自己專案中的簡單路徑
+            // 舊路徑 (Canvas 專用): doc(db, 'artifacts', appId, 'public', 'data', 'site_stats', 'visitor_count');
+            // 新路徑 (您自己的專案):
+            visitorCountDocRef = doc(db, 'site_stats', 'visitor_count'); // 簡化路徑
 
             // 設置即時監聽器
             setupVisitorListener();
@@ -679,7 +684,7 @@
             incrementVisitCount();
         }
 
-        // 3. 設置即時監聽器 (
+        // 3. 設置即時監聽器
         function setupVisitorListener() {
             onSnapshot(visitorCountDocRef, (docSnap) => {
                 let count = 0;
