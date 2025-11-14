@@ -95,7 +95,7 @@
             scroll-margin-top: 80px; 
         }
 
-        /* --- 新增：訪客計數器樣式 --- */
+        /* --- 訪客計數器樣式 (自然堆疊) --- */
         #bottle-container {
             position: relative;
             width: 250px;
@@ -116,11 +116,8 @@
             left: 0;
             right: 0;
             height: 100%;
-            display: flex;
-            flex-wrap: wrap; /* 換行 */
-            justify-content: center;
-            align-content: flex-end; /* 從底部開始堆疊 */
-            padding: 10px;
+            /* 移除 display: flex 及相關屬性 */
+            padding: 10px; /* 保留 padding 作為邊界 */
             overflow: hidden; 
         }
 
@@ -128,9 +125,11 @@
             width: 20px;
             height: 20px;
             color: var(--color-hues-end); /* HUES 顏色 */
-            margin: 2px;
-            flex-shrink: 0;
+            position: absolute; /* 改為絕對定位 */
+            /* 移除 margin 和 flex-shrink */
+            /* bottom, left, transform 將由 JS 設定 */
             /* 動畫會由 JS 動態添加 */
+            filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3)); /* 修正：增加立體感 */
         }
         
         /* 愛心掉落動畫 */
@@ -731,7 +730,7 @@
             }
         }
 
-        // 5. 更新 UI
+        // 5. 更新 UI (自然堆疊版本)
         function updateHeartBottle(count) {
             if (countText) {
                 countText.textContent = count;
@@ -740,26 +739,60 @@
             if (!heartWrapper) return;
 
             const heartsToAdd = count - currentHeartCount;
-            if (heartsToAdd <= 0) return;
+            if (heartsToAdd <= 0) return; // 沒有新愛心
+
+            if (currentHeartCount === 0) {
+                 heartWrapper.innerHTML = ''; // 清空可能存在的錯誤訊息
+            }
 
             // console.log(`新增 ${heartsToAdd} 顆愛心`);
 
+            // 水瓶寬度 250px - 左右 padding 10px*2 = 230px
+            // 愛心寬度 20px
+            // 可用寬度 = 230 - 20 = 210px (for left positioning)
+            const usableWidth = 210; 
+            // 視覺上每行約 11 顆 (230 / 20)
+            const heartsPerVisualRow = 11; 
+
             for (let i = 0; i < heartsToAdd; i++) {
+                // 計算這顆新愛心是第幾顆
+                const effectiveHeartIndex = currentHeartCount + i;
+
                 const heartEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 heartEl.setAttribute('class', 'heart-icon');
                 heartEl.setAttribute('viewBox', '0 0 20 20');
                 heartEl.setAttribute('fill', 'currentColor');
                 heartEl.innerHTML = '<path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />';
                 
+                // --- 自然堆疊計算 ---
+                const row = Math.floor(effectiveHeartIndex / heartsPerVisualRow);
+                
+                // 基礎 bottom: 每個 row 堆疊 18px (略小於 20px 造成重疊)
+                // 隨機 Y: 增加 0-5px 的隨機高度
+                const randomBottom = (row * 18) + (Math.random() * 5);
+                
+                // 隨機 X: 在可用寬度內隨機
+                const randomLeft = Math.random() * usableWidth;
+                
+                // 修正：隨機旋轉: -45 to +45 度 (原為 -15 to +15)
+                const randomRotation = (Math.random() - 0.5) * 90; 
+                
+                heartEl.style.left = `${randomLeft}px`;
+                heartEl.style.bottom = `${randomBottom}px`;
+                heartEl.style.transform = `rotate(${randomRotation}deg)`;
+                // --- 計算結束 ---
+
                 // 設置動畫
                 heartEl.style.opacity = '0'; // 動畫初始狀態
-                heartEl.style.animation = `dropIn 0.5s ease-out ${i * 0.05}s forwards`;
+                // 動畫延遲，讓它們一顆一顆掉
+                heartEl.style.animation = `dropIn 0.5s ease-out ${i * 0.1}s forwards`; // 延遲 0.1s
                 
                 heartWrapper.appendChild(heartEl);
-                currentHeartCount++;
             }
+            
+            // For loop 結束後才更新
+            currentHeartCount = count; // 直接同步到最新總數
         }
     </script>
 </body>
 </html>
-
