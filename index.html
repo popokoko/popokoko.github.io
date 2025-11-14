@@ -242,6 +242,23 @@
                         「我們相信，真正的創新來自於熱情與安全的完美平衡。」
                     </p>
                 </div>
+
+                <!-- --- 訪客計數器：移至此處 --- -->
+                <div class="mt-16 mb-20 max-w-lg mx-auto text-center">
+                    <h3 class="font-heading text-3xl font-bold mb-8 text-center">我們的愛</h3>
+                    <p class="text-gray-600 mb-8 max-w-md mx-auto">感謝每一位訪客的蒞臨，您的支持是我們創新的動力！</p>
+                    
+                    <!-- 水瓶容器 -->
+                    <div id="bottle-container">
+                        <!-- 愛心將由 JS 添加到這裡 -->
+                        <div id="hearts-wrapper"></div>
+                    </div>
+                    
+                    <p class="mt-6 text-2xl font-bold">
+                        <span id="visitor-count-text" class="text-gradient-hues text-3xl">0</span> 顆心 (位訪客)
+                    </p>
+                </div>
+                <!-- --- 區塊結束 --- -->
                 
                 <!-- 使命宣言 -->
                 <div class="bg-white p-10 md:p-16 rounded-3xl shadow-lg mb-20 max-w-5xl mx-auto">
@@ -290,23 +307,11 @@
                     </div>
                 </div>
 
-                <!-- --- 新增：訪客計數器 --- -->
-                <div class="mt-24 max-w-lg mx-auto text-center">
-                    <h3 class="font-heading text-3xl font-bold mb-8 text-center">社群足跡</h3>
-                    <p class="text-gray-600 mb-8 max-w-md mx-auto">感謝每一位訪客的蒞臨，您的支持是我們創新的動力！</p>
-                    
-                    <!-- 水瓶容器 -->
-                    <div id="bottle-container">
-                        <!-- 愛心將由 JS 添加到這裡 -->
-                        <div id="hearts-wrapper"></div>
-                    </div>
-                    
-                    <p class="mt-6 text-2xl font-bold">
-                        <span id="visitor-count-text" class="text-gradient-hues text-3xl">0</span> 顆心 (位訪客)
-                    </p>
-                </div>
-                <!-- --- 區塊結束 --- -->
-
+                <!-- 
+                  FIX: 
+                  移除重複的計數器區塊 (已上移) 
+                -->
+                
             </div>
         </section>
         
@@ -388,7 +393,8 @@
                         <div class="w-16 h-16 bg-gradient-hues rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                             <!-- Desktop Icon -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2
+ 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
                         </div>
                         <h3 class="font-heading text-2xl font-bold mb-3">Chroma AI (色彩推薦)</h3>
@@ -623,7 +629,7 @@
         // 錯誤 'auth/api-key-not-valid' 表示您目前的 API Key 不正確。
         // 請前往 Firebase 專案設定，複製 *正確* 的 Web App 設定。
         const firebaseConfig = {
-            apiKey: "AIzaSyB5omg8yaumVDlvd8pGxub0EyX8SW2KifE", 
+            apiKey: "AIzaSyB5omg8yaumVDlvd8pGxub0EyX8SW2KifE", // <--- 錯誤的金鑰！請替換
             authDomain: "peacelove-27b0d.firebaseapp.com",
             projectId: "peacelove-27b0d",
             storageBucket: "peacelove-27b0d.firebasestorage.app", // 
