@@ -619,15 +619,19 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, onSnapshot, setDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // 修正：將 Firebase 設定檔進行 Base64 編碼
-        // 原始設定（JSON 格式）已被編碼，以防止在原始碼中直接可讀
-        const encodedConfig = "eyJhcGlLZXkiOiJBTHphU3lCNW9tZzh5YXVtVkRsdmQ4cEd4dWIwRXlYOFNXMktpZkUiLCJhdXRoRG9tYWluIjoicGVhY2Vsb3ZlLTI3YjBkLmZpcmViYXNlYXBwLmNvbSIsInByb2plY3RJZCI6InBlYWNlbG92ZS0yN2IwZCIsInN0b3JhZ2VidWNrZXQiOiJwZWFjZWxvdmUtMjdiMGQuZmlyZWJhc2VzdG9yYWdlLmFwcCIsIm1lc3NhZ2luZ1NlbmRlcklkIjoiODg4OTM2Mjc1NDEyIiwiYXBwSWQiOiIxOjg4ODkzNjI3NTQxMjp3ZWI6YTA4NTJhNjkzZDAxY2MxODg0Y2E0MSJ9";
-        
-        // 在執行時解碼
-        const firebaseConfig = JSON.parse(atob(encodedConfig));
-        
+        // --- 警告：請替換成您自己的 Firebase 專案設定 ---
+        // 錯誤 'auth/api-key-not-valid' 表示您目前的 API Key 不正確。
+        // 請前往 Firebase 專案設定，複製 *正確* 的 Web App 設定。
+        const firebaseConfig = {
+            apiKey: "AIzaSyB5omg8yaumVDlvd8pGxub0EyX8SW2KifE", 
+            authDomain: "peacelove-27b0d.firebaseapp.com",
+            projectId: "peacelove-27b0d",
+            storageBucket: "peacelove-27b0d.firebasestorage.app", // 
+            messagingSenderId: "888936275412",
+            appId: "1:888936275412:web:a0852a693d01cc1884ca41"
+        };
         // --- 設定結束 ---
-
+        
         // 初始化 Firebase
         let app, db, auth;
         try {
@@ -643,8 +647,15 @@
                 .catch((error) => {
                     console.error("Firebase 匿名登入失敗:", error);
                     
-                    // 修正：新增詳細的錯誤處理，指引使用者修正 Firebase 設定
-                    if (error.code === 'auth/configuration-not-found') {
+                    // 修正：新增 'auth/api-key-not-valid' 錯誤處理
+                    if (error.code === 'auth/api-key-not-valid') {
+                        console.error("******************************************************************");
+                        console.error("開發者提示：API Key 無效 (auth/api-key-not-valid)");
+                        console.error("您在 firebaseConfig 中提供的 'apiKey' 不正確。");
+                        console.error("請前往 Firebase Console -> 專案設定 (齒輪) -> 您的應用程式 -> 複製正確的設定。");
+                        console.error("******************************************************************");
+                        document.getElementById('bottle-container').innerHTML = "<p class='text-gray-500 p-4 text-sm'>錯誤：API Key 無效。<br>(請更新設定檔)</p>";
+                    } else if (error.code === 'auth/configuration-not-found') {
                         console.error("******************************************************************");
                         console.error("開發者提示：登入失敗 (auth/configuration-not-found)");
                         console.error("這通常意味著您尚未在 Firebase 專案中啟用「匿名登入」。");
