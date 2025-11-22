@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wife 消消樂 - 魔王挑戰版</title>
+    <style>
+        :root {
+            --bg-color: #2c3e50;
+            --board-bg: #34495e;
+            --text-color: #ecf0f1;
+            --accent-color: #e74c3c;
+            --boss-color: #8e44ad;
+            --gold-color: #f1c40f;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            user-select: none;
+            min-height: 100vh;
+        }
+
+        /* --- UI Layout --- */
+        .game-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 { text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin: 10px 0; }
+
+        .info-board {
+            display: flex;
+            justify-content: space-between;
+            width: 560px;
+            background: var(--board-bg);
+            padding: 10px 20px;
+            border-radius: 15px 15px 0 0;
+            font-size: 20px;
+            box-sizing: border-box;
+            border: 3px solid #546e7a;
+            border-bottom: none;
+        }
+
+        .info-group { display: flex; gap: 15px; }
+        .highlight { font-weight: bold; color: var(--gold-color); }
+        .danger { color: var(--accent-color); animation: pulse 1s infinite; }
+
+        /* --- Boss Bar --- */
+        #bossContainer {
+            width: 560px;
+            background: #222;
+            padding: 10px;
+            box-sizing: border-box;
+            display: none; /* 預設隱藏 */
+            flex-direction: column;
+            align-items: center;
+            border: 3px solid var(--boss-color);
+            border-bottom: none;
+        }
+        .boss-title { color: var(--boss-color); font-weight: bold; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;}
+        .hp-bar-bg { width: 100%; height: 20px; background: #555; border-radius: 10px; overflow: hidden; }
+        .hp-bar-fill { width: 100%; height: 100%; background: linear-gradient(90deg, #e74c3c, #c0392b); transition: width 0.3s; }
+
+        /* --- Grid --- */
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            width: 560px;
+            height: 560px;
+            background-color: var(--board-bg);
+            padding: 5px;
+            border-radius: 0 0 15px 15px;
+            border: 3px solid #546e7a;
+            border-top: none;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .square {
+            height: 70px; width: 70px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px;
+            cursor: grab;
+            border-radius: 12px;
+            background-color: rgba(0,0,0,0.15);
+            transition: transform 0.2s, background-color 0.2s;
+            box-sizing: border-box;
+            border: 2px solid transparent;
+        }
+        .square:active { cursor: grabbing; }
+        
+        /* 圖片樣式 */
+        .square img {
+            width: 90%; height: 90%; object-fit: contain;
+            pointer-events: none; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
+        }
+
+        /* --- Overlays (Start, Level Up, Game Over) --- */
+        .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 100;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+        .hidden { display: none !important; }
+
+        .btn {
+            padding: 15px 30px; font-size: 24px; font-weight: bold;
+            color: white; background: var(--accent-color);
+            border: none; border-radius: 50px; cursor: pointer;
+            margin-top: 20px; transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+        .btn:hover { transform: scale(1.05); background: #c0392b; }
+        .btn-secondary { background: #27ae60; }
+        .btn-secondary:hover { background: #2ecc71; }
+
+        /* Leaderboard */
+        .leaderboard { margin-top: 20px; width: 80%; text-align: center; }
+        .leaderboard table { width: 100%; border-collapse: collapse; color: #ddd; }
+        .leaderboard th, .leaderboard td { padding: 8px; border-bottom: 1px solid #555; }
+        .leaderboard th { color: var(--gold-color); }
+
+        /* Animations */
+        @keyframes poof { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
+        .poof { animation: poof 0.4s ease-out forwards; pointer-events: none; }
+        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+        .shake { animation: shake 0.5s; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+    </style>
+</head>
+<body>
+
+    <h1>My Wife 消消樂 ❤️</h1>
+
+    <div class="game-container">
+        <div class="info-board">
+            <div class="info-group">
+                <div>關卡: <span id="levelDisplay" class="highlight">1</span></div>
+                <div>目標: <span id="targetDisplay">100</span></div>
+            </div>
+            <div class="info-group">
+                <div>時間: <span id="timerDisplay">60</span>s</div>
+                <div>分數: <span id="scoreDisplay" class="highlight">0</span></div>
+            </div>
+        </div>
+
+        <div id="bossContainer">
+            <div class="boss-title">👹 大魔王出現! <span id="bossHpText">100/100</span></div>
+            <div class="hp-bar-bg">
+                <div class="hp-bar-fill" id="hpBarFill"></div>
+            </div>
+        </div>
+
+        <div class="grid"></div>
+
+        <div id="startScreen" class="overlay">
+            <h2 style="color: var(--gold-color); font-size: 40px;">準備好了嗎？</h2>
+            <p>每10關將遭遇大魔王！<br>連續消除可造成 10倍 傷害！</p>
+            <button class="btn" onclick="Game.start()">開始遊戲</button>
+            
+            <div class="leaderboard">
+                <h3>🏆 排行榜</h3>
+                <table id="leaderboardTable">
+                    <tr><th>排名</th><th>分數</th><th>關卡</th></tr>
+                    </table>
+            </div>
+        </div>
+
+        <div id="levelUpScreen" class="overlay hidden">
+            <h2 style="color: #2ecc71; font-size: 36px;">🎉 關卡完成!</h2>
+            <p id="levelUpMsg">分數達標！</p>
+            <button class="btn btn-secondary" onclick="Game.nextLevel()">下一關</button>
+        </div>
+
+        <div id="gameOverScreen" class="overlay hidden">
+            <h2 style="color: var(--accent-color); font-size: 36px;">💀 遊戲結束</h2>
+            <p>最終分數: <span id="finalScore" class="highlight"></span></p>
+            <p>到達關卡: <span id="finalLevel"></span></p>
+            <button class="btn" onclick="location.reload()">回到主選單</button>
+        </div>
+    </div>
+
+    <script>
+        // === 遊戲設定與狀態 ===
+        const CONFIG = {
+            width: 8,
+            baseTime: 60,
+            scorePerLevel: 200, // 每關增加的目標分數
+            bossBaseHp: 100,
+            bossHpScale: 1.2, // 每隻魔王血量成長幅度
+        };
+
+        // 圖片資源
+        const CUSTOM_IMG = '<img src="https://popokoko.github.io/mywife.png" draggable="false" alt="My Wife">';
+        const BOMB = '💣';
+        const BASE_COLORS = [CUSTOM_IMG, '🟡', '🟠', '🟣', '🟢', '🔵'];
+
+        // 遊戲狀態
+        const State = {
+            score: 0,
+            level: 1,
+            targetScore: 100,
+            timeLeft: 60,
+            isPaused: true,
+            isBossLevel: false,
+            bossHp: 100,
+            maxBossHp: 100,
+            timerId: null,
+            gameLoopId: null,
+            isChainReaction: false, // 判斷是否為連鎖消除 (Combo)
+            userInteracting: false
+        };
+
+        // DOM 元素
+        const grid = document.querySelector('.grid');
+        const ui = {
+            score: document.getElementById('scoreDisplay'),
+            level: document.getElementById('levelDisplay'),
+            target: document.getElementById('targetDisplay'),
+            timer: document.getElementById('timerDisplay'),
+            bossContainer: document.getElementById('bossContainer'),
+            hpFill: document.getElementById('hpBarFill'),
+            hpText: document.getElementById('bossHpText'),
+            start: document.getElementById('startScreen'),
+            levelUp: document.getElementById('levelUpScreen'),
+            gameOver: document.getElementById('gameOverScreen'),
+            leaderboard: document.getElementById('leaderboardTable')
+        };
+
+        let squares = [];
+
+        // === 排行榜系統 ===
+        const Leaderboard = {
+            get: () => JSON.parse(localStorage.getItem('match3_scores')) || [],
+            save: (score, level) => {
+                let scores = Leaderboard.get();
+                scores.push({ score, level, date: new Date().toLocaleDateString() });
+                scores.sort((a, b) => b.score - a.score);
+                scores = scores.slice(0, 5); // 只留前5名
+                localStorage.setItem('match3_scores', JSON.stringify(scores));
+            },
+            render: () => {
+                const scores = Leaderboard.get();
+                let html = '<tr><th>排名</th><th>分數</th><th>關卡</th></tr>';
+                if(scores.length === 0) html += '<tr><td colspan="3">暫無紀錄</td></tr>';
+                scores.forEach((s, i) => {
+                    html += `<tr><td>${i+1}</td><td>${s.score}</td><td>${s.level}</td></tr>`;
+                });
+                ui.leaderboard.innerHTML = html;
+            }
+        };
+
+        // === 遊戲核心控制 ===
+        const Game = {
+            init: () => {
+                Leaderboard.render();
+                createBoard();
+            },
+
+            start: () => {
+                ui.start.classList.add('hidden');
+                State.isPaused = false;
+                State.score = 0;
+                State.level = 1;
+                Game.setupLevel();
+            },
+
+            setupLevel: () => {
+                State.timeLeft = CONFIG.baseTime;
+                State.isBossLevel = (State.level % 10 === 0); // 每10關
+                
+                // UI 更新
+                ui.level.innerText = State.level;
+                ui.score.innerText = State.score;
+                ui.timer.classList.remove('danger');
+
+                if (State.isBossLevel) {
+                    // 魔王關設定
+                    ui.bossContainer.style.display = 'flex';
+                    ui.target.innerText = "擊敗魔王!";
+                    State.maxBossHp = Math.floor(CONFIG.bossBaseHp * Math.pow(CONFIG.bossHpScale, (State.level/10) - 1));
+                    State.bossHp = State.maxBossHp;
+                    Game.updateBossUi();
+                } else {
+                    // 普通關設定
+                    ui.bossContainer.style.display = 'none';
+                    // 目標分數是當前分數 + 關卡難度
+                    State.targetScore = State.score + (State.level * CONFIG.scorePerLevel);
+                    ui.target.innerText = State.targetScore;
+                }
+
+                // 啟動計時與循環
+                State.isPaused = false;
+                ui.levelUp.classList.add('hidden');
+                clearInterval(State.timerId);
+                clearInterval(State.gameLoopId);
+                State.timerId = setInterval(Game.tick, 1000);
+                State.gameLoopId = setInterval(Game.loop, 150);
+            },
+
+            nextLevel: () => {
+                State.level++;
+                Game.setupLevel();
+            },
+
+            tick: () => {
+                if (State.isPaused) return;
+                State.timeLeft--;
+                ui.timer.innerText = State.timeLeft;
+                if (State.timeLeft <= 10) ui.timer.classList.add('danger');
+                
+                if (State.timeLeft <= 0) {
+                    Game.over();
+                }
+            },
+
+            loop: () => {
+                if (State.isPaused) return;
+                moveDown();
+                checkMatches();
+            },
+
+            checkWinCondition: () => {
+                if (State.isPaused) return;
+
+                if (State.isBossLevel) {
+                    if (State.bossHp <= 0) {
+                        Game.levelComplete("大魔王已被擊敗！");
+                    }
+                } else {
+                    if (State.score >= State.targetScore) {
+                        Game.levelComplete("目標分數達成！");
+                    }
+                }
+            },
+
+            levelComplete: (msg) => {
+                State.isPaused = true;
+                clearInterval(State.timerId);
+                clearInterval(State.gameLoopId);
+                document.getElementById('levelUpMsg').innerText = msg;
+                ui.levelUp.classList.remove('hidden');
+            },
+
+            over: () => {
+                State.isPaused = true;
+                clearInterval(State.timerId);
+                clearInterval(State.gameLoopId);
+                Leaderboard.save(State.score, State.level);
+                document.getElementById('finalScore').innerText = State.score;
+                document.getElementById('finalLevel').innerText = State.level;
+                ui.gameOver.classList.remove('hidden');
+            },
+
+            updateBossUi: () => {
+                let pct = (State.bossHp / State.maxBossHp) * 100;
+                if (pct < 0) pct = 0;
+                ui.hpFill.style.width = pct + '%';
+                ui.hpText.innerText = `${State.bossHp}/${State.maxBossHp}`;
+            },
+            
+            // 傷害計算
+            dealDamage: (amount, isCombo) => {
+                if (!State.isBossLevel) return;
+                
+                let finalDamage = amount;
+                if (isCombo) {
+                    finalDamage = amount * 10; // 連鎖傷害 x10
+                    // 視覺震動效果
+                    ui.bossContainer.classList.add('shake');
+                    setTimeout(() => ui.bossContainer.classList.remove('shake'), 500);
+                }
+                
+                State.bossHp -= finalDamage;
+                Game.updateBossUi();
+                Game.checkWinCondition();
+            }
+        };
+
+        // === 棋盤邏輯 ===
+        function createBoard() {
+            grid.innerHTML = '';
+            squares = [];
+            for (let i = 0; i < CONFIG.width * CONFIG.width; i++) {
+                const square = document.createElement('div');
+                square.setAttribute('draggable', true);
+                square.setAttribute('id', i);
+                square.classList.add('square');
+                let randomColor = getRandomGem();
+                square.innerHTML = randomColor;
+                grid.appendChild(square);
+                squares.push(square);
+
+                square.addEventListener('dragstart', dragStart);
+                square.addEventListener('dragend', dragEnd);
+                square.addEventListener('dragover', dragOver);
+                square.addEventListener('dragenter', dragEnter);
+                square.addEventListener('dragleave', dragLeave);
+                square.addEventListener('drop', dragDrop);
+            }
+        }
+
+        function getRandomGem() {
+            if (Math.random() < 0.05) return BOMB;
+            return BASE_COLORS[Math.floor(Math.random() * BASE_COLORS.length)];
+        }
+
+        // --- 拖曳處理 ---
+        let colorBeingDragged, colorBeingReplaced, squareIdBeingDragged, squareIdBeingReplaced;
+
+        function dragStart() {
+            if (State.isPaused) return;
+            colorBeingDragged = this.innerHTML;
+            squareIdBeingDragged = parseInt(this.id);
+            State.userInteracting = true; // 標記為使用者操作
+        }
+        function dragOver(e) { e.preventDefault(); }
+        function dragEnter(e) { e.preventDefault(); }
+        function dragLeave() { }
+        function dragDrop() {
+            if (State.isPaused) return;
+            colorBeingReplaced = this.innerHTML;
+            squareIdBeingReplaced = parseInt(this.id);
+            this.innerHTML = colorBeingDragged;
+            squares[squareIdBeingDragged].innerHTML = colorBeingReplaced;
+        }
+        function dragEnd() {
+            if (State.isPaused) return;
+            let validMoves = [squareIdBeingDragged - 1, squareIdBeingDragged - CONFIG.width, squareIdBeingDragged + 1, squareIdBeingDragged + CONFIG.width];
+            let validMove = validMoves.includes(squareIdBeingReplaced);
+
+            if (squareIdBeingReplaced && validMove) {
+                squareIdBeingReplaced = null;
+                // 拖曳結束後，稍微延遲一點將 userInteracting 設為 false，
+                // 這樣第一波消除會被視為手動，之後的掉落消除視為 Combo
+                setTimeout(() => { State.userInteracting = false; }, 200);
+            } else if (squareIdBeingReplaced && !validMove) {
+                squares[squareIdBeingReplaced].innerHTML = colorBeingReplaced;
+                squares[squareIdBeingDragged].innerHTML = colorBeingDragged;
+                State.userInteracting = false;
+            }
+        }
+
+        // --- 消除與傷害核心 ---
+        function performElimination(indices) {
+            if (indices.size === 0) return;
+            
+            let pointsToAdd = 0;
+            let matchGroups = 0; // 計算消除了幾組(大略計算)
+
+            indices.forEach(index => {
+                if (!squares[index].classList.contains('poof')) {
+                    pointsToAdd += 1;
+                    squares[index].classList.add('poof');
+                }
+            });
+
+            if (pointsToAdd > 0) {
+                // 簡單估算組數: 每3個算一組
+                matchGroups = Math.ceil(pointsToAdd / 3);
+                
+                State.score += pointsToAdd * 10;
+                ui.score.innerText = State.score;
+                
+                // 判斷是否為連鎖 (Combo)
+                // 如果目前不是使用者正在互動(拖曳剛結束)，則視為掉落造成的連鎖
+                const isCombo = !State.userInteracting;
+                
+                if (State.isBossLevel) {
+                    // 傷害計算：每組扣1，連鎖扣10倍
+                    Game.dealDamage(matchGroups, isCombo);
+                } else {
+                    Game.checkWinCondition();
+                }
+            }
+
+            setTimeout(() => {
+                indices.forEach(index => {
+                    squares[index].innerHTML = '';
+                    squares[index].classList.remove('poof');
+                });
+            }, 400);
+        }
+
+        function checkMatches() {
+            // 合併 Row 和 Column 的檢查
+            let allMatched = new Set();
+            
+            // 檢查 Row
+            for (let i = 0; i < 64; i++) {
+                if (i % CONFIG.width > 5) continue;
+                let row = [i, i + 1, i + 2];
+                let color = squares[i].innerHTML;
+                if (row.every(idx => squares[idx].innerHTML === color && color !== '' && !squares[idx].classList.contains('poof'))) {
+                    row.forEach(idx => allMatched.add(idx));
+                }
+            }
+            
+            // 檢查 Column
+            for (let i = 0; i < 47; i++) {
+                let col = [i, i + CONFIG.width, i + CONFIG.width * 2];
+                let color = squares[i].innerHTML;
+                if (col.every(idx => squares[idx].innerHTML === color && color !== '' && !squares[idx].classList.contains('poof'))) {
+                    col.forEach(idx => allMatched.add(idx));
+                }
+            }
+
+            // 炸彈邏輯
+            let finalSet = new Set(allMatched);
+            let bombTriggered = false;
+            allMatched.forEach(index => {
+                if (squares[index].innerHTML === BOMB) {
+                    bombTriggered = true;
+                    let r = Math.floor(index / CONFIG.width);
+                    let c = index % CONFIG.width;
+                    for (let rr = r - 1; rr <= r + 1; rr++) {
+                        for (let cc = c - 1; cc <= c + 1; cc++) {
+                            if (rr >= 0 && rr < CONFIG.width && cc >= 0 && cc < CONFIG.width) {
+                                finalSet.add(rr * CONFIG.width + cc);
+                            }
+                        }
+                    }
+                }
+            });
+            if (bombTriggered) State.score += 50;
+
+            performElimination(finalSet);
+        }
+
+        function moveDown() {
+            let didMove = false;
+            for (let i = 0; i < 55; i++) {
+                if (squares[i + CONFIG.width].innerHTML === '' && !squares[i].classList.contains('poof')) {
+                    squares[i + CONFIG.width].innerHTML = squares[i].innerHTML;
+                    squares[i].innerHTML = '';
+                    didMove = true;
+                }
+            }
+            for (let i = 0; i < CONFIG.width; i++) {
+                if (squares[i].innerHTML === '' && !squares[i].classList.contains('poof')) {
+                    squares[i].innerHTML = getRandomGem();
+                    didMove = true;
+                }
+            }
+            // 如果有方塊掉落，這意味著下一幀的消除可能是連鎖反應
+            // 我們在 moveDown 不直接設標記，而是依賴 dragEnd 的 userInteracting 狀態
+        }
+
+        // 啟動初始化
+        Game.init();
+
+    </script>
+</body>
+</html>
