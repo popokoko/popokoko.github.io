@@ -3,29 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>經典五子棋 - 動態天災版</title>
+    <title>經典五子棋 - 少女粉紅版</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background-color: #fff0f5; /* LavenderBlush */
             font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmZmZmIi8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNlZWVlZWUiLz4KPC9zdmc+');
-            overflow-x: hidden;
+            /* Polka dot pattern in pink */
+            background-image: radial-gradient(#ffb6c1 15%, transparent 15%), radial-gradient(#ffb6c1 15%, transparent 15%);
+            background-position: 0 0, 15px 15px;
+            background-size: 30px 30px;
+            overflow-x: hidden; /* Important for the runner animation */
         }
 
         #game-container {
             position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border-radius: 4px;
+            box-shadow: 0 15px 35px rgba(255, 105, 180, 0.4); /* Pink glow shadow */
+            border-radius: 15px;
             padding: 20px;
-            background: #DCB35C;
-            background: linear-gradient(45deg, #e6c88b 0%, #d4a855 100%);
+            background: #ffc0cb;
+            /* Strawberry Milk Gradient */
+            background: linear-gradient(135deg, #ffe4e1 0%, #ffb6c1 100%);
+            border: 4px solid #fff;
             transition: transform 0.1s;
         }
 
@@ -52,9 +57,9 @@
         canvas {
             display: block;
             cursor: pointer;
-            background-color: #DCB35C;
-            border-radius: 2px;
+            border-radius: 8px;
             touch-action: none;
+            background-color: transparent; 
         }
 
         #ui-layer {
@@ -68,16 +73,17 @@
         }
 
         .card {
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             padding: 10px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(255, 182, 193, 0.3);
             display: flex;
             align-items: center;
             gap: 10px;
+            border: 2px solid #ffe4e1;
         }
 
-        h1 { margin: 0; font-size: 1.5rem; color: #333; }
+        h1 { margin: 0; font-size: 1.5rem; color: #d63384; /* Dark Pink */ }
 
         .turn-indicator {
             display: flex;
@@ -85,6 +91,7 @@
             gap: 10px;
             font-weight: bold;
             font-size: 1.1rem;
+            color: #d63384;
         }
 
         .stone-icon {
@@ -94,8 +101,8 @@
             display: inline-block;
             border: 1px solid rgba(0,0,0,0.1);
         }
-        .stone-black { background: radial-gradient(circle at 30% 30%, #555, #000); }
-        .stone-white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1px solid #ccc; }
+        .stone-black { background: radial-gradient(circle at 30% 30%, #555, #222); }
+        .stone-white { background: radial-gradient(circle at 30% 30%, #fff, #f0f0f0); border: 1px solid #ffb6c1; }
 
         /* Controls */
         .controls {
@@ -106,21 +113,33 @@
         }
         
         select, button {
-            padding: 8px 12px;
+            padding: 8px 15px;
             font-size: 0.95rem;
-            border-radius: 4px;
-            border: 1px solid #ccc;
+            border-radius: 20px;
+            border: 2px solid #ffb6c1;
             font-family: inherit;
             cursor: pointer;
+            outline: none;
         }
         
+        select {
+            background-color: #fff;
+            color: #d63384;
+        }
+
         button {
-            background-color: #5C4033;
+            background-color: #ff69b4; /* Hot Pink */
             color: white;
             border: none;
-            transition: background 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #db7093; /* 3D effect */
+            transition: transform 0.1s, box-shadow 0.1s;
         }
-        button:hover { background-color: #7a5846; }
+        button:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #db7093;
+        }
+        button:hover { background-color: #ff1493; }
 
         .toggle-label {
             display: flex;
@@ -128,55 +147,125 @@
             gap: 5px;
             font-size: 0.95rem;
             background: #fff;
-            padding: 8px 12px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid #ffb6c1;
             cursor: pointer;
             user-select: none;
+            color: #d63384;
         }
-        .toggle-label input { cursor: pointer; width: 16px; height: 16px; }
+        .toggle-label input { cursor: pointer; width: 16px; height: 16px; accent-color: #ff69b4; }
 
         /* Modal */
         #modal-overlay {
             display: none;
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(255, 192, 203, 0.6); /* Pinkish overlay */
+            backdrop-filter: blur(2px);
             justify-content: center;
             align-items: center;
-            border-radius: 4px;
+            border-radius: 15px;
             z-index: 10;
         }
 
         #modal-content {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
+            padding: 40px;
+            border-radius: 25px;
             text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(219, 112, 147, 0.3);
+            border: 4px solid #ffb6c1;
             animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        #winner-text { font-size: 2rem; margin-bottom: 20px; color: #333; }
+        #winner-text { font-size: 2rem; margin-bottom: 20px; color: #ff1493; }
 
-        /* Alert Toast */
+        /* --- Full Screen Disaster Alert --- */
         #disaster-alert {
             position: absolute;
-            top: 20px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0,0,0,0.8);
-            color: white;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-weight: bold;
+            transform: translate(-50%, -50%) scale(0);
+            
+            font-size: 5rem; 
+            font-weight: 900;
+            width: 100%;
+            text-align: center;
+            background: rgba(50, 0, 20, 0.7); /* Dark reddish background */
+            padding: 40px 0;
+            
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
             pointer-events: none;
-            z-index: 5;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 50;
+            
             white-space: nowrap;
-            border: 2px solid gold;
+            text-shadow: 0 0 30px currentColor;
+        }
+        
+        #disaster-alert.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* --- Start Game Overlay --- */
+        #start-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(3px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            border-radius: 11px;
+        }
+
+        #start-btn {
+            font-size: 2rem;
+            padding: 15px 50px;
+            border-radius: 50px;
+            background-color: #ff1493;
+            color: white;
+            border: 4px solid #fff;
+            box-shadow: 0 0 15px #ff69b4, 0 6px 0 #c71585;
+            cursor: pointer;
+            animation: pulse 1.5s infinite ease-in-out;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+        }
+
+        #start-btn:hover {
+            transform: scale(1.05);
+            background-color: #ff0080;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- Start Game Runner Animation --- */
+        #start-runner {
+            position: fixed;
+            top: 50%;
+            left: 100vw; /* Start off-screen right */
+            transform: translateY(-50%);
+            height: 350px; /* Big enough to be seen */
+            z-index: 9999; /* Top most */
+            pointer-events: none; /* Let clicks pass through */
+            display: none; /* Hidden by default */
+        }
+
+        #start-runner.active {
+            display: block;
+            animation: run-across 2.5s linear forwards;
+        }
+
+        @keyframes run-across {
+            0% { left: 100vw; }
+            100% { left: -600px; } /* Run until fully off-screen left */
         }
 
         @media (max-width: 650px) {
@@ -184,14 +273,19 @@
             canvas { width: 95vw; height: 95vw; }
             .controls { flex-direction: column; align-items: stretch; }
             .toggle-label { justify-content: center; }
+            #disaster-alert { font-size: 2.5rem; padding: 20px 0; }
+            #start-runner { height: 180px; } /* Smaller runner on mobile */
         }
     </style>
 </head>
 <body>
 
+    <!-- Runner Image (Hidden initially) -->
+    <img id="start-runner" src="https://popokoko.github.io/love_us_run-removebg-preview.png" alt="Let's Go!">
+
     <div id="ui-layer">
         <div class="card">
-            <h1>五子棋</h1>
+            <h1>🌸 少女五子棋</h1>
         </div>
         
         <div class="card">
@@ -219,6 +313,11 @@
     </div>
 
     <div id="game-container">
+        <!-- Start Overlay -->
+        <div id="start-overlay">
+            <button id="start-btn" onclick="startGame()">💖 開始對戰</button>
+        </div>
+
         <div id="disaster-alert">⚠️ 天災預警！</div>
         <canvas id="board" width="600" height="600"></canvas>
         <div id="modal-overlay">
@@ -241,6 +340,12 @@
         const levelSelect = document.getElementById('ai-level');
         const disasterToggle = document.getElementById('disaster-toggle');
         const disasterAlert = document.getElementById('disaster-alert');
+        const startOverlay = document.getElementById('start-overlay');
+        const startRunner = document.getElementById('start-runner');
+
+        // Load Custom Image for Disaster
+        const customImage = new Image();
+        customImage.src = 'https://popokoko.github.io/mywife.png';
 
         // Game Constants
         const GRID_SIZE = 15;
@@ -253,18 +358,19 @@
         // 1: Black, 2: White
         // -1: Meteor Crater
         // -2: Tornado Debris
-        // -3: Heart Stone
+        // -3: Love/Custom Image
         // -4: Tear Puddle
         let board = [];
         let currentPlayer = 1;
         let isGameOver = false;
         let lastMove = null;
         let isThinking = false;
+        let isGameActive = false; // Controls if the game has started
         
         // Disaster & Animation State
         let disasterTimeoutId = null;
-        let particles = []; // {x, y, vx, vy, life, color, size, type}
-        let activeEffects = []; // {type, x, y, progress, targetX, targetY}
+        let particles = [];
+        let activeEffects = []; 
         let animationFrameId = null;
 
         function init() {
@@ -276,7 +382,9 @@
             CELL_SIZE = 600 / (GRID_SIZE + 1);
             PADDING = CELL_SIZE;
 
-            resetGame();
+            // Initial Draw without starting logic
+            board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+            draw();
             
             canvas.addEventListener('click', handleInput);
             canvas.addEventListener('touchend', (e) => {
@@ -286,14 +394,16 @@
 
             modeSelect.addEventListener('change', () => {
                 levelSelect.style.display = modeSelect.value === 'pve' ? 'inline-block' : 'none';
-                resetGame();
+                if(isGameActive) resetGame();
             });
             
             disasterToggle.addEventListener('change', () => {
-                if (disasterToggle.checked) {
-                    scheduleNextDisaster();
-                } else {
-                    clearTimeout(disasterTimeoutId);
+                if (isGameActive) {
+                    if (disasterToggle.checked) {
+                        scheduleNextDisaster();
+                    } else {
+                        clearTimeout(disasterTimeoutId);
+                    }
                 }
             });
 
@@ -301,7 +411,26 @@
             animate();
         }
 
+        function startGame() {
+            startOverlay.style.display = 'none';
+            isGameActive = true;
+            
+            // Trigger Runner Animation
+            startRunner.classList.remove('active');
+            void startRunner.offsetWidth; // Trigger reflow
+            startRunner.classList.add('active');
+            
+            // Cleanup animation class after it finishes (3s)
+            setTimeout(() => {
+                startRunner.classList.remove('active');
+            }, 3000);
+
+            resetGame();
+        }
+
         function resetGame() {
+            if (!isGameActive) return;
+
             board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
             currentPlayer = 1;
             isGameOver = false;
@@ -333,7 +462,7 @@
         // --- Disaster Logic ---
         
         function scheduleNextDisaster() {
-            if (isGameOver || !disasterToggle.checked) return;
+            if (isGameOver || !disasterToggle.checked || !isGameActive) return;
             
             // Chaos happens more often: 4s to 12s
             const delay = Math.floor(Math.random() * 8000) + 4000;
@@ -345,7 +474,7 @@
         }
 
         function triggerDisaster() {
-            if (isGameOver) return;
+            if (isGameOver || !isGameActive) return;
 
             const x = Math.floor(Math.random() * GRID_SIZE);
             const y = Math.floor(Math.random() * GRID_SIZE);
@@ -354,7 +483,7 @@
             const types = [
                 { id: -1, name: 'meteor', text: '🔥 隕石衝擊！', color: '#FF4500' },
                 { id: -2, name: 'tornado', text: '🌪️ 龍捲風來襲！', color: '#00FFFF' },
-                { id: -3, name: 'love', text: '💖 天降愛意！', color: '#FF69B4' },
+                { id: -3, name: 'love', text: '💖 老婆降臨！', color: '#FF69B4' },
                 { id: -4, name: 'tear', text: '💧 相思成災...', color: '#4169E1' }
             ];
             
@@ -422,10 +551,17 @@
 
         function showAlert(text, color) {
             disasterAlert.textContent = text;
-            disasterAlert.style.borderColor = color;
             disasterAlert.style.color = color;
-            disasterAlert.style.opacity = 1;
-            setTimeout(() => { disasterAlert.style.opacity = 0; }, 2500);
+            // Add text shadow glow effect matching the color
+            disasterAlert.style.textShadow = `0 0 20px ${color}, 2px 2px 0 #000`;
+            
+            // Trigger animation class
+            disasterAlert.classList.add('active');
+            
+            // Remove after delay
+            setTimeout(() => { 
+                disasterAlert.classList.remove('active');
+            }, 2000);
         }
 
         // --- Animation Loop ---
@@ -451,7 +587,7 @@
                     }
                 } 
                 else if (eff.type === 'love') {
-                    // Float down slowly
+                    // Float down slowly (Image float)
                     eff.y += 5;
                     if (eff.y >= eff.targetY) {
                         applyDisasterDamage(eff);
@@ -501,7 +637,8 @@
             // 1. Draw Grid
             ctx.beginPath();
             ctx.lineWidth = 1;
-            ctx.strokeStyle = "#333";
+            // Changed grid line color to soft raspberry
+            ctx.strokeStyle = "#8B4C5E"; 
             for (let i = 0; i < GRID_SIZE; i++) {
                 ctx.moveTo(PADDING, PADDING + i * CELL_SIZE);
                 ctx.lineTo(PADDING + (GRID_SIZE - 1) * CELL_SIZE, PADDING + i * CELL_SIZE);
@@ -512,7 +649,7 @@
 
             // 2. Draw Stars
             const stars = [{x: 3, y: 3}, {x: 11, y: 3}, {x: 7, y: 7}, {x: 3, y: 11}, {x: 11, y: 11}];
-            ctx.fillStyle = "#333";
+            ctx.fillStyle = "#8B4C5E";
             stars.forEach(star => {
                 ctx.beginPath();
                 ctx.arc(PADDING + star.x * CELL_SIZE, PADDING + star.y * CELL_SIZE, 4, 0, Math.PI * 2);
@@ -533,7 +670,7 @@
                 ctx.beginPath();
                 const cx = PADDING + lastMove.x * CELL_SIZE;
                 const cy = PADDING + lastMove.y * CELL_SIZE;
-                ctx.fillStyle = "red";
+                ctx.fillStyle = "#ff1493"; // Deep pink highlight
                 ctx.fillRect(cx - 4, cy - 4, 8, 8);
             }
 
@@ -550,13 +687,20 @@
             const radius = CELL_SIZE * 0.45;
             ctx.beginPath();
             ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-            ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
+            ctx.shadowColor = "rgba(0, 0, 0, 0.2)"; // Softer shadow
             ctx.shadowBlur = 5;
             ctx.shadowOffsetX = 2;
             ctx.shadowOffsetY = 2;
             const grad = ctx.createRadialGradient(cx - radius/3, cy - radius/3, radius/10, cx, cy, radius);
-            if (type === 1) { grad.addColorStop(0, "#666"); grad.addColorStop(1, "#000"); } 
-            else { grad.addColorStop(0, "#fff"); grad.addColorStop(1, "#ccc"); }
+            if (type === 1) { 
+                // Black stone: Dark Chocolate
+                grad.addColorStop(0, "#554444"); 
+                grad.addColorStop(1, "#1a1a1a"); 
+            } else { 
+                // White stone: Cream
+                grad.addColorStop(0, "#fff"); 
+                grad.addColorStop(1, "#f0e0e0"); 
+            }
             ctx.fillStyle = grad;
             ctx.fill();
             ctx.shadowColor = "transparent";
@@ -571,7 +715,7 @@
             ctx.translate(cx, cy);
 
             if (type === -1) { // Meteor Crater
-                ctx.fillStyle = "#444"; // Charred ground
+                ctx.fillStyle = "#444";
                 ctx.beginPath();
                 ctx.arc(0, 0, size, 0, Math.PI*2);
                 ctx.fill();
@@ -588,25 +732,31 @@
                 ctx.fill();
                 ctx.strokeStyle = "#555";
                 ctx.lineWidth = 2;
-                // Draw spiralish debris
                 ctx.beginPath();
                 ctx.arc(0, 0, size*0.5, 0, Math.PI*1.5);
                 ctx.stroke();
-            } else if (type === -3) { // Love Stone
-                ctx.fillStyle = "#FF69B4";
-                ctx.beginPath();
-                // Heart shape
-                const topCurveHeight = size * 0.3;
-                ctx.moveTo(0, topCurveHeight);
-                ctx.bezierCurveTo(0, 0, -size, 0, -size, topCurveHeight);
-                ctx.bezierCurveTo(-size, (size + topCurveHeight) / 2, 0, size, 0, size + topCurveHeight);
-                ctx.bezierCurveTo(0, size, size, (size + topCurveHeight) / 2, size, topCurveHeight);
-                ctx.bezierCurveTo(size, 0, 0, 0, 0, topCurveHeight);
-                ctx.fill();
+            } else if (type === -3) { // Love/Custom Image Debris
+                if (customImage.complete) {
+                    // Draw circular clipped image
+                    ctx.beginPath();
+                    ctx.arc(0, 0, size * 1.2, 0, Math.PI * 2);
+                    ctx.clip();
+                    ctx.drawImage(customImage, -size*1.2, -size*1.2, size*2.4, size*2.4);
+                } else {
+                    // Fallback to Heart
+                    ctx.fillStyle = "#FF69B4";
+                    ctx.beginPath();
+                    const topCurveHeight = size * 0.3;
+                    ctx.moveTo(0, topCurveHeight);
+                    ctx.bezierCurveTo(0, 0, -size, 0, -size, topCurveHeight);
+                    ctx.bezierCurveTo(-size, (size + topCurveHeight) / 2, 0, size, 0, size + topCurveHeight);
+                    ctx.bezierCurveTo(0, size, size, (size + topCurveHeight) / 2, size, topCurveHeight);
+                    ctx.bezierCurveTo(size, 0, 0, 0, 0, topCurveHeight);
+                    ctx.fill();
+                }
             } else if (type === -4) { // Tear Puddle
                 ctx.fillStyle = "#4169E1";
                 ctx.beginPath();
-                // Teardrop / Puddle
                 ctx.arc(0, size*0.4, size*0.6, 0, Math.PI*2);
                 ctx.fill();
                 ctx.beginPath();
@@ -624,7 +774,6 @@
                 ctx.translate(eff.x, eff.y);
 
                 if (eff.type === 'meteor') {
-                    // Fireball
                     const grad = ctx.createRadialGradient(0, 0, 5, 0, 0, 20);
                     grad.addColorStop(0, '#ffff00');
                     grad.addColorStop(0.5, '#ffaa00');
@@ -635,7 +784,6 @@
                     ctx.fill();
                 } 
                 else if (eff.type === 'tornado') {
-                    // Spinning Spiral
                     ctx.rotate(Date.now() / 100);
                     ctx.strokeStyle = "rgba(0, 255, 255, 0.6)";
                     ctx.lineWidth = 3;
@@ -646,13 +794,16 @@
                     ctx.stroke();
                 }
                 else if (eff.type === 'love') {
-                    // Big Heart
-                    ctx.fillStyle = "#FF1493";
-                    ctx.font = "30px Arial";
-                    ctx.fillText("❤", -15, 10);
+                    // Falling Custom Image
+                    if (customImage.complete) {
+                        ctx.drawImage(customImage, -30, -30, 60, 60);
+                    } else {
+                        ctx.fillStyle = "#FF1493";
+                        ctx.font = "30px Arial";
+                        ctx.fillText("❤", -15, 10);
+                    }
                 }
                 else if (eff.type === 'tear') {
-                    // Big Tear
                     ctx.fillStyle = "#00BFFF";
                     ctx.font = "30px Arial";
                     ctx.fillText("💧", -15, 10);
@@ -669,6 +820,7 @@
                 ctx.beginPath();
                 
                 if (p.type === 'love') {
+                     // Love particles also
                     ctx.font = "12px Arial";
                     ctx.fillText("❤", p.x, p.y);
                 } else if (p.type === 'tornado') {
@@ -682,10 +834,10 @@
             ctx.globalAlpha = 1.0;
         }
 
-        // --- Logic & Input (Same as before, just handling -values) ---
+        // --- Logic & Input (Same as before) ---
 
         function handleInput(e) {
-            if (isGameOver || isThinking) return;
+            if (isGameOver || isThinking || !isGameActive) return;
             if (modeSelect.value === 'pve' && currentPlayer === 2) return;
 
             const rect = canvas.getBoundingClientRect();
@@ -698,7 +850,6 @@
             const gridY = Math.round((mouseY - PADDING) / CELL_SIZE);
 
             if (gridX >= 0 && gridX < GRID_SIZE && gridY >= 0 && gridY < GRID_SIZE) {
-                // Can only place on empty (0). Blocked by players (>0) or disasters (<0)
                 if (board[gridY][gridX] === 0) {
                     placeStone(gridX, gridY);
                 }
@@ -708,7 +859,6 @@
         function placeStone(x, y) {
             board[y][x] = currentPlayer;
             lastMove = {x, y};
-            // Trigger a sound effect or particle for placement? Maybe later.
             
             if (checkWin(x, y, currentPlayer)) {
                 endGame(currentPlayer);
@@ -725,6 +875,8 @@
         }
 
         function makeAIMove() {
+            if (!isGameActive || isGameOver) return; // Safety check
+            
             const level = parseInt(levelSelect.value);
             let move;
             if (level === 1) move = getLevel1Move();
@@ -748,7 +900,6 @@
             let candidates = [];
             for (let y = 0; y < GRID_SIZE; y++) {
                 for (let x = 0; x < GRID_SIZE; x++) {
-                    // Ignore disasters/opponents in check, just look for valid spot near something non-empty
                     if (board[y][x] === 0 && hasNeighbor(x, y, 2)) {
                         candidates.push({x, y});
                     }
@@ -805,7 +956,6 @@
                     if (dx === 0 && dy === 0) continue;
                     let nx = x + dx, ny = y + dy;
                     if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
-                        // Anything not 0 (including disasters) attracts attention
                         if (board[ny][nx] !== 0) return true;
                     }
                 }
@@ -825,7 +975,6 @@
         function evaluateLine(x, y, dx, dy, player) {
             let count = 1; 
             let blockedEnds = 0;
-            // Check positive
             let i = 1;
             while (true) {
                 let nx = x + dx * i;
@@ -834,10 +983,9 @@
                 const val = board[ny][nx];
                 if (val === player) { count++; }
                 else if (val === 0) { break; } 
-                else { blockedEnds++; break; } // Blocked by Opponent or Disaster (<0)
+                else { blockedEnds++; break; } 
                 i++;
             }
-            // Check negative
             i = 1;
             while (true) {
                 let nx = x - dx * i;
