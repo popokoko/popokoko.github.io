@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>經典五子棋 - 動態天災版</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmZmZmIi8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNlZWVlZWUiLz4KPC9zdmc+');
+            overflow-x: hidden;
+        }
+
+        #game-container {
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-radius: 4px;
+            padding: 20px;
+            background: #DCB35C;
+            background: linear-gradient(45deg, #e6c88b 0%, #d4a855 100%);
+            transition: transform 0.1s;
+        }
+
+        /* Shake Animation */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .shake-effect {
+            animation: shake 0.5s;
+            animation-iteration-count: 1;
+        }
+
+        canvas {
+            display: block;
+            cursor: pointer;
+            background-color: #DCB35C;
+            border-radius: 2px;
+            touch-action: none;
+        }
+
+        #ui-layer {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            width: 600px;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .card {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; color: #333; }
+
+        .turn-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .stone-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .stone-black { background: radial-gradient(circle at 30% 30%, #555, #000); }
+        .stone-white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1px solid #ccc; }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        select, button {
+            padding: 8px 12px;
+            font-size: 0.95rem;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        
+        button {
+            background-color: #5C4033;
+            color: white;
+            border: none;
+            transition: background 0.2s;
+        }
+        button:hover { background-color: #7a5846; }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+            background: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            user-select: none;
+        }
+        .toggle-label input { cursor: pointer; width: 16px; height: 16px; }
+
+        /* Modal */
+        #modal-overlay {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            z-index: 10;
+        }
+
+        #modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        #winner-text { font-size: 2rem; margin-bottom: 20px; color: #333; }
+
+        /* Alert Toast */
+        #disaster-alert {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 5;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            white-space: nowrap;
+            border: 2px solid gold;
+        }
+
+        @media (max-width: 650px) {
+            #ui-layer { width: 95vw; flex-direction: column; align-items: stretch; }
+            canvas { width: 95vw; height: 95vw; }
+            .controls { flex-direction: column; align-items: stretch; }
+            .toggle-label { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ui-layer">
+        <div class="card">
+            <h1>五子棋</h1>
+        </div>
+        
+        <div class="card">
+            <div class="turn-indicator">
+                <span id="current-stone" class="stone-icon stone-black"></span>
+                <span id="status-text">黑子回合</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <select id="game-mode">
+                <option value="pve">人機對戰</option>
+                <option value="pvp">雙人對戰</option>
+            </select>
+            <select id="ai-level">
+                <option value="1">AI: 簡單</option>
+                <option value="2" selected>AI: 普通</option>
+                <option value="3">AI: 大師</option>
+            </select>
+            <label class="toggle-label" title="隨機出現特效災害">
+                <input type="checkbox" id="disaster-toggle"> 🌪️ 動態天災
+            </label>
+            <button onclick="resetGame()">重新開始</button>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <div id="disaster-alert">⚠️ 天災預警！</div>
+        <canvas id="board" width="600" height="600"></canvas>
+        <div id="modal-overlay">
+            <div id="modal-content">
+                <div id="winner-text">黑子獲勝!</div>
+                <button onclick="resetGame()">再來一局</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('board');
+        const ctx = canvas.getContext('2d');
+        const gameContainer = document.getElementById('game-container');
+        const statusText = document.getElementById('status-text');
+        const currentStoneIcon = document.getElementById('current-stone');
+        const modal = document.getElementById('modal-overlay');
+        const winnerText = document.getElementById('winner-text');
+        const modeSelect = document.getElementById('game-mode');
+        const levelSelect = document.getElementById('ai-level');
+        const disasterToggle = document.getElementById('disaster-toggle');
+        const disasterAlert = document.getElementById('disaster-alert');
+
+        // Game Constants
+        const GRID_SIZE = 15;
+        let CELL_SIZE = 600 / (GRID_SIZE + 1);
+        let PADDING = CELL_SIZE;
+
+        // Game State
+        // Board Values: 
+        // 0: Empty
+        // 1: Black, 2: White
+        // -1: Meteor Crater
+        // -2: Tornado Debris
+        // -3: Heart Stone
+        // -4: Tear Puddle
+        let board = [];
+        let currentPlayer = 1;
+        let isGameOver = false;
+        let lastMove = null;
+        let isThinking = false;
+        
+        // Disaster & Animation State
+        let disasterTimeoutId = null;
+        let particles = []; // {x, y, vx, vy, life, color, size, type}
+        let activeEffects = []; // {type, x, y, progress, targetX, targetY}
+        let animationFrameId = null;
+
+        function init() {
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = 600 * dpr;
+            canvas.height = 600 * dpr;
+            ctx.scale(dpr, dpr);
+            
+            CELL_SIZE = 600 / (GRID_SIZE + 1);
+            PADDING = CELL_SIZE;
+
+            resetGame();
+            
+            canvas.addEventListener('click', handleInput);
+            canvas.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                handleInput(e.changedTouches[0]);
+            }, {passive: false});
+
+            modeSelect.addEventListener('change', () => {
+                levelSelect.style.display = modeSelect.value === 'pve' ? 'inline-block' : 'none';
+                resetGame();
+            });
+            
+            disasterToggle.addEventListener('change', () => {
+                if (disasterToggle.checked) {
+                    scheduleNextDisaster();
+                } else {
+                    clearTimeout(disasterTimeoutId);
+                }
+            });
+
+            // Start Animation Loop
+            animate();
+        }
+
+        function resetGame() {
+            board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+            currentPlayer = 1;
+            isGameOver = false;
+            lastMove = null;
+            isThinking = false;
+            modal.style.display = 'none';
+            particles = [];
+            activeEffects = [];
+            
+            clearTimeout(disasterTimeoutId);
+            if (disasterToggle.checked) {
+                scheduleNextDisaster();
+            }
+
+            updateUI();
+        }
+
+        function updateUI() {
+            if (currentPlayer === 1) {
+                statusText.textContent = "黑子回合";
+                currentStoneIcon.className = "stone-icon stone-black";
+            } else {
+                const mode = modeSelect.value;
+                statusText.textContent = mode === 'pve' ? "電腦思考中..." : "白子回合";
+                currentStoneIcon.className = "stone-icon stone-white";
+            }
+        }
+
+        // --- Disaster Logic ---
+        
+        function scheduleNextDisaster() {
+            if (isGameOver || !disasterToggle.checked) return;
+            
+            // Chaos happens more often: 4s to 12s
+            const delay = Math.floor(Math.random() * 8000) + 4000;
+            
+            disasterTimeoutId = setTimeout(() => {
+                triggerDisaster();
+                scheduleNextDisaster();
+            }, delay);
+        }
+
+        function triggerDisaster() {
+            if (isGameOver) return;
+
+            const x = Math.floor(Math.random() * GRID_SIZE);
+            const y = Math.floor(Math.random() * GRID_SIZE);
+
+            // Random Disaster Type
+            const types = [
+                { id: -1, name: 'meteor', text: '🔥 隕石衝擊！', color: '#FF4500' },
+                { id: -2, name: 'tornado', text: '🌪️ 龍捲風來襲！', color: '#00FFFF' },
+                { id: -3, name: 'love', text: '💖 天降愛意！', color: '#FF69B4' },
+                { id: -4, name: 'tear', text: '💧 相思成災...', color: '#4169E1' }
+            ];
+            
+            const disaster = types[Math.floor(Math.random() * types.length)];
+
+            // Start Animation Effect
+            spawnDisasterEffect(disaster, x, y);
+            
+            // Show Alert
+            showAlert(disaster.text, disaster.color);
+        }
+
+        function spawnDisasterEffect(disaster, gridX, gridY) {
+            const targetX = PADDING + gridX * CELL_SIZE;
+            const targetY = PADDING + gridY * CELL_SIZE;
+
+            // Add to active effects for animation
+            activeEffects.push({
+                type: disaster.name,
+                gridX: gridX,
+                gridY: gridY,
+                disasterId: disaster.id,
+                progress: 0,
+                x: disaster.name === 'meteor' || disaster.name === 'love' || disaster.name === 'tear' ? targetX : targetX - 100, // Start pos
+                y: disaster.name === 'meteor' || disaster.name === 'love' || disaster.name === 'tear' ? -50 : targetY, 
+                targetX: targetX,
+                targetY: targetY
+            });
+        }
+
+        function applyDisasterDamage(effect) {
+            // Apply permanent board change
+            board[effect.gridY][effect.gridX] = effect.disasterId;
+            
+            // Screen Shake
+            gameContainer.classList.remove('shake-effect');
+            void gameContainer.offsetWidth;
+            gameContainer.classList.add('shake-effect');
+
+            // Explosion Particles
+            spawnParticles(effect.targetX, effect.targetY, effect.type);
+        }
+
+        function spawnParticles(x, y, type) {
+            let count = 20;
+            let color = '#fff';
+            
+            if (type === 'meteor') { count = 30; color = '#ffaa00'; }
+            else if (type === 'tornado') { count = 20; color = '#88ffff'; }
+            else if (type === 'love') { count = 15; color = '#ff69b4'; }
+            else if (type === 'tear') { count = 15; color = '#4169e1'; }
+
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 10,
+                    vy: (Math.random() - 0.5) * 10,
+                    life: 1.0,
+                    color: color,
+                    type: type
+                });
+            }
+        }
+
+        function showAlert(text, color) {
+            disasterAlert.textContent = text;
+            disasterAlert.style.borderColor = color;
+            disasterAlert.style.color = color;
+            disasterAlert.style.opacity = 1;
+            setTimeout(() => { disasterAlert.style.opacity = 0; }, 2500);
+        }
+
+        // --- Animation Loop ---
+
+        function animate() {
+            // Always clear and redraw to handle particles/effects
+            draw(); 
+            updateEffects();
+            requestAnimationFrame(animate);
+        }
+
+        function updateEffects() {
+            // Update Active Effects (Falling/Moving)
+            for (let i = activeEffects.length - 1; i >= 0; i--) {
+                let eff = activeEffects[i];
+                
+                if (eff.type === 'meteor') {
+                    // Fall down
+                    eff.y += 15; 
+                    if (eff.y >= eff.targetY) {
+                        applyDisasterDamage(eff);
+                        activeEffects.splice(i, 1);
+                    }
+                } 
+                else if (eff.type === 'love') {
+                    // Float down slowly
+                    eff.y += 5;
+                    if (eff.y >= eff.targetY) {
+                        applyDisasterDamage(eff);
+                        activeEffects.splice(i, 1);
+                    }
+                }
+                else if (eff.type === 'tear') {
+                    // Rain down
+                    eff.y += 8;
+                    if (eff.y >= eff.targetY) {
+                        applyDisasterDamage(eff);
+                        activeEffects.splice(i, 1);
+                    }
+                }
+                else if (eff.type === 'tornado') {
+                    // Move horizontally
+                    eff.x += (eff.targetX - eff.x) * 0.1;
+                    eff.progress += 0.05;
+                    if (Math.abs(eff.x - eff.targetX) < 5 && eff.progress > 1) {
+                        applyDisasterDamage(eff);
+                        activeEffects.splice(i, 1);
+                    }
+                }
+            }
+
+            // Update Particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= 0.02;
+                
+                // Gravity for some
+                if (p.type === 'tear' || p.type === 'meteor') p.vy += 0.2;
+
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+        }
+
+        // --- Drawing Functions ---
+
+        function draw() {
+            ctx.clearRect(0, 0, 600, 600);
+
+            // 1. Draw Grid
+            ctx.beginPath();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "#333";
+            for (let i = 0; i < GRID_SIZE; i++) {
+                ctx.moveTo(PADDING, PADDING + i * CELL_SIZE);
+                ctx.lineTo(PADDING + (GRID_SIZE - 1) * CELL_SIZE, PADDING + i * CELL_SIZE);
+                ctx.moveTo(PADDING + i * CELL_SIZE, PADDING);
+                ctx.lineTo(PADDING + i * CELL_SIZE, PADDING + (GRID_SIZE - 1) * CELL_SIZE);
+            }
+            ctx.stroke();
+
+            // 2. Draw Stars
+            const stars = [{x: 3, y: 3}, {x: 11, y: 3}, {x: 7, y: 7}, {x: 3, y: 11}, {x: 11, y: 11}];
+            ctx.fillStyle = "#333";
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(PADDING + star.x * CELL_SIZE, PADDING + star.y * CELL_SIZE, 4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // 3. Draw Board Objects (Stones & Disasters)
+            for (let y = 0; y < GRID_SIZE; y++) {
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    const val = board[y][x];
+                    if (val > 0) drawStone(x, y, val);
+                    else if (val < 0) drawDisasterResult(x, y, val);
+                }
+            }
+
+            // 4. Highlight Last Move
+            if (lastMove && board[lastMove.y][lastMove.x] > 0) {
+                ctx.beginPath();
+                const cx = PADDING + lastMove.x * CELL_SIZE;
+                const cy = PADDING + lastMove.y * CELL_SIZE;
+                ctx.fillStyle = "red";
+                ctx.fillRect(cx - 4, cy - 4, 8, 8);
+            }
+
+            // 5. Draw Active Effects (In Flight)
+            drawActiveEffects();
+
+            // 6. Draw Particles
+            drawParticles();
+        }
+
+        function drawStone(x, y, type) {
+            const cx = PADDING + x * CELL_SIZE;
+            const cy = PADDING + y * CELL_SIZE;
+            const radius = CELL_SIZE * 0.45;
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+            ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
+            ctx.shadowBlur = 5;
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+            const grad = ctx.createRadialGradient(cx - radius/3, cy - radius/3, radius/10, cx, cy, radius);
+            if (type === 1) { grad.addColorStop(0, "#666"); grad.addColorStop(1, "#000"); } 
+            else { grad.addColorStop(0, "#fff"); grad.addColorStop(1, "#ccc"); }
+            ctx.fillStyle = grad;
+            ctx.fill();
+            ctx.shadowColor = "transparent";
+        }
+
+        function drawDisasterResult(x, y, type) {
+            const cx = PADDING + x * CELL_SIZE;
+            const cy = PADDING + y * CELL_SIZE;
+            const size = CELL_SIZE * 0.4;
+            
+            ctx.save();
+            ctx.translate(cx, cy);
+
+            if (type === -1) { // Meteor Crater
+                ctx.fillStyle = "#444"; // Charred ground
+                ctx.beginPath();
+                ctx.arc(0, 0, size, 0, Math.PI*2);
+                ctx.fill();
+                ctx.strokeStyle = "#FF4500";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(-size*0.7, -size*0.7); ctx.lineTo(size*0.7, size*0.7);
+                ctx.moveTo(size*0.7, -size*0.7); ctx.lineTo(-size*0.7, size*0.7);
+                ctx.stroke();
+            } else if (type === -2) { // Tornado Debris
+                ctx.fillStyle = "#aaa";
+                ctx.beginPath();
+                ctx.arc(0, 0, size*0.8, 0, Math.PI*2);
+                ctx.fill();
+                ctx.strokeStyle = "#555";
+                ctx.lineWidth = 2;
+                // Draw spiralish debris
+                ctx.beginPath();
+                ctx.arc(0, 0, size*0.5, 0, Math.PI*1.5);
+                ctx.stroke();
+            } else if (type === -3) { // Love Stone
+                ctx.fillStyle = "#FF69B4";
+                ctx.beginPath();
+                // Heart shape
+                const topCurveHeight = size * 0.3;
+                ctx.moveTo(0, topCurveHeight);
+                ctx.bezierCurveTo(0, 0, -size, 0, -size, topCurveHeight);
+                ctx.bezierCurveTo(-size, (size + topCurveHeight) / 2, 0, size, 0, size + topCurveHeight);
+                ctx.bezierCurveTo(0, size, size, (size + topCurveHeight) / 2, size, topCurveHeight);
+                ctx.bezierCurveTo(size, 0, 0, 0, 0, topCurveHeight);
+                ctx.fill();
+            } else if (type === -4) { // Tear Puddle
+                ctx.fillStyle = "#4169E1";
+                ctx.beginPath();
+                // Teardrop / Puddle
+                ctx.arc(0, size*0.4, size*0.6, 0, Math.PI*2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(0, -size);
+                ctx.quadraticCurveTo(size*0.6, size*0.4, 0, size*0.4);
+                ctx.quadraticCurveTo(-size*0.6, size*0.4, 0, -size);
+                ctx.fill();
+            }
+            ctx.restore();
+        }
+
+        function drawActiveEffects() {
+            activeEffects.forEach(eff => {
+                ctx.save();
+                ctx.translate(eff.x, eff.y);
+
+                if (eff.type === 'meteor') {
+                    // Fireball
+                    const grad = ctx.createRadialGradient(0, 0, 5, 0, 0, 20);
+                    grad.addColorStop(0, '#ffff00');
+                    grad.addColorStop(0.5, '#ffaa00');
+                    grad.addColorStop(1, 'transparent');
+                    ctx.fillStyle = grad;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 20, 0, Math.PI*2);
+                    ctx.fill();
+                } 
+                else if (eff.type === 'tornado') {
+                    // Spinning Spiral
+                    ctx.rotate(Date.now() / 100);
+                    ctx.strokeStyle = "rgba(0, 255, 255, 0.6)";
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    for(let i=0; i<3; i++) {
+                        ctx.arc(0, i*5, 10 + i*5, 0, Math.PI);
+                    }
+                    ctx.stroke();
+                }
+                else if (eff.type === 'love') {
+                    // Big Heart
+                    ctx.fillStyle = "#FF1493";
+                    ctx.font = "30px Arial";
+                    ctx.fillText("❤", -15, 10);
+                }
+                else if (eff.type === 'tear') {
+                    // Big Tear
+                    ctx.fillStyle = "#00BFFF";
+                    ctx.font = "30px Arial";
+                    ctx.fillText("💧", -15, 10);
+                }
+
+                ctx.restore();
+            });
+        }
+
+        function drawParticles() {
+            particles.forEach(p => {
+                ctx.globalAlpha = p.life;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                
+                if (p.type === 'love') {
+                    ctx.font = "12px Arial";
+                    ctx.fillText("❤", p.x, p.y);
+                } else if (p.type === 'tornado') {
+                    ctx.rect(p.x, p.y, 3, 3);
+                    ctx.fill();
+                } else {
+                    ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+                    ctx.fill();
+                }
+            });
+            ctx.globalAlpha = 1.0;
+        }
+
+        // --- Logic & Input (Same as before, just handling -values) ---
+
+        function handleInput(e) {
+            if (isGameOver || isThinking) return;
+            if (modeSelect.value === 'pve' && currentPlayer === 2) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = 600 / rect.width;
+            const scaleY = 600 / rect.height;
+            const mouseX = (e.clientX - rect.left) * scaleX;
+            const mouseY = (e.clientY - rect.top) * scaleY;
+
+            const gridX = Math.round((mouseX - PADDING) / CELL_SIZE);
+            const gridY = Math.round((mouseY - PADDING) / CELL_SIZE);
+
+            if (gridX >= 0 && gridX < GRID_SIZE && gridY >= 0 && gridY < GRID_SIZE) {
+                // Can only place on empty (0). Blocked by players (>0) or disasters (<0)
+                if (board[gridY][gridX] === 0) {
+                    placeStone(gridX, gridY);
+                }
+            }
+        }
+
+        function placeStone(x, y) {
+            board[y][x] = currentPlayer;
+            lastMove = {x, y};
+            // Trigger a sound effect or particle for placement? Maybe later.
+            
+            if (checkWin(x, y, currentPlayer)) {
+                endGame(currentPlayer);
+                return;
+            }
+
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            updateUI();
+
+            if (modeSelect.value === 'pve' && currentPlayer === 2 && !isGameOver) {
+                isThinking = true;
+                setTimeout(makeAIMove, 500);
+            }
+        }
+
+        function makeAIMove() {
+            const level = parseInt(levelSelect.value);
+            let move;
+            if (level === 1) move = getLevel1Move();
+            else if (level === 2) move = getLevel2Move();
+            else move = getLevel3Move();
+
+            if (!move) {
+                for(let y=0; y<GRID_SIZE; y++) {
+                    for(let x=0; x<GRID_SIZE; x++) {
+                        if(board[y][x] === 0) { move = {x, y}; break; }
+                    }
+                    if(move) break;
+                }
+            }
+            
+            if (move) placeStone(move.x, move.y);
+            isThinking = false;
+        }
+
+        function getLevel1Move() {
+            let candidates = [];
+            for (let y = 0; y < GRID_SIZE; y++) {
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    // Ignore disasters/opponents in check, just look for valid spot near something non-empty
+                    if (board[y][x] === 0 && hasNeighbor(x, y, 2)) {
+                        candidates.push({x, y});
+                    }
+                }
+            }
+            if (candidates.length === 0) {
+                if (board[7][7] === 0) return {x: 7, y: 7};
+                return null; 
+            }
+            return candidates[Math.floor(Math.random() * candidates.length)];
+        }
+
+        function getLevel2Move() { return getBestMoveByScore(false); }
+        function getLevel3Move() { return getBestMoveByScore(true); }
+
+        function getBestMoveByScore(isHard) {
+            let bestScore = -Infinity;
+            let bestMoves = [];
+            
+            for (let y = 0; y < GRID_SIZE; y++) {
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    if (board[y][x] === 0) {
+                        if (!hasNeighbor(x, y, 2) && board[7][7] !== 0) continue;
+                        let attackScore = evaluatePoint(x, y, 2);
+                        let defenseScore = evaluatePoint(x, y, 1);
+                        let currentScore;
+                        if (isHard) {
+                            if (attackScore >= 10000) currentScore = 20000; 
+                            else if (defenseScore >= 10000) currentScore = 10000; 
+                            else currentScore = attackScore + defenseScore;
+                        } else {
+                            let noise = Math.random() * 20;
+                            currentScore = attackScore + (defenseScore * 0.8) + noise;
+                        }
+                        if (currentScore > bestScore) {
+                            bestScore = currentScore;
+                            bestMoves = [{x, y}];
+                        } else if (currentScore === bestScore) {
+                            bestMoves.push({x, y});
+                        }
+                    }
+                }
+            }
+            if (bestMoves.length === 0) {
+                if (board[7][7] === 0) return {x: 7, y: 7};
+                return null;
+            }
+            return bestMoves[Math.floor(Math.random() * bestMoves.length)];
+        }
+
+        function hasNeighbor(x, y, radius) {
+            for (let dy = -radius; dy <= radius; dy++) {
+                for (let dx = -radius; dx <= radius; dx++) {
+                    if (dx === 0 && dy === 0) continue;
+                    let nx = x + dx, ny = y + dy;
+                    if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                        // Anything not 0 (including disasters) attracts attention
+                        if (board[ny][nx] !== 0) return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function evaluatePoint(x, y, player) {
+            let score = 0;
+            const dirs = [[1,0], [0,1], [1,1], [1,-1]];
+            for (let dir of dirs) {
+                score += evaluateLine(x, y, dir[0], dir[1], player);
+            }
+            return score;
+        }
+
+        function evaluateLine(x, y, dx, dy, player) {
+            let count = 1; 
+            let blockedEnds = 0;
+            // Check positive
+            let i = 1;
+            while (true) {
+                let nx = x + dx * i;
+                let ny = y + dy * i;
+                if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE) { blockedEnds++; break; }
+                const val = board[ny][nx];
+                if (val === player) { count++; }
+                else if (val === 0) { break; } 
+                else { blockedEnds++; break; } // Blocked by Opponent or Disaster (<0)
+                i++;
+            }
+            // Check negative
+            i = 1;
+            while (true) {
+                let nx = x - dx * i;
+                let ny = y - dy * i;
+                if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE) { blockedEnds++; break; }
+                const val = board[ny][nx];
+                if (val === player) { count++; }
+                else if (val === 0) { break; }
+                else { blockedEnds++; break; }
+                i++;
+            }
+            if (blockedEnds >= 2 && count < 5) return 0;
+            if (count >= 5) return 100000;
+            if (count === 4) return blockedEnds === 0 ? 10000 : 2500;
+            if (count === 3) return blockedEnds === 0 ? 3000 : 500;
+            if (count === 2) return blockedEnds === 0 ? 500 : 50;
+            return 10;
+        }
+
+        function checkWin(x, y, player) {
+            const directions = [[1, 0], [0, 1], [1, 1], [1, -1]];
+            for (let [dx, dy] of directions) {
+                let count = 1;
+                for (let i = 1; i < 5; i++) {
+                    const nx = x + dx * i, ny = y + dy * i;
+                    if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE || board[ny][nx] !== player) break;
+                    count++;
+                }
+                for (let i = 1; i < 5; i++) {
+                    const nx = x - dx * i, ny = y - dy * i;
+                    if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE || board[ny][nx] !== player) break;
+                    count++;
+                }
+                if (count >= 5) return true;
+            }
+            return false;
+        }
+
+        function endGame(winner) {
+            isGameOver = true;
+            clearTimeout(disasterTimeoutId);
+            let msg = winner === 1 ? "黑子獲勝!" : "白子獲勝!";
+            if (modeSelect.value === 'pve' && winner === 2) msg = "電腦獲勝!";
+            winnerText.textContent = msg;
+            modal.style.display = 'flex';
+            statusText.textContent = "遊戲結束";
+        }
+
+        init();
+
+    </script>
+</body>
+</html>
