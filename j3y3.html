@@ -460,11 +460,14 @@
         import { getFirestore, doc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
         // Firebase Config & Init
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = {
+          apiKey: "AIzaSyACGrG89M5AlJSJmzU9v7PEOXqNMK-zKr0",
+          authDomain: "gomoku-love-game.firebaseapp.com",
+          projectId: "gomoku-love-game",
+          storageBucket: "gomoku-love-game.firebasestorage.app",
+          messagingSenderId: "488500423250",
+          appId: "1:488500423250:web:f83df27227ac8bc89b8d8b"
+};
 
         let userId = null;
 
