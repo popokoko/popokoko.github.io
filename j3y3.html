@@ -468,6 +468,10 @@
           messagingSenderId: "488500423250",
           appId: "1:488500423250:web:f83df27227ac8bc89b8d8b"
 };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = "my-gomoku-game"; // 這裡可以自己取一個喜歡的名字
 
         let userId = null;
 
