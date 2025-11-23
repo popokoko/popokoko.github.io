@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>經典五子棋 - 少女粉紅版 (單機存檔)</title>
+    <title>經典五子棋 - 少女粉紅版 (最終修復版)</title>
     <style>
         body {
             margin: 0;
@@ -292,6 +292,30 @@
         }
         #disaster-alert.active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
+        /* --- Toast Message --- */
+        #toast-message {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(255, 20, 147, 0.95); /* Deep Pink */
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            z-index: 2000; /* Above modal */
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            white-space: nowrap;
+        }
+        #toast-message.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
         /* --- Start Game Overlay --- */
         #start-overlay {
             position: absolute;
@@ -396,6 +420,9 @@
 
     <!-- Runner Image (Hidden initially) -->
     <img id="start-runner" src="https://popokoko.github.io/love_us_run-removebg-preview.png" alt="Let's Go!">
+    
+    <!-- Toast Message -->
+    <div id="toast-message">提示訊息</div>
 
     <div id="ui-layer">
         <div class="card">
@@ -457,23 +484,24 @@
 
     <script>
         // --- Data Init (Local Storage) ---
-        let dowryCount = parseInt(localStorage.getItem('dowryCount')) || 0;
-        let ownedSkins = JSON.parse(localStorage.getItem('ownedSkins')) || ['classic'];
-        let selectedSkin = localStorage.getItem('selectedSkin') || 'classic';
+        // Initialize globals attached to window
+        window.dowryCount = parseInt(localStorage.getItem('dowryCount')) || 0;
+        window.ownedSkins = JSON.parse(localStorage.getItem('ownedSkins')) || ['classic'];
+        window.selectedSkin = localStorage.getItem('selectedSkin') || 'classic';
 
         function updateStorage() {
-            localStorage.setItem('dowryCount', dowryCount);
-            localStorage.setItem('ownedSkins', JSON.stringify(ownedSkins));
-            localStorage.setItem('selectedSkin', selectedSkin);
+            localStorage.setItem('dowryCount', window.dowryCount);
+            localStorage.setItem('ownedSkins', JSON.stringify(window.ownedSkins));
+            localStorage.setItem('selectedSkin', window.selectedSkin);
             updateUIElements();
         }
 
         function updateUIElements() {
             const dowryEl = document.getElementById('dowry-count');
-            if (dowryEl) dowryEl.textContent = dowryCount;
+            if (dowryEl) dowryEl.textContent = window.dowryCount;
             const storeDowryEl = document.getElementById('store-dowry');
-            if (storeDowryEl) storeDowryEl.textContent = dowryCount;
-            draw();
+            if (storeDowryEl) storeDowryEl.textContent = window.dowryCount;
+            draw(); // Redraw board to update skins
         }
 
         // --- Globals & Elements ---
@@ -493,6 +521,13 @@
         const startBtn = document.getElementById('start-btn');
         const restartBtn = document.getElementById('restart-btn');
         
+        // Custom Images
+        const imgHaha = new Image();
+        imgHaha.src = 'https://popokoko.github.io/images/box_Q_YA__haha-removebg-preview.png';
+        const imgLove = new Image();
+        imgLove.src = 'https://popokoko.github.io/images/images/box_Q_YA__loveu-removebg-preview.png';
+        const imgOnlyLove = new Image();
+        imgOnlyLove.src = 'https://popokoko.github.io/images/only_love.png';
         const customImage = new Image();
         customImage.src = 'https://popokoko.github.io/mywife.png';
 
@@ -500,7 +535,6 @@
         let CELL_SIZE = 600 / (GRID_SIZE + 1);
         let PADDING = CELL_SIZE;
 
-        // Initialize board immediately
         let board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
         
         let currentPlayer = 1;
@@ -518,8 +552,8 @@
 
         const skins = {
             'classic': { name: '經典黑白', price: 0, type: 'color', color1: ['#554444', '#1a1a1a'], color2: ['#fff', '#f0e0e0'] },
-            'pink': { name: '櫻花粉系', price: 50, type: 'color', color1: ['#ff69b4', '#c71585'], color2: ['#fff0f5', '#ffb6c1'] },
-            'galaxy': { name: '璀璨星空', price: 120, type: 'color', color1: ['#191970', '#000000'], color2: ['#ffd700', '#fffacd'] },
+            'pink': { name: '櫻花粉系', price: 50, type: 'shape', shape: 'flower', color1: '#ff69b4', color2: '#ffb6c1' }, 
+            'galaxy': { name: '璀璨星空', price: 120, type: 'shape', shape: 'star', color1: '#191970', color2: '#ffd700' }, 
             'heart': { name: '熱戀愛心', price: 360, type: 'shape', shape: 'heart', color1: '#ff0000', color2: '#ffc0cb' },
             'cat': { name: '萌萌貓掌', price: 520, type: 'pattern', pattern: 'paw', color1: '#8b4513', color2: '#ffe4c4' }
         };
@@ -534,10 +568,11 @@
             { name: "凍結", desc: "暫停你的操作 2 秒" },
             { name: "混亂", desc: "將你的一顆棋子變成我的" },
             { name: "暴風", desc: "召喚龍捲風摧毀區域" },
-            { name: "真愛", desc: "召喚老婆降臨佔據棋盤" }
+            { name: "唯愛", desc: "召喚 Only Love 降臨佔據棋盤" }
         ];
 
-        // --- Core Functions ---
+        // --- Initialization ---
+        window.onload = init;
 
         function init() {
             const dpr = window.devicePixelRatio || 1;
@@ -547,7 +582,6 @@
             CELL_SIZE = 600 / (GRID_SIZE + 1);
             PADDING = CELL_SIZE;
             
-            // Load data
             updateUIElements();
             
             canvas.addEventListener('click', handleInput);
@@ -566,6 +600,8 @@
             });
             animate();
         }
+
+        // --- Main Game Functions ---
 
         function reselectGame() {
             isGameActive = false; isGameOver = false; restartBtn.disabled = true; clearTimeout(disasterTimeoutId); modalOverlay.style.display = 'none'; startOverlay.style.display = 'flex'; tournamentOverlay.style.display = 'none';
@@ -679,6 +715,8 @@
             }
         }
 
+        // --- UI Helper Functions ---
+
         function showHelp() {
             modalContent.innerHTML = `
                 <div class="help-content">
@@ -709,8 +747,8 @@
         function showStore() {
             let itemsHtml = '';
             for (const [id, skin] of Object.entries(skins)) {
-                const owned = ownedSkins.includes(id);
-                const active = selectedSkin === id;
+                const owned = window.ownedSkins.includes(id);
+                const active = window.selectedSkin === id;
                 let btnText = owned ? (active ? "已裝備" : "裝備") : `購買 $${skin.price}`;
                 let btnClass = owned ? (active ? "store-btn" : "store-btn btn-secondary") : "store-btn";
                 let btnAction = owned ? `equipSkin('${id}')` : `buySkin('${id}', ${skin.price})`;
@@ -719,8 +757,14 @@
                 let previewStyle = "";
                 if (skin.type === 'color') {
                     previewStyle = `background: radial-gradient(circle at 30% 30%, ${skin.color1[0]}, ${skin.color1[1]});`;
-                } else if (skin.type === 'shape' || skin.type === 'pattern') {
-                    previewStyle = `background: ${skin.color1};`;
+                } else if (skin.shape === 'flower') {
+                    previewStyle = `background: ${skin.color1}; clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%); border-radius: 50%;`;
+                } else if (skin.shape === 'star') {
+                    previewStyle = `background: ${skin.color1}; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); border-radius: 0;`;
+                } else if (skin.shape === 'heart') {
+                    previewStyle = `background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff0000'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E") no-repeat center/contain; border-radius: 0;`;
+                } else if (skin.pattern === 'paw') {
+                    previewStyle = `background: ${skin.color1}; border: 2px solid ${skin.color2}; border-radius: 50%;`;
                 }
 
                 itemsHtml += `
@@ -735,7 +779,7 @@
 
             modalContent.innerHTML = `
                 <h2 style="color:#ff1493">🏪 時尚商城</h2>
-                <p>目前嫁妝: <strong id="store-dowry">${dowryCount}</strong> 🎁</p>
+                <p>目前嫁妝: <strong id="store-dowry">${window.dowryCount}</strong> 🎁</p>
                 <div class="store-grid">
                     ${itemsHtml}
                 </div>
@@ -744,28 +788,39 @@
             modalOverlay.style.display = 'flex';
         }
 
+        function showToast(msg) {
+            const toast = document.getElementById('toast-message');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
         function buySkin(id, price) {
-            if (dowryCount >= price) {
-                dowryCount -= price;
-                ownedSkins.push(id);
+            if (window.dowryCount >= price) {
+                window.dowryCount -= price;
+                window.ownedSkins.push(id);
                 updateStorage();
                 showStore(); 
-                alert(`購買成功！獲得 ${skins[id].name}`);
+                showToast(`購買成功！獲得 ${skins[id].name}`);
             } else {
-                alert("嫁妝不足！快去參加比賽賺取吧！");
+                showToast("嫁妝不足！快去參加比賽賺取吧！ 🎁");
             }
-        };
+        }
 
         function equipSkin(id) {
-            selectedSkin = id;
+            window.selectedSkin = id;
             updateStorage();
             showStore();
             draw();
-        };
+        }
 
         function closeModal() {
             modalOverlay.style.display = 'none';
         }
+
+        // --- AI Logic & Skills ---
 
         function triggerOpponentSkill() {
             if (currentTournamentLevel === 0 || isGameOver) return;
@@ -777,16 +832,28 @@
                 switch(skillId) {
                     case 1: break;
                     case 2: showAlert(`技能：${skillName}!`, color); gameContainer.classList.add('blur-effect'); setTimeout(() => gameContainer.classList.remove('blur-effect'), 3000); break;
-                    case 3: if (lastMove && board[lastMove.y][lastMove.x] === 1) { showAlert(`技能：${skillName}!`, color); board[lastMove.y][lastMove.x] = 0; currentPlayer = 1; isThinking = false; draw(); return true; } break;
+                    case 3: if (lastMove && board[lastMove.y][lastMove.x] === 1) { 
+                        showAlert(`技能：${skillName}!`, color); 
+                        board[lastMove.y][lastMove.x] = 0; 
+                        currentPlayer = 1; isThinking = false; draw(); 
+                        spawnDisasterEffect({id: 'haha', name: 'haha'}, 7, 7); 
+                        updateUI();
+                        return true; 
+                    } break;
                     case 4: showAlert(`技能：${skillName}!`, color); spawnFog(); break;
                     case 5: showAlert(`技能：${skillName}!`, color); for(let i=0; i<2; i++) spawnObstacle(-4); draw(); break;
                     case 6: showAlert(`技能：${skillName}!`, color); destroyRandomPlayerStone(); draw(); break;
-                    case 7: showAlert(`技能：${skillName}!`, color); isInputBlocked = true; gameContainer.classList.add('freeze-effect'); setTimeout(() => { isInputBlocked = false; gameContainer.classList.remove('freeze-effect'); }, 2000); break;
-                    case 8: showAlert(`技能：${skillName}!`, color); swapPlayerStoneToAI(); draw(); break;
+                    case 7: showAlert(`技能：${skillName}!`, color); isInputBlocked = true; gameContainer.classList.add('freeze-effect'); setTimeout(() => { isInputBlocked = false; gameContainer.classList.remove('freeze-effect'); }, 3000); break;
+                    case 8: showAlert(`技能：${skillName}!`, color); swapPlayerStoneToAI(); 
+                        spawnDisasterEffect({id: 'haha', name: 'haha'}, 7, 7); 
+                        draw(); break;
                     case 9: showAlert(`技能：${skillName}!`, color); spawnDisasterEffect({id: -2, name: 'tornado'}, 7, 7); break;
-                    case 10: showAlert(`技能：${skillName}!`, color); spawnDisasterEffect({id: -3, name: 'love'}, 7, 7); break;
+                    case 10: 
+                        showAlert(`技能：${skillName}!`, color); 
+                        spawnDisasterEffect({id: -5, name: 'onlylove'}, 7, 7); 
+                        break;
                 }
-            }, 500);
+            }, 2000); 
             return false;
         }
         
@@ -794,20 +861,74 @@
         function destroyRandomPlayerStone() { let playerStones = []; for(let y=0; y<GRID_SIZE; y++) for(let x=0; x<GRID_SIZE; x++) if(board[y][x] === 1) playerStones.push({x, y}); if(playerStones.length > 0) { const target = playerStones[Math.floor(Math.random() * playerStones.length)]; board[target.y][target.x] = -1; spawnParticles(PADDING + target.x * CELL_SIZE, PADDING + target.y * CELL_SIZE, 'meteor'); } }
         function spawnObstacle(typeId) { let x, y; do { x = Math.floor(Math.random() * GRID_SIZE); y = Math.floor(Math.random() * GRID_SIZE); } while(board[y][x] !== 0); board[y][x] = typeId; }
         function swapPlayerStoneToAI() { let playerStones = []; for(let y=0; y<GRID_SIZE; y++) for(let x=0; x<GRID_SIZE; x++) if(board[y][x] === 1) playerStones.push({x, y}); if(playerStones.length > 0) { const target = playerStones[Math.floor(Math.random() * playerStones.length)]; board[target.y][target.x] = 2; } }
-        function scheduleNextDisaster() { if (isGameOver || !disasterToggle.checked || !isGameActive) return; const delay = Math.floor(Math.random() * 8000) + 4000; disasterTimeoutId = setTimeout(() => { triggerDisaster(); scheduleNextDisaster(); }, delay); }
+        
+        function scheduleNextDisaster() { 
+            if (isGameOver || !disasterToggle.checked || !isGameActive) return; 
+            const delay = Math.floor(Math.random() * 20000) + 15000; 
+            disasterTimeoutId = setTimeout(() => { 
+                triggerDisaster(); 
+                scheduleNextDisaster(); 
+            }, delay); 
+        }
+
         function triggerDisaster() { if (isGameOver || !isGameActive) return; const x = Math.floor(Math.random() * GRID_SIZE); const y = Math.floor(Math.random() * GRID_SIZE); const types = [{ id: -1, name: 'meteor', text: '🔥 隕石衝擊！', color: '#FF4500' }, { id: -2, name: 'tornado', text: '🌪️ 龍捲風來襲！', color: '#00FFFF' }, { id: -3, name: 'love', text: '💖 老婆降臨！', color: '#FF69B4' }, { id: -4, name: 'tear', text: '💧 相思成災...', color: '#4169E1' }]; const disaster = types[Math.floor(Math.random() * types.length)]; spawnDisasterEffect(disaster, x, y); showAlert(disaster.text, disaster.color); }
-        function spawnDisasterEffect(disaster, gridX, gridY) { const targetX = PADDING + gridX * CELL_SIZE; const targetY = PADDING + gridY * CELL_SIZE; activeEffects.push({ type: disaster.name, gridX: gridX, gridY: gridY, disasterId: disaster.id, progress: 0, x: disaster.name === 'meteor' || disaster.name === 'love' || disaster.name === 'tear' ? targetX : targetX - 100, y: disaster.name === 'meteor' || disaster.name === 'love' || disaster.name === 'tear' ? -50 : targetY, targetX: targetX, targetY: targetY }); }
-        function applyDisasterDamage(effect) { board[effect.gridY][effect.gridX] = effect.disasterId; gameContainer.classList.remove('shake-effect'); void gameContainer.offsetWidth; gameContainer.classList.add('shake-effect'); spawnParticles(effect.targetX, effect.targetY, effect.type); }
+        
+        function spawnDisasterEffect(disaster, gridX, gridY) { 
+            const targetX = PADDING + gridX * CELL_SIZE; 
+            const targetY = PADDING + gridY * CELL_SIZE; 
+            
+            let visualType = disaster.name;
+            if (disaster.name === 'love' || disaster.id === -3) visualType = 'love';
+            if (disaster.name === 'onlylove' || disaster.id === -5) visualType = 'onlylove';
+            if (disaster.name === 'haha') visualType = 'haha';
+            
+            activeEffects.push({ 
+                type: visualType, 
+                gridX: gridX, 
+                gridY: gridY, 
+                disasterId: disaster.id, 
+                progress: 0, 
+                x: visualType === 'meteor' || visualType === 'love' || visualType === 'tear' || visualType === 'onlylove' ? targetX : targetX - 100, 
+                y: visualType === 'meteor' || visualType === 'love' || visualType === 'tear' || visualType === 'onlylove' ? -50 : targetY, 
+                targetX: targetX, 
+                targetY: targetY 
+            }); 
+        }
+        
+        function applyDisasterDamage(effect) { 
+            if (typeof effect.disasterId === 'number') {
+                board[effect.gridY][effect.gridX] = effect.disasterId; 
+            }
+            gameContainer.classList.remove('shake-effect'); 
+            void gameContainer.offsetWidth; 
+            gameContainer.classList.add('shake-effect'); 
+            spawnParticles(effect.targetX, effect.targetY, effect.type); 
+        }
+        
         function spawnParticles(x, y, type) { let count = 20; let color = '#fff'; if (type === 'meteor') { count = 30; color = '#ffaa00'; } else if (type === 'tornado') { count = 20; color = '#88ffff'; } else if (type === 'love') { count = 15; color = '#ff69b4'; } else if (type === 'tear') { count = 15; color = '#4169e1'; } for (let i = 0; i < count; i++) { particles.push({ x: x, y: y, vx: (Math.random() - 0.5) * 10, vy: (Math.random() - 0.5) * 10, life: 1.0, color: color, type: type }); } }
+        function drawParticles() { particles.forEach(p => { ctx.globalAlpha = p.life; ctx.fillStyle = p.color; ctx.beginPath(); if (p.type === 'love') { ctx.font = "12px Arial"; ctx.fillText("❤", p.x, p.y); } else if (p.type === 'tornado') { ctx.rect(p.x, p.y, 3, 3); ctx.fill(); } else { ctx.arc(p.x, p.y, 3, 0, Math.PI*2); ctx.fill(); } }); ctx.globalAlpha = 1.0; }
         function showAlert(text, color) { disasterAlert.textContent = text; disasterAlert.style.color = color; disasterAlert.style.textShadow = `0 0 20px ${color}, 2px 2px 0 #000`; disasterAlert.classList.add('active'); setTimeout(() => { disasterAlert.classList.remove('active'); }, 2000); }
 
         function animate() {
-            draw(); 
+            window.draw(); 
             updateEffects();
             animationFrameId = requestAnimationFrame(animate);
         }
 
-        function updateEffects() { for (let i = activeEffects.length - 1; i >= 0; i--) { let eff = activeEffects[i]; if (eff.type === 'meteor') { eff.y += 15; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } else if (eff.type === 'love') { eff.y += 5; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } else if (eff.type === 'tear') { eff.y += 8; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } else if (eff.type === 'tornado') { eff.x += (eff.targetX - eff.x) * 0.1; eff.progress += 0.05; if (Math.abs(eff.x - eff.targetX) < 5 && eff.progress > 1) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } } for (let i = particles.length - 1; i >= 0; i--) { let p = particles[i]; p.x += p.vx; p.y += p.vy; p.life -= 0.02; if (p.type === 'tear' || p.type === 'meteor') p.vy += 0.2; if (p.life <= 0) { particles.splice(i, 1); } } }
+        function updateEffects() { 
+            for (let i = activeEffects.length - 1; i >= 0; i--) { 
+                let eff = activeEffects[i]; 
+                if (eff.type === 'meteor') { eff.y += 15; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } 
+                else if (eff.type === 'love') { eff.y += 5; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } 
+                else if (eff.type === 'onlylove') { eff.y += 3; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } 
+                else if (eff.type === 'tear') { eff.y += 8; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } 
+                else if (eff.type === 'tornado') { eff.x += (eff.targetX - eff.x) * 0.1; eff.progress += 0.05; if (Math.abs(eff.x - eff.targetX) < 5 && eff.progress > 1) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } 
+                else if (eff.type === 'haha') { eff.y -= 2; eff.progress += 0.05; if (eff.progress > 2) { activeEffects.splice(i, 1); } } 
+            } 
+            for (let i = particles.length - 1; i >= 0; i--) { 
+                let p = particles[i]; p.x += p.vx; p.y += p.vy; p.life -= 0.02; if (p.type === 'tear' || p.type === 'meteor') p.vy += 0.2; if (p.life <= 0) { particles.splice(i, 1); } 
+            } 
+        }
 
         function draw() {
             ctx.clearRect(0, 0, 600, 600);
@@ -828,8 +949,19 @@
             drawActiveEffects(); drawParticles();
         }
 
-        function drawActiveEffects() { activeEffects.forEach(eff => { ctx.save(); ctx.translate(eff.x, eff.y); if (eff.type === 'meteor') { const grad = ctx.createRadialGradient(0, 0, 5, 0, 0, 20); grad.addColorStop(0, '#ffff00'); grad.addColorStop(0.5, '#ffaa00'); grad.addColorStop(1, 'transparent'); ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(0, 0, 20, 0, Math.PI*2); ctx.fill(); } else if (eff.type === 'tornado') { ctx.rotate(Date.now() / 100); ctx.strokeStyle = "rgba(0, 255, 255, 0.6)"; ctx.lineWidth = 3; ctx.beginPath(); for(let i=0; i<3; i++) { ctx.arc(0, i*5, 10 + i*5, 0, Math.PI); } ctx.stroke(); } else if (eff.type === 'love') { if (customImage.complete) { ctx.drawImage(customImage, -30, -30, 60, 60); } else { ctx.fillStyle = "#FF1493"; ctx.font = "30px Arial"; ctx.fillText("❤", -15, 10); } } else if (eff.type === 'tear') { ctx.fillStyle = "#00BFFF"; ctx.font = "30px Arial"; ctx.fillText("💧", -15, 10); } ctx.restore(); }); }
-        function drawParticles() { particles.forEach(p => { ctx.globalAlpha = p.life; ctx.fillStyle = p.color; ctx.beginPath(); if (p.type === 'love') { ctx.font = "12px Arial"; ctx.fillText("❤", p.x, p.y); } else if (p.type === 'tornado') { ctx.rect(p.x, p.y, 3, 3); ctx.fill(); } else { ctx.arc(p.x, p.y, 3, 0, Math.PI*2); ctx.fill(); } }); ctx.globalAlpha = 1.0; }
+        function drawActiveEffects() { 
+            activeEffects.forEach(eff => { 
+                ctx.save(); 
+                ctx.translate(eff.x, eff.y); 
+                if (eff.type === 'meteor') { const grad = ctx.createRadialGradient(0, 0, 5, 0, 0, 20); grad.addColorStop(0, '#ffff00'); grad.addColorStop(0.5, '#ffaa00'); grad.addColorStop(1, 'transparent'); ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(0, 0, 20, 0, Math.PI*2); ctx.fill(); } 
+                else if (eff.type === 'tornado') { ctx.rotate(Date.now() / 100); ctx.strokeStyle = "rgba(0, 255, 255, 0.6)"; ctx.lineWidth = 3; ctx.beginPath(); for(let i=0; i<3; i++) { ctx.arc(0, i*5, 10 + i*5, 0, Math.PI); } ctx.stroke(); } 
+                else if (eff.type === 'love') { if (imgLove.complete && imgLove.naturalWidth !== 0) { ctx.drawImage(imgLove, -30, -30, 60, 60); } else { ctx.fillStyle = "#FF1493"; ctx.font = "30px Arial"; ctx.fillText("❤", -15, 10); } } 
+                else if (eff.type === 'onlylove') { if (imgOnlyLove.complete && imgOnlyLove.naturalWidth !== 0) { ctx.drawImage(imgOnlyLove, -50, -50, 100, 100); } else { ctx.fillStyle = "#FF1493"; ctx.fillText("Only Love", -30, 0); } } 
+                else if (eff.type === 'tear') { ctx.fillStyle = "#00BFFF"; ctx.font = "30px Arial"; ctx.fillText("💧", -15, 10); } 
+                else if (eff.type === 'haha') { if (imgHaha.complete && imgHaha.naturalWidth !== 0) { ctx.drawImage(imgHaha, -40, -40, 80, 80); } else { ctx.fillStyle = "#FF1493"; ctx.font = "30px Arial"; ctx.fillText("Haha", -25, 10); } }
+                ctx.restore(); 
+            }); 
+        }
 
         function drawStone(x, y, type) {
             const cx = PADDING + x * CELL_SIZE;
@@ -839,7 +971,7 @@
             let currentStyle = skins['classic'];
             
             if (type === 1) { 
-                let skinKey = selectedSkin;
+                let skinKey = window.selectedSkin;
                 if (!skins[skinKey]) skinKey = 'classic';
                 currentStyle = skins[skinKey];
             } else { 
@@ -855,21 +987,63 @@
                 grad.addColorStop(1, currentStyle.color1[1]); 
                 ctx.fillStyle = grad;
                 ctx.fill();
-            } else if (currentStyle.type === 'shape' && currentStyle.shape === 'heart') {
+            } else if (currentStyle.type === 'shape') {
                 ctx.shadowColor = "rgba(0, 0, 0, 0.2)"; ctx.shadowBlur = 5; ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2;
                 ctx.fillStyle = currentStyle.color1;
-                ctx.beginPath();
-                const size = radius; 
-                const topCurveHeight = size * 0.3;
-                ctx.save();
-                ctx.translate(cx, cy - size/2);
-                ctx.moveTo(0, topCurveHeight);
-                ctx.bezierCurveTo(0, 0, -size, 0, -size, topCurveHeight);
-                ctx.bezierCurveTo(-size, (size + topCurveHeight) / 2, 0, size, 0, size + topCurveHeight);
-                ctx.bezierCurveTo(0, size, size, (size + topCurveHeight) / 2, size, topCurveHeight);
-                ctx.bezierCurveTo(size, 0, 0, 0, 0, topCurveHeight);
-                ctx.fill();
-                ctx.restore();
+                
+                if (currentStyle.shape === 'flower') {
+                    const petalRadius = radius * 0.5;
+                    for (let i = 0; i < 5; i++) {
+                        const angle = (i * 2 * Math.PI) / 5 - (Math.PI/2);
+                        const px = cx + Math.cos(angle) * (radius * 0.4);
+                        const py = cy + Math.sin(angle) * (radius * 0.4);
+                        ctx.beginPath();
+                        ctx.arc(px, py, petalRadius, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.fillStyle = "#fff";
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, radius * 0.2, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (currentStyle.shape === 'star') {
+                    ctx.beginPath();
+                    const spikes = 5;
+                    const outerRadius = radius;
+                    const innerRadius = radius * 0.5;
+                    let rot = Math.PI / 2 * 3;
+                    let x = cx;
+                    let y = cy;
+                    let step = Math.PI / spikes;
+
+                    ctx.moveTo(cx, cy - outerRadius);
+                    for (let i = 0; i < spikes; i++) {
+                        x = cx + Math.cos(rot) * outerRadius;
+                        y = cy + Math.sin(rot) * outerRadius;
+                        ctx.lineTo(x, y);
+                        rot += step;
+
+                        x = cx + Math.cos(rot) * innerRadius;
+                        y = cy + Math.sin(rot) * innerRadius;
+                        ctx.lineTo(x, y);
+                        rot += step;
+                    }
+                    ctx.lineTo(cx, cy - outerRadius);
+                    ctx.closePath();
+                    ctx.fill();
+                } else if (currentStyle.shape === 'heart') {
+                    ctx.beginPath();
+                    const size = radius; 
+                    const topCurveHeight = size * 0.3;
+                    ctx.save();
+                    ctx.translate(cx, cy - size/2);
+                    ctx.moveTo(0, topCurveHeight);
+                    ctx.bezierCurveTo(0, 0, -size, 0, -size, topCurveHeight);
+                    ctx.bezierCurveTo(-size, (size + topCurveHeight) / 2, 0, size, 0, size + topCurveHeight);
+                    ctx.bezierCurveTo(0, size, size, (size + topCurveHeight) / 2, size, topCurveHeight);
+                    ctx.bezierCurveTo(size, 0, 0, 0, 0, topCurveHeight);
+                    ctx.fill();
+                    ctx.restore();
+                }
             } else if (currentStyle.type === 'pattern' && currentStyle.pattern === 'paw') {
                 ctx.shadowColor = "rgba(0, 0, 0, 0.2)"; ctx.shadowBlur = 5; ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2;
                 ctx.fillStyle = currentStyle.color1;
@@ -894,39 +1068,107 @@
             ctx.save();
             ctx.translate(cx, cy);
 
-            if (type === -1) { // Meteor Crater
-                ctx.fillStyle = "#444";
-                ctx.beginPath(); ctx.arc(0, 0, size, 0, Math.PI*2); ctx.fill();
-                ctx.strokeStyle = "#FF4500"; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.moveTo(-size*0.7, -size*0.7); ctx.lineTo(size*0.7, size*0.7); ctx.moveTo(size*0.7, -size*0.7); ctx.lineTo(-size*0.7, size*0.7); ctx.stroke();
-            } else if (type === -2) { // Tornado Debris
-                ctx.fillStyle = "#aaa";
-                ctx.beginPath(); ctx.arc(0, 0, size*0.8, 0, Math.PI*2); ctx.fill();
-                ctx.strokeStyle = "#555"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, size*0.5, 0, Math.PI*1.5); ctx.stroke();
-            } else if (type === -3) { // Love/Custom Image Debris
-                if (customImage.complete) {
-                    ctx.beginPath(); ctx.arc(0, 0, size * 1.2, 0, Math.PI * 2); ctx.clip();
-                    ctx.drawImage(customImage, -size*1.2, -size*1.2, size*2.4, size*2.4);
+            if (type === -1) { /* ... meteor ... */ ctx.fillStyle = "#444"; ctx.beginPath(); ctx.arc(0, 0, size, 0, Math.PI*2); ctx.fill(); ctx.strokeStyle = "#FF4500"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-size*0.7, -size*0.7); ctx.lineTo(size*0.7, size*0.7); ctx.moveTo(size*0.7, -size*0.7); ctx.lineTo(-size*0.7, size*0.7); ctx.stroke(); }
+            else if (type === -2) { /* ... tornado ... */ ctx.fillStyle = "#aaa"; ctx.beginPath(); ctx.arc(0, 0, size*0.8, 0, Math.PI*2); ctx.fill(); ctx.strokeStyle = "#555"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, size*0.5, 0, Math.PI*1.5); ctx.stroke(); }
+            else if (type === -3) { /* ... mywife ... */ if (customImage.complete && customImage.naturalWidth !== 0) { ctx.beginPath(); ctx.arc(0, 0, size * 1.2, 0, Math.PI * 2); ctx.clip(); ctx.drawImage(customImage, -size*1.2, -size*1.2, size*2.4, size*2.4); } else { ctx.fillStyle = "#FF69B4"; ctx.beginPath(); const topCurveHeight = size * 0.3; ctx.moveTo(0, topCurveHeight); ctx.bezierCurveTo(0, 0, -size, 0, -size, topCurveHeight); ctx.bezierCurveTo(-size, (size + topCurveHeight) / 2, 0, size, 0, size + topCurveHeight); ctx.bezierCurveTo(0, size, size, (size + topCurveHeight) / 2, size, topCurveHeight); ctx.bezierCurveTo(size, 0, 0, 0, 0, topCurveHeight); ctx.fill(); } }
+            else if (type === -4) { /* ... tear ... */ ctx.fillStyle = "#4169E1"; ctx.beginPath(); ctx.arc(0, size*0.4, size*0.6, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.moveTo(0, -size); ctx.quadraticCurveTo(size*0.6, size*0.4, 0, size*0.4); ctx.quadraticCurveTo(-size*0.6, size*0.4, 0, -size); ctx.fill(); }
+            else if (type === -5) { // Only Love (Level 10)
+                 if (imgOnlyLove.complete && imgOnlyLove.naturalWidth !== 0) {
+                    // Draw circular clipped image for Only Love
+                    ctx.beginPath();
+                    ctx.arc(0, 0, size * 1.5, 0, Math.PI * 2);
+                    ctx.clip();
+                    ctx.drawImage(imgOnlyLove, -size*1.5, -size*1.5, size*3, size*3);
                 } else {
-                    ctx.fillStyle = "#FF69B4"; ctx.beginPath();
-                    const topCurveHeight = size * 0.3;
-                    ctx.moveTo(0, topCurveHeight);
-                    ctx.bezierCurveTo(0, 0, -size, 0, -size, topCurveHeight);
-                    ctx.bezierCurveTo(-size, (size + topCurveHeight) / 2, 0, size, 0, size + topCurveHeight);
-                    ctx.bezierCurveTo(0, size, size, (size + topCurveHeight) / 2, size, topCurveHeight);
-                    ctx.bezierCurveTo(size, 0, 0, 0, 0, topCurveHeight);
-                    ctx.fill();
+                    ctx.fillStyle = "#FF1493";
+                    ctx.fillText("Only Love", -20, 5);
                 }
-            } else if (type === -4) { // Tear Puddle
-                ctx.fillStyle = "#4169E1"; ctx.beginPath(); ctx.arc(0, size*0.4, size*0.6, 0, Math.PI*2); ctx.fill();
-                ctx.beginPath(); ctx.moveTo(0, -size); ctx.quadraticCurveTo(size*0.6, size*0.4, 0, size*0.4); ctx.quadraticCurveTo(-size*0.6, size*0.4, 0, -size); ctx.fill();
             }
             ctx.restore();
         }
 
+        function endGame(winner) {
+            isGameOver = true;
+            clearTimeout(disasterTimeoutId);
+            let msg = winner === 1 ? "黑子獲勝!" : "白子獲勝!";
+            const mode = modeSelect.value;
+            let reward = 0;
+            let extraHtml = ''; 
+
+            if ((mode === 'pve' || mode === 'tournament') && winner === 2) {
+                 msg = mode === 'tournament' ? "思念太強，妳輸了！" : "電腦獲勝!";
+            } else if (winner === 1 && mode === 'tournament') {
+                if (currentTournamentLevel === 10) {
+                    reward = 520;
+                    extraHtml = `<img src="https://popokoko.github.io/images/only_love.png" style="max-width: 100%; height: auto; border-radius: 15px; margin-bottom: 15px; border: 2px solid #ff69b4; box-shadow: 0 0 15px #ffb6c1;">`;
+                }
+                else if (currentTournamentLevel === 9) reward = 360;
+                else if (currentTournamentLevel === 8) reward = 225;
+                else reward = 10;
+                
+                msg = `恭喜獲勝！<br>獲得 ${reward} 個嫁妝 🎁`;
+                window.dowryCount += reward;
+                updateStorage();
+            }
+
+            modalContent.innerHTML = `
+                ${extraHtml}
+                <div id="winner-text">${winner === 1 ? "🎉 恭喜獲勝!" : "💔 再接再厲"}</div>
+                ${reward > 0 ? `<div id="reward-text">🎁 +${reward} 嫁妝</div>` : ''}
+                <p style="color:#666; margin-bottom:20px;">${winner === 1 ? "妳的愛意戰勝了一切！" : "不要氣餒，愛需要堅持！"}</p>
+                <button class="btn-secondary" onclick="window.closeModal(); window.resetGame();">再來一局</button>
+                ${mode === 'tournament' ? `<button class="btn-secondary" style="margin-top:10px" onclick="window.closeModal(); window.showTournamentSelection();">選擇對手</button>` : ''}
+            `;
+            modalOverlay.style.display = 'flex';
+            const statusText = document.getElementById('status-text');
+            if(statusText) statusText.textContent = "遊戲結束";
+        }
+        
         function handleInput(e) { if (isGameOver || isThinking || !isGameActive || isInputBlocked) return; if ((modeSelect.value === 'pve' || modeSelect.value === 'tournament') && currentPlayer === 2) return; const rect = canvas.getBoundingClientRect(); const scaleX = 600 / rect.width; const scaleY = 600 / rect.height; const mouseX = (e.clientX - rect.left) * scaleX; const mouseY = (e.clientY - rect.top) * scaleY; const gridX = Math.round((mouseX - PADDING) / CELL_SIZE); const gridY = Math.round((mouseY - PADDING) / CELL_SIZE); if (gridX >= 0 && gridX < GRID_SIZE && gridY >= 0 && gridY < GRID_SIZE) { if (board[gridY][gridX] === 0) { placeStone(gridX, gridY); } } }
-        function placeStone(x, y) { board[y][x] = currentPlayer; lastMove = {x, y}; if (checkWin(x, y, currentPlayer)) { endGame(currentPlayer); return; } currentPlayer = currentPlayer === 1 ? 2 : 1; updateUI(); const mode = modeSelect.value; if ((mode === 'pve' || mode === 'tournament') && currentPlayer === 2 && !isGameOver) { isThinking = true; setTimeout(makeAIMove, 500); } }
-        function makeAIMove() { if (!isGameActive || isGameOver) return; if (modeSelect.value === 'tournament') { const skipped = triggerOpponentSkill(); if(skipped) return; } const level = parseInt(levelSelect.value); let move; if (currentTournamentLevel === 1 && Math.random() < 0.1) { move = getRandomMove(); } else { if (level === 1) move = getLevel1Move(); else if (level === 2) move = getLevel2Move(); else move = getLevel3Move(); } if (!move) move = getRandomMove(); if (move) placeStone(move.x, move.y); isThinking = false; }
+        function placeStone(x, y) { board[y][x] = currentPlayer; lastMove = {x, y}; if (checkWin(x, y, currentPlayer)) { endGame(currentPlayer); return; } currentPlayer = currentPlayer === 1 ? 2 : 1; updateUI(); const mode = modeSelect.value; if ((mode === 'pve' || mode === 'tournament') && currentPlayer === 2 && !isGameOver) { isThinking = true; makeAIMove(); } }
+
+        function makeAIMove() {
+            if (!isGameActive || isGameOver) return;
+            
+            if (modeSelect.value === 'tournament') {
+                if (currentTournamentLevel > 1 && Math.random() < 0.3) {
+                    const skillId = currentTournamentLevel;
+                    const skillName = tournamentSkills[skillId-1].name;
+                    const color = "#d63384";
+                    setTimeout(() => {
+                        if (isGameOver) return;
+                        showAlert(`技能：${skillName}!`, color);
+                        let skipMove = false;
+                        switch(skillId) {
+                            case 2: gameContainer.classList.add('blur-effect'); setTimeout(() => gameContainer.classList.remove('blur-effect'), 3000); break;
+                            case 3: if (lastMove && board[lastMove.y][lastMove.x] === 1) { board[lastMove.y][lastMove.x] = 0; lastMove = null; currentPlayer = 1; isThinking = false; draw(); spawnDisasterEffect({id: 'haha', name: 'haha'}, 7, 7); updateUI(); skipMove = true; } break;
+                            case 4: spawnFog(); break;
+                            case 5: for(let i=0; i<2; i++) spawnObstacle(-4); draw(); break;
+                            case 6: destroyRandomPlayerStone(); draw(); break;
+                            case 7: isInputBlocked = true; gameContainer.classList.add('freeze-effect'); setTimeout(() => { isInputBlocked = false; gameContainer.classList.remove('freeze-effect'); }, 3000); break;
+                            case 8: swapPlayerStoneToAI(); spawnDisasterEffect({id: 'haha', name: 'haha'}, 7, 7); draw(); break;
+                            case 9: spawnDisasterEffect({id: -2, name: 'tornado'}, 7, 7); break;
+                            case 10: spawnDisasterEffect({id: -3, name: 'love'}, 7, 7); break;
+                        }
+                        if (!skipMove) { setTimeout(() => { performAIMoveLogic(); }, 1000); }
+                    }, 2000);
+                    return; 
+                }
+            }
+            setTimeout(performAIMoveLogic, 500);
+        }
+
+        function performAIMoveLogic() {
+            if (isGameOver) return;
+            const level = parseInt(levelSelect.value);
+            let move;
+            if (currentTournamentLevel === 1 && Math.random() < 0.1) { move = getRandomMove(); } 
+            else { if (level === 1) move = getLevel1Move(); else if (level === 2) move = getLevel2Move(); else move = getLevel3Move(); }
+            if (!move) move = getRandomMove();
+            if (move) placeStone(move.x, move.y);
+            isThinking = false;
+        }
+
         function getRandomMove() { for(let y=0; y<GRID_SIZE; y++) for(let x=0; x<GRID_SIZE; x++) if(board[y][x] === 0) return {x, y}; return null; }
         function getLevel1Move() { let candidates = []; for (let y = 0; y < GRID_SIZE; y++) for (let x = 0; x < GRID_SIZE; x++) if (board[y][x] === 0 && hasNeighbor(x, y, 2)) candidates.push({x, y}); if (candidates.length === 0) return getRandomMove(); return candidates[Math.floor(Math.random() * candidates.length)]; }
         function getLevel2Move() { return getBestMoveByScore(false); }
@@ -936,26 +1178,6 @@
         function evaluatePoint(x, y, player) { let score = 0; const dirs = [[1,0], [0,1], [1,1], [1,-1]]; for (let dir of dirs) score += evaluateLine(x, y, dir[0], dir[1], player); return score; }
         function evaluateLine(x, y, dx, dy, player) { let count = 1; let blockedEnds = 0; let i = 1; while (true) { let nx = x + dx * i; let ny = y + dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE) { blockedEnds++; break; } const val = board[ny][nx]; if (val === player) { count++; } else if (val === 0) { break; } else { blockedEnds++; break; } i++; } i = 1; while (true) { let nx = x - dx * i; let ny = y - dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE) { blockedEnds++; break; } const val = board[ny][nx]; if (val === player) { count++; } else if (val === 0) { break; } else { blockedEnds++; break; } i++; } if (blockedEnds >= 2 && count < 5) return 0; if (count >= 5) return 100000; if (count === 4) return blockedEnds === 0 ? 10000 : 2500; if (count === 3) return blockedEnds === 0 ? 3000 : 500; if (count === 2) return blockedEnds === 0 ? 500 : 50; return 10; }
         function checkWin(x, y, player) { const directions = [[1, 0], [0, 1], [1, 1], [1, -1]]; for (let [dx, dy] of directions) { let count = 1; for (let i = 1; i < 5; i++) { const nx = x + dx * i, ny = y + dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE || board[ny][nx] !== player) break; count++; } for (let i = 1; i < 5; i++) { const nx = x - dx * i, ny = y - dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE || board[ny][nx] !== player) break; count++; } if (count >= 5) return true; } return false; }
-
-        function endGame(winner) {
-            isGameOver = true;
-            clearTimeout(disasterTimeoutId);
-            let msg = winner === 1 ? "黑子獲勝!" : "白子獲勝!";
-            const mode = modeSelect.value;
-            let reward = 0;
-            if ((mode === 'pve' || mode === 'tournament') && winner === 2) {
-                 msg = mode === 'tournament' ? "思念太強，妳輸了！" : "電腦獲勝!";
-            } else if (winner === 1 && mode === 'tournament') {
-                if (currentTournamentLevel === 10) reward = 520; else if (currentTournamentLevel === 9) reward = 360; else if (currentTournamentLevel === 8) reward = 225; else reward = 10;
-                msg = `恭喜獲勝！<br>獲得 ${reward} 個嫁妝 🎁`;
-                dowryCount += reward;
-                updateStorage();
-            }
-            modalContent.innerHTML = `<div id="winner-text">${winner === 1 ? "🎉 恭喜獲勝!" : "💔 再接再厲"}</div>${reward > 0 ? `<div id="reward-text">🎁 +${reward} 嫁妝</div>` : ''}<p style="color:#666; margin-bottom:20px;">${winner === 1 ? "妳的愛意戰勝了一切！" : "不要氣餒，愛需要堅持！"}</p><button class="btn-secondary" onclick="closeModal(); resetGame();">再來一局</button>${mode === 'tournament' ? `<button class="btn-secondary" style="margin-top:10px" onclick="closeModal(); showTournamentSelection();">選擇對手</button>` : ''}`;
-            modalOverlay.style.display = 'flex';
-            const statusText = document.getElementById('status-text');
-            if(statusText) statusText.textContent = "遊戲結束";
-        }
 
         // Start
         init();
