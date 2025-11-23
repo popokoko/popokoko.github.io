@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>經典五子棋 - 少女粉紅版</title>
+    <title>經典五子棋 - 少女粉紅版 (單機存檔)</title>
     <style>
         body {
             margin: 0;
@@ -20,6 +20,7 @@
             background-position: 0 0, 15px 15px;
             background-size: 30px 30px;
             overflow-x: hidden;
+            user-select: none;
         }
 
         #game-container {
@@ -403,7 +404,7 @@
         
         <div class="card">
             <div class="dowry-display" title="目前擁有的嫁妝">
-                <span class="dowry-icon">🎁</span> <span id="dowry-count">...</span> 嫁妝
+                <span class="dowry-icon">🎁</span> <span id="dowry-count">0</span> 嫁妝
             </div>
         </div>
 
@@ -454,78 +455,25 @@
         <canvas id="board" width="600" height="600"></canvas>
     </div>
 
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
-        import { getFirestore, doc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
-
-        // Firebase Config & Init
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-        let userId = null;
-
-        // --- Data Init ---
-        window.dowryCount = 0;
-        window.ownedSkins = ['classic'];
-        window.selectedSkin = 'classic';
-
-        // Auth Flow
-        const initAuth = async () => {
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
-            } else {
-                await signInAnonymously(auth);
-            }
-        };
-        initAuth();
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                userId = user.uid;
-                loadUserData();
-            }
-        });
-
-        function loadUserData() {
-            if (!userId) return;
-            const docRef = doc(db, 'artifacts', appId, 'users', userId, 'gamedata', 'profile');
-            onSnapshot(docRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    window.dowryCount = data.dowryCount || 0;
-                    window.ownedSkins = data.ownedSkins || ['classic'];
-                    window.selectedSkin = data.selectedSkin || 'classic';
-                } else {
-                    setDoc(docRef, {
-                        dowryCount: 0,
-                        ownedSkins: ['classic'],
-                        selectedSkin: 'classic'
-                    });
-                }
-                updateUIElements();
-            });
-        }
+    <script>
+        // --- Data Init (Local Storage) ---
+        let dowryCount = parseInt(localStorage.getItem('dowryCount')) || 0;
+        let ownedSkins = JSON.parse(localStorage.getItem('ownedSkins')) || ['classic'];
+        let selectedSkin = localStorage.getItem('selectedSkin') || 'classic';
 
         function updateStorage() {
-            if (!userId) return;
-            const docRef = doc(db, 'artifacts', appId, 'users', userId, 'gamedata', 'profile');
-            setDoc(docRef, {
-                dowryCount: window.dowryCount,
-                ownedSkins: window.ownedSkins,
-                selectedSkin: window.selectedSkin
-            }, { merge: true });
+            localStorage.setItem('dowryCount', dowryCount);
+            localStorage.setItem('ownedSkins', JSON.stringify(ownedSkins));
+            localStorage.setItem('selectedSkin', selectedSkin);
+            updateUIElements();
         }
 
         function updateUIElements() {
             const dowryEl = document.getElementById('dowry-count');
-            if (dowryEl) dowryEl.textContent = window.dowryCount;
+            if (dowryEl) dowryEl.textContent = dowryCount;
             const storeDowryEl = document.getElementById('store-dowry');
-            if (storeDowryEl) storeDowryEl.textContent = window.dowryCount;
-            window.draw();
+            if (storeDowryEl) storeDowryEl.textContent = dowryCount;
+            draw();
         }
 
         // --- Globals & Elements ---
@@ -552,7 +500,7 @@
         let CELL_SIZE = 600 / (GRID_SIZE + 1);
         let PADDING = CELL_SIZE;
 
-        // FIX: Initialize board with zeros immediately to prevent race condition with Firestore callback
+        // Initialize board immediately
         let board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
         
         let currentPlayer = 1;
@@ -589,23 +537,35 @@
             { name: "真愛", desc: "召喚老婆降臨佔據棋盤" }
         ];
 
-        // --- Functions ---
+        // --- Core Functions ---
 
-        // Declare window functions first
-        window.init = init;
-        window.draw = draw;
-        window.resetGame = resetGame;
-        window.reselectGame = reselectGame;
-        window.handleStartButtonClick = handleStartButtonClick;
-        window.showTournamentSelection = showTournamentSelection;
-        window.cancelTournament = cancelTournament;
-        window.startTournamentMatch = startTournamentMatch;
-        window.showStore = showStore;
-        window.showHelp = showHelp;
-        window.closeModal = closeModal;
-        window.updateStorage = updateStorage;
-        window.buySkin = buySkin;
-        window.equipSkin = equipSkin;
+        function init() {
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = 600 * dpr;
+            canvas.height = 600 * dpr;
+            ctx.scale(dpr, dpr);
+            CELL_SIZE = 600 / (GRID_SIZE + 1);
+            PADDING = CELL_SIZE;
+            
+            // Load data
+            updateUIElements();
+            
+            canvas.addEventListener('click', handleInput);
+            canvas.addEventListener('touchend', (e) => { e.preventDefault(); handleInput(e.changedTouches[0]); }, {passive: false});
+            
+            modeSelect.addEventListener('change', () => {
+                const mode = modeSelect.value;
+                if (mode === 'pve') { levelSelect.style.display = 'inline-block'; startBtn.textContent = "💖 開始對戰"; }
+                else if (mode === 'tournament') { levelSelect.style.display = 'none'; startBtn.textContent = "🏆 選擇對手"; }
+                else { levelSelect.style.display = 'none'; startBtn.textContent = "💖 開始對戰"; }
+                if(isGameActive) resetGame();
+            });
+            
+            disasterToggle.addEventListener('change', () => {
+                if (isGameActive) { if (disasterToggle.checked) scheduleNextDisaster(); else clearTimeout(disasterTimeoutId); }
+            });
+            animate();
+        }
 
         function reselectGame() {
             isGameActive = false; isGameOver = false; restartBtn.disabled = true; clearTimeout(disasterTimeoutId); modalOverlay.style.display = 'none'; startOverlay.style.display = 'flex'; tournamentOverlay.style.display = 'none';
@@ -694,7 +654,6 @@
             draw(); 
         }
 
-        // Added missing updateUI function
         function updateUI() {
             const statusText = document.getElementById('status-text');
             const currentStoneIcon = document.getElementById('current-stone');
@@ -750,8 +709,8 @@
         function showStore() {
             let itemsHtml = '';
             for (const [id, skin] of Object.entries(skins)) {
-                const owned = window.ownedSkins.includes(id);
-                const active = window.selectedSkin === id;
+                const owned = ownedSkins.includes(id);
+                const active = selectedSkin === id;
                 let btnText = owned ? (active ? "已裝備" : "裝備") : `購買 $${skin.price}`;
                 let btnClass = owned ? (active ? "store-btn" : "store-btn btn-secondary") : "store-btn";
                 let btnAction = owned ? `equipSkin('${id}')` : `buySkin('${id}', ${skin.price})`;
@@ -776,7 +735,7 @@
 
             modalContent.innerHTML = `
                 <h2 style="color:#ff1493">🏪 時尚商城</h2>
-                <p>目前嫁妝: <strong id="store-dowry">${window.dowryCount}</strong> 🎁</p>
+                <p>目前嫁妝: <strong id="store-dowry">${dowryCount}</strong> 🎁</p>
                 <div class="store-grid">
                     ${itemsHtml}
                 </div>
@@ -786,11 +745,11 @@
         }
 
         function buySkin(id, price) {
-            if (window.dowryCount >= price) {
-                window.dowryCount -= price;
-                window.ownedSkins.push(id);
-                window.updateStorage();
-                window.showStore(); 
+            if (dowryCount >= price) {
+                dowryCount -= price;
+                ownedSkins.push(id);
+                updateStorage();
+                showStore(); 
                 alert(`購買成功！獲得 ${skins[id].name}`);
             } else {
                 alert("嫁妝不足！快去參加比賽賺取吧！");
@@ -798,10 +757,10 @@
         };
 
         function equipSkin(id) {
-            window.selectedSkin = id;
-            window.updateStorage();
-            window.showStore();
-            window.draw();
+            selectedSkin = id;
+            updateStorage();
+            showStore();
+            draw();
         };
 
         function closeModal() {
@@ -818,12 +777,12 @@
                 switch(skillId) {
                     case 1: break;
                     case 2: showAlert(`技能：${skillName}!`, color); gameContainer.classList.add('blur-effect'); setTimeout(() => gameContainer.classList.remove('blur-effect'), 3000); break;
-                    case 3: if (lastMove && board[lastMove.y][lastMove.x] === 1) { showAlert(`技能：${skillName}!`, color); board[lastMove.y][lastMove.x] = 0; currentPlayer = 1; isThinking = false; window.draw(); return true; } break;
+                    case 3: if (lastMove && board[lastMove.y][lastMove.x] === 1) { showAlert(`技能：${skillName}!`, color); board[lastMove.y][lastMove.x] = 0; currentPlayer = 1; isThinking = false; draw(); return true; } break;
                     case 4: showAlert(`技能：${skillName}!`, color); spawnFog(); break;
-                    case 5: showAlert(`技能：${skillName}!`, color); for(let i=0; i<2; i++) spawnObstacle(-4); window.draw(); break;
-                    case 6: showAlert(`技能：${skillName}!`, color); destroyRandomPlayerStone(); window.draw(); break;
+                    case 5: showAlert(`技能：${skillName}!`, color); for(let i=0; i<2; i++) spawnObstacle(-4); draw(); break;
+                    case 6: showAlert(`技能：${skillName}!`, color); destroyRandomPlayerStone(); draw(); break;
                     case 7: showAlert(`技能：${skillName}!`, color); isInputBlocked = true; gameContainer.classList.add('freeze-effect'); setTimeout(() => { isInputBlocked = false; gameContainer.classList.remove('freeze-effect'); }, 2000); break;
-                    case 8: showAlert(`技能：${skillName}!`, color); swapPlayerStoneToAI(); window.draw(); break;
+                    case 8: showAlert(`技能：${skillName}!`, color); swapPlayerStoneToAI(); draw(); break;
                     case 9: showAlert(`技能：${skillName}!`, color); spawnDisasterEffect({id: -2, name: 'tornado'}, 7, 7); break;
                     case 10: showAlert(`技能：${skillName}!`, color); spawnDisasterEffect({id: -3, name: 'love'}, 7, 7); break;
                 }
@@ -843,7 +802,7 @@
         function showAlert(text, color) { disasterAlert.textContent = text; disasterAlert.style.color = color; disasterAlert.style.textShadow = `0 0 20px ${color}, 2px 2px 0 #000`; disasterAlert.classList.add('active'); setTimeout(() => { disasterAlert.classList.remove('active'); }, 2000); }
 
         function animate() {
-            window.draw(); 
+            draw(); 
             updateEffects();
             animationFrameId = requestAnimationFrame(animate);
         }
@@ -856,7 +815,6 @@
             for (let i = 0; i < GRID_SIZE; i++) { ctx.moveTo(PADDING, PADDING + i * CELL_SIZE); ctx.lineTo(PADDING + (GRID_SIZE - 1) * CELL_SIZE, PADDING + i * CELL_SIZE); ctx.moveTo(PADDING + i * CELL_SIZE, PADDING); ctx.lineTo(PADDING + i * CELL_SIZE, PADDING + (GRID_SIZE - 1) * CELL_SIZE); } ctx.stroke();
             const stars = [{x: 3, y: 3}, {x: 11, y: 3}, {x: 7, y: 7}, {x: 3, y: 11}, {x: 11, y: 11}]; ctx.fillStyle = "#8B4C5E"; stars.forEach(star => { ctx.beginPath(); ctx.arc(PADDING + star.x * CELL_SIZE, PADDING + star.y * CELL_SIZE, 4, 0, Math.PI * 2); ctx.fill(); });
 
-            // FIX: Check if board is ready before drawing content
             if (!board || board.length === 0) return;
 
             for (let y = 0; y < GRID_SIZE; y++) {
@@ -881,8 +839,7 @@
             let currentStyle = skins['classic'];
             
             if (type === 1) { 
-                // Fallback if skin is missing
-                let skinKey = window.selectedSkin;
+                let skinKey = selectedSkin;
                 if (!skins[skinKey]) skinKey = 'classic';
                 currentStyle = skins[skinKey];
             } else { 
@@ -930,45 +887,28 @@
             ctx.shadowColor = "transparent";
         }
 
-        // Add missing drawDisasterResult
         function drawDisasterResult(x, y, type) {
             const cx = PADDING + x * CELL_SIZE;
             const cy = PADDING + y * CELL_SIZE;
             const size = CELL_SIZE * 0.4;
-            
             ctx.save();
             ctx.translate(cx, cy);
 
             if (type === -1) { // Meteor Crater
                 ctx.fillStyle = "#444";
-                ctx.beginPath();
-                ctx.arc(0, 0, size, 0, Math.PI*2);
-                ctx.fill();
-                ctx.strokeStyle = "#FF4500";
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(-size*0.7, -size*0.7); ctx.lineTo(size*0.7, size*0.7);
-                ctx.moveTo(size*0.7, -size*0.7); ctx.lineTo(-size*0.7, size*0.7);
-                ctx.stroke();
+                ctx.beginPath(); ctx.arc(0, 0, size, 0, Math.PI*2); ctx.fill();
+                ctx.strokeStyle = "#FF4500"; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(-size*0.7, -size*0.7); ctx.lineTo(size*0.7, size*0.7); ctx.moveTo(size*0.7, -size*0.7); ctx.lineTo(-size*0.7, size*0.7); ctx.stroke();
             } else if (type === -2) { // Tornado Debris
                 ctx.fillStyle = "#aaa";
-                ctx.beginPath();
-                ctx.arc(0, 0, size*0.8, 0, Math.PI*2);
-                ctx.fill();
-                ctx.strokeStyle = "#555";
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(0, 0, size*0.5, 0, Math.PI*1.5);
-                ctx.stroke();
+                ctx.beginPath(); ctx.arc(0, 0, size*0.8, 0, Math.PI*2); ctx.fill();
+                ctx.strokeStyle = "#555"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, size*0.5, 0, Math.PI*1.5); ctx.stroke();
             } else if (type === -3) { // Love/Custom Image Debris
                 if (customImage.complete) {
-                    ctx.beginPath();
-                    ctx.arc(0, 0, size * 1.2, 0, Math.PI * 2);
-                    ctx.clip();
+                    ctx.beginPath(); ctx.arc(0, 0, size * 1.2, 0, Math.PI * 2); ctx.clip();
                     ctx.drawImage(customImage, -size*1.2, -size*1.2, size*2.4, size*2.4);
                 } else {
-                    ctx.fillStyle = "#FF69B4";
-                    ctx.beginPath();
+                    ctx.fillStyle = "#FF69B4"; ctx.beginPath();
                     const topCurveHeight = size * 0.3;
                     ctx.moveTo(0, topCurveHeight);
                     ctx.bezierCurveTo(0, 0, -size, 0, -size, topCurveHeight);
@@ -978,15 +918,8 @@
                     ctx.fill();
                 }
             } else if (type === -4) { // Tear Puddle
-                ctx.fillStyle = "#4169E1";
-                ctx.beginPath();
-                ctx.arc(0, size*0.4, size*0.6, 0, Math.PI*2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.moveTo(0, -size);
-                ctx.quadraticCurveTo(size*0.6, size*0.4, 0, size*0.4);
-                ctx.quadraticCurveTo(-size*0.6, size*0.4, 0, -size);
-                ctx.fill();
+                ctx.fillStyle = "#4169E1"; ctx.beginPath(); ctx.arc(0, size*0.4, size*0.6, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.moveTo(0, -size); ctx.quadraticCurveTo(size*0.6, size*0.4, 0, size*0.4); ctx.quadraticCurveTo(-size*0.6, size*0.4, 0, -size); ctx.fill();
             }
             ctx.restore();
         }
@@ -1015,40 +948,13 @@
             } else if (winner === 1 && mode === 'tournament') {
                 if (currentTournamentLevel === 10) reward = 520; else if (currentTournamentLevel === 9) reward = 360; else if (currentTournamentLevel === 8) reward = 225; else reward = 10;
                 msg = `恭喜獲勝！<br>獲得 ${reward} 個嫁妝 🎁`;
-                window.dowryCount += reward;
-                window.updateStorage();
+                dowryCount += reward;
+                updateStorage();
             }
-            modalContent.innerHTML = `<div id="winner-text">${winner === 1 ? "🎉 恭喜獲勝!" : "💔 再接再厲"}</div>${reward > 0 ? `<div id="reward-text">🎁 +${reward} 嫁妝</div>` : ''}<p style="color:#666; margin-bottom:20px;">${winner === 1 ? "妳的愛意戰勝了一切！" : "不要氣餒，愛需要堅持！"}</p><button class="btn-secondary" onclick="window.closeModal(); window.resetGame();">再來一局</button>${mode === 'tournament' ? `<button class="btn-secondary" style="margin-top:10px" onclick="window.closeModal(); window.showTournamentSelection();">選擇對手</button>` : ''}`;
+            modalContent.innerHTML = `<div id="winner-text">${winner === 1 ? "🎉 恭喜獲勝!" : "💔 再接再厲"}</div>${reward > 0 ? `<div id="reward-text">🎁 +${reward} 嫁妝</div>` : ''}<p style="color:#666; margin-bottom:20px;">${winner === 1 ? "妳的愛意戰勝了一切！" : "不要氣餒，愛需要堅持！"}</p><button class="btn-secondary" onclick="closeModal(); resetGame();">再來一局</button>${mode === 'tournament' ? `<button class="btn-secondary" style="margin-top:10px" onclick="closeModal(); showTournamentSelection();">選擇對手</button>` : ''}`;
             modalOverlay.style.display = 'flex';
             const statusText = document.getElementById('status-text');
             if(statusText) statusText.textContent = "遊戲結束";
-        }
-
-        function init() {
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = 600 * dpr;
-            canvas.height = 600 * dpr;
-            ctx.scale(dpr, dpr);
-            CELL_SIZE = 600 / (GRID_SIZE + 1);
-            PADDING = CELL_SIZE;
-            board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
-            draw();
-            
-            canvas.addEventListener('click', handleInput);
-            canvas.addEventListener('touchend', (e) => { e.preventDefault(); handleInput(e.changedTouches[0]); }, {passive: false});
-            
-            modeSelect.addEventListener('change', () => {
-                const mode = modeSelect.value;
-                if (mode === 'pve') { levelSelect.style.display = 'inline-block'; startBtn.textContent = "💖 開始對戰"; }
-                else if (mode === 'tournament') { levelSelect.style.display = 'none'; startBtn.textContent = "🏆 選擇對手"; }
-                else { levelSelect.style.display = 'none'; startBtn.textContent = "💖 開始對戰"; }
-                if(isGameActive) resetGame();
-            });
-            
-            disasterToggle.addEventListener('change', () => {
-                if (isGameActive) { if (disasterToggle.checked) scheduleNextDisaster(); else clearTimeout(disasterTimeoutId); }
-            });
-            animate();
         }
 
         // Start
