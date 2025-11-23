@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>經典五子棋 - 少女粉紅版 (最終修復版)</title>
+    <title>經典五子棋 - 少女粉紅版 (最終完美版)</title>
     <style>
         body {
             margin: 0;
@@ -15,7 +15,6 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            /* Polka dot pattern in pink */
             background-image: radial-gradient(#ffb6c1 15%, transparent 15%), radial-gradient(#ffb6c1 15%, transparent 15%);
             background-position: 0 0, 15px 15px;
             background-size: 30px 30px;
@@ -35,7 +34,6 @@
             overflow: hidden;
         }
 
-        /* Shake Animation */
         @keyframes shake {
             0% { transform: translate(1px, 1px) rotate(0deg); }
             10% { transform: translate(-1px, -2px) rotate(-1deg); }
@@ -55,13 +53,11 @@
             animation-iteration-count: 1;
         }
 
-        /* Blur Effect */
         .blur-effect canvas {
             filter: blur(8px);
             transition: filter 0.5s;
         }
 
-        /* Freeze Effect */
         .freeze-effect canvas {
             filter: hue-rotate(180deg) brightness(1.2);
             transition: filter 0.5s;
@@ -99,7 +95,6 @@
 
         h1 { margin: 0; font-size: 1.5rem; color: #d63384; }
 
-        /* Dowry Display */
         .dowry-display {
             font-weight: bold;
             color: #d63384;
@@ -126,11 +121,9 @@
             display: inline-block;
             border: 1px solid rgba(0,0,0,0.1);
         }
-        /* Default icons for UI */
         .stone-black { background: radial-gradient(circle at 30% 30%, #555, #222); }
         .stone-white { background: radial-gradient(circle at 30% 30%, #fff, #f0f0f0); border: 1px solid #ffb6c1; }
 
-        /* Controls */
         .controls {
             display: flex;
             gap: 10px;
@@ -154,11 +147,11 @@
         }
 
         button {
-            background-color: #ff69b4; /* Hot Pink */
+            background-color: #ff69b4;
             color: white;
             border: none;
             font-weight: bold;
-            box-shadow: 0 4px 0 #db7093; /* 3D effect */
+            box-shadow: 0 4px 0 #db7093;
             transition: transform 0.1s, box-shadow 0.1s, background-color 0.2s, opacity 0.2s;
         }
         button:active {
@@ -175,7 +168,6 @@
             transform: none;
         }
 
-        /* Secondary Button Style */
         .btn-secondary {
             background-color: #fff;
             color: #ff69b4;
@@ -205,7 +197,6 @@
         }
         .toggle-label input { cursor: pointer; width: 16px; height: 16px; accent-color: #ff69b4; }
 
-        /* Modal Generic */
         .modal-overlay {
             display: none;
             position: absolute;
@@ -232,7 +223,6 @@
             overflow-y: auto;
         }
         
-        /* Store Styling */
         .store-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -259,7 +249,6 @@
         .store-price { font-size: 0.85rem; color: #d63384; margin-bottom: 8px; }
         .store-btn { padding: 5px 10px; font-size: 0.8rem; width: 100%; }
 
-        /* Help Content */
         .help-content { text-align: left; }
         .help-content h2 { color: #ff1493; text-align: center; margin-top: 0; border-bottom: 2px dashed #ffb6c1; padding-bottom: 10px; }
         .help-item { margin-bottom: 15px; }
@@ -270,7 +259,6 @@
         #winner-text { font-size: 2rem; margin-bottom: 20px; color: #ff1493; }
         #reward-text { font-size: 1.2rem; color: #d63384; margin-bottom: 20px; font-weight: bold;}
 
-        /* --- Full Screen Disaster Alert --- */
         #disaster-alert {
             position: absolute;
             top: 50%;
@@ -292,19 +280,18 @@
         }
         #disaster-alert.active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
-        /* --- Toast Message --- */
         #toast-message {
             position: fixed;
             bottom: 100px;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
-            background: rgba(255, 20, 147, 0.95); /* Deep Pink */
+            background: rgba(255, 20, 147, 0.95);
             color: white;
             padding: 15px 30px;
             border-radius: 50px;
             font-size: 1.1rem;
             font-weight: bold;
-            z-index: 2000; /* Above modal */
+            z-index: 2000;
             opacity: 0;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
@@ -316,7 +303,6 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* --- Start Game Overlay --- */
         #start-overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -344,7 +330,6 @@
         #start-btn:hover { transform: scale(1.05); background-color: #ff0080; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        /* --- Tournament Overlay --- */
         #tournament-overlay {
             display: none;
             position: absolute;
@@ -381,7 +366,6 @@
         .opponent-skill { font-size: 0.85rem; color: #c71585; background: #fff0f5; padding: 5px; border-radius: 5px; border: 1px dashed #ffb6c1; margin-top: auto; }
         .opponent-skill strong { display: block; color: #ff1493; }
 
-        /* --- Fog Overlay --- */
         .fog-cloud {
             position: absolute;
             width: 150px; height: 150px;
@@ -393,7 +377,6 @@
         }
         @keyframes floatFog { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(10px, 15px); } }
 
-        /* --- Start Game Runner Animation --- */
         #start-runner {
             position: fixed; top: 50%; left: 100vw;
             transform: translateY(-50%);
@@ -484,7 +467,6 @@
 
     <script>
         // --- Data Init (Local Storage) ---
-        // Initialize globals attached to window
         window.dowryCount = parseInt(localStorage.getItem('dowryCount')) || 0;
         window.ownedSkins = JSON.parse(localStorage.getItem('ownedSkins')) || ['classic'];
         window.selectedSkin = localStorage.getItem('selectedSkin') || 'classic';
@@ -499,9 +481,10 @@
         function updateUIElements() {
             const dowryEl = document.getElementById('dowry-count');
             if (dowryEl) dowryEl.textContent = window.dowryCount;
+            // If store is open, update its display too
             const storeDowryEl = document.getElementById('store-dowry');
             if (storeDowryEl) storeDowryEl.textContent = window.dowryCount;
-            draw(); // Redraw board to update skins
+            if (typeof window.draw === 'function') window.draw();
         }
 
         // --- Globals & Elements ---
@@ -544,6 +527,7 @@
         let isGameActive = false;
         let currentTournamentLevel = 0;
         let isInputBlocked = false;
+        let skillUsageCount = 0;
         
         let disasterTimeoutId = null;
         let particles = [];
@@ -571,10 +555,8 @@
             { name: "唯愛", desc: "召喚 Only Love 降臨佔據棋盤" }
         ];
 
-        // --- Initialization ---
-        window.onload = init;
-
-        function init() {
+        // --- Main Init ---
+        window.onload = function() {
             const dpr = window.devicePixelRatio || 1;
             canvas.width = 600 * dpr;
             canvas.height = 600 * dpr;
@@ -599,26 +581,27 @@
                 if (isGameActive) { if (disasterToggle.checked) scheduleNextDisaster(); else clearTimeout(disasterTimeoutId); }
             });
             animate();
-        }
+        };
 
-        // --- Main Game Functions ---
+        // --- Main Functions (Attached to window for HTML access) ---
 
-        function reselectGame() {
+        window.reselectGame = function() {
             isGameActive = false; isGameOver = false; restartBtn.disabled = true; clearTimeout(disasterTimeoutId); modalOverlay.style.display = 'none'; startOverlay.style.display = 'flex'; tournamentOverlay.style.display = 'none';
             board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0)); activeEffects = []; particles = []; lastMove = null; gameContainer.classList.remove('blur-effect', 'freeze-effect'); document.querySelectorAll('.fog-cloud').forEach(el => el.remove()); draw();
         }
 
-        function handleStartButtonClick() {
+        window.handleStartButtonClick = function() {
             if (modeSelect.value === 'tournament') showTournamentSelection(); else startStandardGame();
         }
 
+        window.showTournamentSelection = showTournamentSelection;
         function showTournamentSelection() {
             startOverlay.style.display = 'none';
             tournamentOverlay.style.display = 'flex';
             generateTournamentOpponents();
         }
 
-        function cancelTournament() {
+        window.cancelTournament = function() {
             tournamentOverlay.style.display = 'none';
             startOverlay.style.display = 'flex';
         }
@@ -643,6 +626,7 @@
             }
         }
 
+        window.startTournamentMatch = startTournamentMatch;
         function startTournamentMatch(level) {
             currentTournamentLevel = level;
             tournamentOverlay.style.display = 'none';
@@ -672,6 +656,7 @@
             setTimeout(() => { startRunner.classList.remove('active'); }, 3000);
         }
 
+        window.resetGame = resetGame;
         function resetGame(keepState = false) {
             if (!isGameActive) return;
             board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
@@ -680,6 +665,7 @@
             lastMove = null;
             isThinking = false;
             isInputBlocked = false;
+            skillUsageCount = 0;
             modalOverlay.style.display = 'none';
             particles = [];
             activeEffects = [];
@@ -688,6 +674,7 @@
             clearTimeout(disasterTimeoutId);
             if (disasterToggle.checked) scheduleNextDisaster();
             draw(); 
+            updateUI();
         }
 
         function updateUI() {
@@ -715,9 +702,7 @@
             }
         }
 
-        // --- UI Helper Functions ---
-
-        function showHelp() {
+        window.showHelp = function() {
             modalContent.innerHTML = `
                 <div class="help-content">
                     <h2>🌸 遊戲說明</h2>
@@ -744,7 +729,7 @@
             modalOverlay.style.display = 'flex';
         }
 
-        function showStore() {
+        window.showStore = function() {
             let itemsHtml = '';
             for (const [id, skin] of Object.entries(skins)) {
                 const owned = window.ownedSkins.includes(id);
@@ -797,7 +782,7 @@
             }, 3000);
         }
 
-        function buySkin(id, price) {
+        window.buySkin = function(id, price) {
             if (window.dowryCount >= price) {
                 window.dowryCount -= price;
                 window.ownedSkins.push(id);
@@ -807,55 +792,109 @@
             } else {
                 showToast("嫁妝不足！快去參加比賽賺取吧！ 🎁");
             }
-        }
+        };
 
-        function equipSkin(id) {
+        window.equipSkin = function(id) {
             window.selectedSkin = id;
             updateStorage();
             showStore();
             draw();
-        }
+        };
 
+        window.closeModal = function() {
+            modalOverlay.style.display = 'none';
+        }
+        
         function closeModal() {
             modalOverlay.style.display = 'none';
         }
 
+        // --- Helper function for Random Coordinate ---
+        function getRandomCoordinate() {
+            return {
+                x: Math.floor(Math.random() * GRID_SIZE),
+                y: Math.floor(Math.random() * GRID_SIZE)
+            };
+        }
+
         // --- AI Logic & Skills ---
 
-        function triggerOpponentSkill() {
-            if (currentTournamentLevel === 0 || isGameOver) return;
-            if (Math.random() > 0.3) return;
-            const skillId = currentTournamentLevel;
-            const skillName = tournamentSkills[skillId-1].name;
-            const color = "#d63384";
-            setTimeout(() => {
-                switch(skillId) {
-                    case 1: break;
-                    case 2: showAlert(`技能：${skillName}!`, color); gameContainer.classList.add('blur-effect'); setTimeout(() => gameContainer.classList.remove('blur-effect'), 3000); break;
-                    case 3: if (lastMove && board[lastMove.y][lastMove.x] === 1) { 
-                        showAlert(`技能：${skillName}!`, color); 
-                        board[lastMove.y][lastMove.x] = 0; 
-                        currentPlayer = 1; isThinking = false; draw(); 
-                        spawnDisasterEffect({id: 'haha', name: 'haha'}, 7, 7); 
-                        updateUI();
-                        return true; 
-                    } break;
-                    case 4: showAlert(`技能：${skillName}!`, color); spawnFog(); break;
-                    case 5: showAlert(`技能：${skillName}!`, color); for(let i=0; i<2; i++) spawnObstacle(-4); draw(); break;
-                    case 6: showAlert(`技能：${skillName}!`, color); destroyRandomPlayerStone(); draw(); break;
-                    case 7: showAlert(`技能：${skillName}!`, color); isInputBlocked = true; gameContainer.classList.add('freeze-effect'); setTimeout(() => { isInputBlocked = false; gameContainer.classList.remove('freeze-effect'); }, 3000); break;
-                    case 8: showAlert(`技能：${skillName}!`, color); swapPlayerStoneToAI(); 
-                        spawnDisasterEffect({id: 'haha', name: 'haha'}, 7, 7); 
-                        draw(); break;
-                    case 9: showAlert(`技能：${skillName}!`, color); spawnDisasterEffect({id: -2, name: 'tornado'}, 7, 7); break;
-                    case 10: 
-                        showAlert(`技能：${skillName}!`, color); 
-                        spawnDisasterEffect({id: -5, name: 'onlylove'}, 7, 7); 
-                        break;
+        function handleInput(e) { if (isGameOver || isThinking || !isGameActive || isInputBlocked) return; if ((modeSelect.value === 'pve' || modeSelect.value === 'tournament') && currentPlayer === 2) return; const rect = canvas.getBoundingClientRect(); const scaleX = 600 / rect.width; const scaleY = 600 / rect.height; const mouseX = (e.clientX - rect.left) * scaleX; const mouseY = (e.clientY - rect.top) * scaleY; const gridX = Math.round((mouseX - PADDING) / CELL_SIZE); const gridY = Math.round((mouseY - PADDING) / CELL_SIZE); if (gridX >= 0 && gridX < GRID_SIZE && gridY >= 0 && gridY < GRID_SIZE) { if (board[gridY][gridX] === 0) { placeStone(gridX, gridY); } } }
+        function placeStone(x, y) { board[y][x] = currentPlayer; lastMove = {x, y}; if (checkWin(x, y, currentPlayer)) { endGame(currentPlayer); return; } currentPlayer = currentPlayer === 1 ? 2 : 1; updateUI(); const mode = modeSelect.value; if ((mode === 'pve' || mode === 'tournament') && currentPlayer === 2 && !isGameOver) { isThinking = true; makeAIMove(); } }
+
+        function makeAIMove() {
+            if (!isGameActive || isGameOver) return;
+            
+            if (modeSelect.value === 'tournament') {
+                // Check skill limit (Max 5 per game)
+                if (currentTournamentLevel > 1 && skillUsageCount < 5 && Math.random() < 0.3) {
+                    const skillId = currentTournamentLevel;
+                    const skillName = tournamentSkills[skillId-1].name;
+                    const color = "#d63384";
+
+                    setTimeout(() => {
+                        if (isGameOver) return;
+                        
+                        showAlert(`技能：${skillName}!`, color);
+                        skillUsageCount++; 
+                        let skipMove = false;
+
+                        switch(skillId) {
+                            case 2: gameContainer.classList.add('blur-effect'); setTimeout(() => gameContainer.classList.remove('blur-effect'), 3000); break;
+                            case 3: if (lastMove && board[lastMove.y][lastMove.x] === 1) { 
+                                board[lastMove.y][lastMove.x] = 0; lastMove = null; currentPlayer = 1; isThinking = false; draw(); 
+                                let pos = getRandomCoordinate();
+                                spawnDisasterEffect({id: 'haha', name: 'haha'}, pos.x, pos.y); updateUI(); skipMove = true; 
+                            } break;
+                            case 4: spawnFog(); break;
+                            case 5: for(let i=0; i<2; i++) spawnObstacle(-4); draw(); break;
+                            case 6: destroyRandomPlayerStone(); draw(); break;
+                            case 7: isInputBlocked = true; gameContainer.classList.add('freeze-effect'); setTimeout(() => { isInputBlocked = false; gameContainer.classList.remove('freeze-effect'); }, 3000); break;
+                            case 8: swapPlayerStoneToAI(); 
+                                let pos8 = getRandomCoordinate();
+                                spawnDisasterEffect({id: 'haha', name: 'haha'}, pos8.x, pos8.y); draw(); break;
+                            case 9: 
+                                let pos9 = getRandomCoordinate();
+                                spawnDisasterEffect({id: -2, name: 'tornado'}, pos9.x, pos9.y); break;
+                            case 10: 
+                                let pos10 = getRandomCoordinate();
+                                spawnDisasterEffect({id: -5, name: 'onlylove'}, pos10.x, pos10.y); break;
+                        }
+
+                        if (!skipMove) {
+                            setTimeout(() => {
+                                performAIMoveLogic();
+                            }, 1000);
+                        }
+
+                    }, 2000); 
+
+                    return; 
                 }
-            }, 2000); 
-            return false;
+            }
+            setTimeout(performAIMoveLogic, 500);
         }
+
+        function performAIMoveLogic() {
+            if (isGameOver) return;
+            const level = parseInt(levelSelect.value);
+            let move;
+            if (currentTournamentLevel === 1 && Math.random() < 0.1) { move = getRandomMove(); } 
+            else { if (level === 1) move = getLevel1Move(); else if (level === 2) move = getLevel2Move(); else move = getLevel3Move(); }
+            if (!move) move = getRandomMove();
+            if (move) placeStone(move.x, move.y);
+            isThinking = false;
+        }
+
+        function getRandomMove() { for(let y=0; y<GRID_SIZE; y++) for(let x=0; x<GRID_SIZE; x++) if(board[y][x] === 0) return {x, y}; return null; }
+        function getLevel1Move() { let candidates = []; for (let y = 0; y < GRID_SIZE; y++) for (let x = 0; x < GRID_SIZE; x++) if (board[y][x] === 0 && hasNeighbor(x, y, 2)) candidates.push({x, y}); if (candidates.length === 0) return getRandomMove(); return candidates[Math.floor(Math.random() * candidates.length)]; }
+        function getLevel2Move() { return getBestMoveByScore(false); }
+        function getLevel3Move() { return getBestMoveByScore(true); }
+        function getBestMoveByScore(isHard) { let bestScore = -Infinity; let bestMoves = []; for (let y = 0; y < GRID_SIZE; y++) { for (let x = 0; x < GRID_SIZE; x++) { if (board[y][x] === 0) { if (!hasNeighbor(x, y, 2) && board[7][7] !== 0) continue; let attackScore = evaluatePoint(x, y, 2); let defenseScore = evaluatePoint(x, y, 1); let currentScore; if (isHard) { if (attackScore >= 10000) currentScore = 20000; else if (defenseScore >= 10000) currentScore = 10000; else currentScore = attackScore + defenseScore; } else { let noise = Math.random() * 20; currentScore = attackScore + (defenseScore * 0.8) + noise; } if (currentScore > bestScore) { bestScore = currentScore; bestMoves = [{x, y}]; } else if (currentScore === bestScore) { bestMoves.push({x, y}); } } } } if (bestMoves.length === 0) return getRandomMove(); return bestMoves[Math.floor(Math.random() * bestMoves.length)]; }
+        function hasNeighbor(x, y, radius) { for (let dy = -radius; dy <= radius; dy++) for (let dx = -radius; dx <= radius; dx++) { if (dx === 0 && dy === 0) continue; let nx = x + dx, ny = y + dy; if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) if (board[ny][nx] !== 0) return true; } return false; }
+        function evaluatePoint(x, y, player) { let score = 0; const dirs = [[1,0], [0,1], [1,1], [1,-1]]; for (let dir of dirs) score += evaluateLine(x, y, dir[0], dir[1], player); return score; }
+        function evaluateLine(x, y, dx, dy, player) { let count = 1; let blockedEnds = 0; let i = 1; while (true) { let nx = x + dx * i; let ny = y + dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE) { blockedEnds++; break; } const val = board[ny][nx]; if (val === player) { count++; } else if (val === 0) { break; } else { blockedEnds++; break; } i++; } i = 1; while (true) { let nx = x - dx * i; let ny = y - dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE) { blockedEnds++; break; } const val = board[ny][nx]; if (val === player) { count++; } else if (val === 0) { break; } else { blockedEnds++; break; } i++; } if (blockedEnds >= 2 && count < 5) return 0; if (count >= 5) return 100000; if (count === 4) return blockedEnds === 0 ? 10000 : 2500; if (count === 3) return blockedEnds === 0 ? 3000 : 500; if (count === 2) return blockedEnds === 0 ? 500 : 50; return 10; }
+        function checkWin(x, y, player) { const directions = [[1, 0], [0, 1], [1, 1], [1, -1]]; for (let [dx, dy] of directions) { let count = 1; for (let i = 1; i < 5; i++) { const nx = x + dx * i, ny = y + dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE || board[ny][nx] !== player) break; count++; } for (let i = 1; i < 5; i++) { const nx = x - dx * i, ny = y - dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE || board[ny][nx] !== player) break; count++; } if (count >= 5) return true; } return false; }
         
         function spawnFog() { for(let i=0; i<3; i++) { const fog = document.createElement('div'); fog.className = 'fog-cloud'; fog.style.left = Math.random() * 80 + '%'; fog.style.top = Math.random() * 80 + '%'; gameContainer.appendChild(fog); setTimeout(() => fog.remove(), 5000); } }
         function destroyRandomPlayerStone() { let playerStones = []; for(let y=0; y<GRID_SIZE; y++) for(let x=0; x<GRID_SIZE; x++) if(board[y][x] === 1) playerStones.push({x, y}); if(playerStones.length > 0) { const target = playerStones[Math.floor(Math.random() * playerStones.length)]; board[target.y][target.x] = -1; spawnParticles(PADDING + target.x * CELL_SIZE, PADDING + target.y * CELL_SIZE, 'meteor'); } }
@@ -910,7 +949,7 @@
         function showAlert(text, color) { disasterAlert.textContent = text; disasterAlert.style.color = color; disasterAlert.style.textShadow = `0 0 20px ${color}, 2px 2px 0 #000`; disasterAlert.classList.add('active'); setTimeout(() => { disasterAlert.classList.remove('active'); }, 2000); }
 
         function animate() {
-            window.draw(); 
+            draw(); 
             updateEffects();
             animationFrameId = requestAnimationFrame(animate);
         }
@@ -961,6 +1000,32 @@
                 else if (eff.type === 'haha') { if (imgHaha.complete && imgHaha.naturalWidth !== 0) { ctx.drawImage(imgHaha, -40, -40, 80, 80); } else { ctx.fillStyle = "#FF1493"; ctx.font = "30px Arial"; ctx.fillText("Haha", -25, 10); } }
                 ctx.restore(); 
             }); 
+        }
+
+        function drawDisasterResult(x, y, type) {
+            const cx = PADDING + x * CELL_SIZE;
+            const cy = PADDING + y * CELL_SIZE;
+            const size = CELL_SIZE * 0.4;
+            ctx.save();
+            ctx.translate(cx, cy);
+
+            if (type === -1) { /* ... meteor ... */ ctx.fillStyle = "#444"; ctx.beginPath(); ctx.arc(0, 0, size, 0, Math.PI*2); ctx.fill(); ctx.strokeStyle = "#FF4500"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-size*0.7, -size*0.7); ctx.lineTo(size*0.7, size*0.7); ctx.moveTo(size*0.7, -size*0.7); ctx.lineTo(-size*0.7, size*0.7); ctx.stroke(); }
+            else if (type === -2) { /* ... tornado ... */ ctx.fillStyle = "#aaa"; ctx.beginPath(); ctx.arc(0, 0, size*0.8, 0, Math.PI*2); ctx.fill(); ctx.strokeStyle = "#555"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, size*0.5, 0, Math.PI*1.5); ctx.stroke(); }
+            else if (type === -3) { /* ... mywife ... */ if (customImage.complete && customImage.naturalWidth !== 0) { ctx.beginPath(); ctx.arc(0, 0, size * 1.2, 0, Math.PI * 2); ctx.clip(); ctx.drawImage(customImage, -size*1.2, -size*1.2, size*2.4, size*2.4); } else { ctx.fillStyle = "#FF69B4"; ctx.beginPath(); const topCurveHeight = size * 0.3; ctx.moveTo(0, topCurveHeight); ctx.bezierCurveTo(0, 0, -size, 0, -size, topCurveHeight); ctx.bezierCurveTo(-size, (size + topCurveHeight) / 2, 0, size, 0, size + topCurveHeight); ctx.bezierCurveTo(0, size, size, (size + topCurveHeight) / 2, size, topCurveHeight); ctx.bezierCurveTo(size, 0, 0, 0, 0, topCurveHeight); ctx.fill(); } }
+            else if (type === -4) { /* ... tear ... */ ctx.fillStyle = "#4169E1"; ctx.beginPath(); ctx.arc(0, size*0.4, size*0.6, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.moveTo(0, -size); ctx.quadraticCurveTo(size*0.6, size*0.4, 0, size*0.4); ctx.quadraticCurveTo(-size*0.6, size*0.4, 0, -size); ctx.fill(); }
+            else if (type === -5) { // Only Love (Level 10)
+                 if (imgOnlyLove.complete && imgOnlyLove.naturalWidth !== 0) {
+                    // Draw circular clipped image for Only Love
+                    ctx.beginPath();
+                    ctx.arc(0, 0, size * 1.5, 0, Math.PI * 2);
+                    ctx.clip();
+                    ctx.drawImage(imgOnlyLove, -size*1.5, -size*1.5, size*3, size*3);
+                } else {
+                    ctx.fillStyle = "#FF1493";
+                    ctx.fillText("Only Love", -20, 5);
+                }
+            }
+            ctx.restore();
         }
 
         function drawStone(x, y, type) {
@@ -1061,32 +1126,6 @@
             ctx.shadowColor = "transparent";
         }
 
-        function drawDisasterResult(x, y, type) {
-            const cx = PADDING + x * CELL_SIZE;
-            const cy = PADDING + y * CELL_SIZE;
-            const size = CELL_SIZE * 0.4;
-            ctx.save();
-            ctx.translate(cx, cy);
-
-            if (type === -1) { /* ... meteor ... */ ctx.fillStyle = "#444"; ctx.beginPath(); ctx.arc(0, 0, size, 0, Math.PI*2); ctx.fill(); ctx.strokeStyle = "#FF4500"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-size*0.7, -size*0.7); ctx.lineTo(size*0.7, size*0.7); ctx.moveTo(size*0.7, -size*0.7); ctx.lineTo(-size*0.7, size*0.7); ctx.stroke(); }
-            else if (type === -2) { /* ... tornado ... */ ctx.fillStyle = "#aaa"; ctx.beginPath(); ctx.arc(0, 0, size*0.8, 0, Math.PI*2); ctx.fill(); ctx.strokeStyle = "#555"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, size*0.5, 0, Math.PI*1.5); ctx.stroke(); }
-            else if (type === -3) { /* ... mywife ... */ if (customImage.complete && customImage.naturalWidth !== 0) { ctx.beginPath(); ctx.arc(0, 0, size * 1.2, 0, Math.PI * 2); ctx.clip(); ctx.drawImage(customImage, -size*1.2, -size*1.2, size*2.4, size*2.4); } else { ctx.fillStyle = "#FF69B4"; ctx.beginPath(); const topCurveHeight = size * 0.3; ctx.moveTo(0, topCurveHeight); ctx.bezierCurveTo(0, 0, -size, 0, -size, topCurveHeight); ctx.bezierCurveTo(-size, (size + topCurveHeight) / 2, 0, size, 0, size + topCurveHeight); ctx.bezierCurveTo(0, size, size, (size + topCurveHeight) / 2, size, topCurveHeight); ctx.bezierCurveTo(size, 0, 0, 0, 0, topCurveHeight); ctx.fill(); } }
-            else if (type === -4) { /* ... tear ... */ ctx.fillStyle = "#4169E1"; ctx.beginPath(); ctx.arc(0, size*0.4, size*0.6, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.moveTo(0, -size); ctx.quadraticCurveTo(size*0.6, size*0.4, 0, size*0.4); ctx.quadraticCurveTo(-size*0.6, size*0.4, 0, -size); ctx.fill(); }
-            else if (type === -5) { // Only Love (Level 10)
-                 if (imgOnlyLove.complete && imgOnlyLove.naturalWidth !== 0) {
-                    // Draw circular clipped image for Only Love
-                    ctx.beginPath();
-                    ctx.arc(0, 0, size * 1.5, 0, Math.PI * 2);
-                    ctx.clip();
-                    ctx.drawImage(imgOnlyLove, -size*1.5, -size*1.5, size*3, size*3);
-                } else {
-                    ctx.fillStyle = "#FF1493";
-                    ctx.fillText("Only Love", -20, 5);
-                }
-            }
-            ctx.restore();
-        }
-
         function endGame(winner) {
             isGameOver = true;
             clearTimeout(disasterTimeoutId);
@@ -1108,7 +1147,7 @@
                 
                 msg = `恭喜獲勝！<br>獲得 ${reward} 個嫁妝 🎁`;
                 window.dowryCount += reward;
-                updateStorage();
+                window.updateStorage();
             }
 
             modalContent.innerHTML = `
@@ -1123,64 +1162,6 @@
             const statusText = document.getElementById('status-text');
             if(statusText) statusText.textContent = "遊戲結束";
         }
-        
-        function handleInput(e) { if (isGameOver || isThinking || !isGameActive || isInputBlocked) return; if ((modeSelect.value === 'pve' || modeSelect.value === 'tournament') && currentPlayer === 2) return; const rect = canvas.getBoundingClientRect(); const scaleX = 600 / rect.width; const scaleY = 600 / rect.height; const mouseX = (e.clientX - rect.left) * scaleX; const mouseY = (e.clientY - rect.top) * scaleY; const gridX = Math.round((mouseX - PADDING) / CELL_SIZE); const gridY = Math.round((mouseY - PADDING) / CELL_SIZE); if (gridX >= 0 && gridX < GRID_SIZE && gridY >= 0 && gridY < GRID_SIZE) { if (board[gridY][gridX] === 0) { placeStone(gridX, gridY); } } }
-        function placeStone(x, y) { board[y][x] = currentPlayer; lastMove = {x, y}; if (checkWin(x, y, currentPlayer)) { endGame(currentPlayer); return; } currentPlayer = currentPlayer === 1 ? 2 : 1; updateUI(); const mode = modeSelect.value; if ((mode === 'pve' || mode === 'tournament') && currentPlayer === 2 && !isGameOver) { isThinking = true; makeAIMove(); } }
-
-        function makeAIMove() {
-            if (!isGameActive || isGameOver) return;
-            
-            if (modeSelect.value === 'tournament') {
-                if (currentTournamentLevel > 1 && Math.random() < 0.3) {
-                    const skillId = currentTournamentLevel;
-                    const skillName = tournamentSkills[skillId-1].name;
-                    const color = "#d63384";
-                    setTimeout(() => {
-                        if (isGameOver) return;
-                        showAlert(`技能：${skillName}!`, color);
-                        let skipMove = false;
-                        switch(skillId) {
-                            case 2: gameContainer.classList.add('blur-effect'); setTimeout(() => gameContainer.classList.remove('blur-effect'), 3000); break;
-                            case 3: if (lastMove && board[lastMove.y][lastMove.x] === 1) { board[lastMove.y][lastMove.x] = 0; lastMove = null; currentPlayer = 1; isThinking = false; draw(); spawnDisasterEffect({id: 'haha', name: 'haha'}, 7, 7); updateUI(); skipMove = true; } break;
-                            case 4: spawnFog(); break;
-                            case 5: for(let i=0; i<2; i++) spawnObstacle(-4); draw(); break;
-                            case 6: destroyRandomPlayerStone(); draw(); break;
-                            case 7: isInputBlocked = true; gameContainer.classList.add('freeze-effect'); setTimeout(() => { isInputBlocked = false; gameContainer.classList.remove('freeze-effect'); }, 3000); break;
-                            case 8: swapPlayerStoneToAI(); spawnDisasterEffect({id: 'haha', name: 'haha'}, 7, 7); draw(); break;
-                            case 9: spawnDisasterEffect({id: -2, name: 'tornado'}, 7, 7); break;
-                            case 10: spawnDisasterEffect({id: -3, name: 'love'}, 7, 7); break;
-                        }
-                        if (!skipMove) { setTimeout(() => { performAIMoveLogic(); }, 1000); }
-                    }, 2000);
-                    return; 
-                }
-            }
-            setTimeout(performAIMoveLogic, 500);
-        }
-
-        function performAIMoveLogic() {
-            if (isGameOver) return;
-            const level = parseInt(levelSelect.value);
-            let move;
-            if (currentTournamentLevel === 1 && Math.random() < 0.1) { move = getRandomMove(); } 
-            else { if (level === 1) move = getLevel1Move(); else if (level === 2) move = getLevel2Move(); else move = getLevel3Move(); }
-            if (!move) move = getRandomMove();
-            if (move) placeStone(move.x, move.y);
-            isThinking = false;
-        }
-
-        function getRandomMove() { for(let y=0; y<GRID_SIZE; y++) for(let x=0; x<GRID_SIZE; x++) if(board[y][x] === 0) return {x, y}; return null; }
-        function getLevel1Move() { let candidates = []; for (let y = 0; y < GRID_SIZE; y++) for (let x = 0; x < GRID_SIZE; x++) if (board[y][x] === 0 && hasNeighbor(x, y, 2)) candidates.push({x, y}); if (candidates.length === 0) return getRandomMove(); return candidates[Math.floor(Math.random() * candidates.length)]; }
-        function getLevel2Move() { return getBestMoveByScore(false); }
-        function getLevel3Move() { return getBestMoveByScore(true); }
-        function getBestMoveByScore(isHard) { let bestScore = -Infinity; let bestMoves = []; for (let y = 0; y < GRID_SIZE; y++) { for (let x = 0; x < GRID_SIZE; x++) { if (board[y][x] === 0) { if (!hasNeighbor(x, y, 2) && board[7][7] !== 0) continue; let attackScore = evaluatePoint(x, y, 2); let defenseScore = evaluatePoint(x, y, 1); let currentScore; if (isHard) { if (attackScore >= 10000) currentScore = 20000; else if (defenseScore >= 10000) currentScore = 10000; else currentScore = attackScore + defenseScore; } else { let noise = Math.random() * 20; currentScore = attackScore + (defenseScore * 0.8) + noise; } if (currentScore > bestScore) { bestScore = currentScore; bestMoves = [{x, y}]; } else if (currentScore === bestScore) { bestMoves.push({x, y}); } } } } if (bestMoves.length === 0) return getRandomMove(); return bestMoves[Math.floor(Math.random() * bestMoves.length)]; }
-        function hasNeighbor(x, y, radius) { for (let dy = -radius; dy <= radius; dy++) for (let dx = -radius; dx <= radius; dx++) { if (dx === 0 && dy === 0) continue; let nx = x + dx, ny = y + dy; if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) if (board[ny][nx] !== 0) return true; } return false; }
-        function evaluatePoint(x, y, player) { let score = 0; const dirs = [[1,0], [0,1], [1,1], [1,-1]]; for (let dir of dirs) score += evaluateLine(x, y, dir[0], dir[1], player); return score; }
-        function evaluateLine(x, y, dx, dy, player) { let count = 1; let blockedEnds = 0; let i = 1; while (true) { let nx = x + dx * i; let ny = y + dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE) { blockedEnds++; break; } const val = board[ny][nx]; if (val === player) { count++; } else if (val === 0) { break; } else { blockedEnds++; break; } i++; } i = 1; while (true) { let nx = x - dx * i; let ny = y - dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE) { blockedEnds++; break; } const val = board[ny][nx]; if (val === player) { count++; } else if (val === 0) { break; } else { blockedEnds++; break; } i++; } if (blockedEnds >= 2 && count < 5) return 0; if (count >= 5) return 100000; if (count === 4) return blockedEnds === 0 ? 10000 : 2500; if (count === 3) return blockedEnds === 0 ? 3000 : 500; if (count === 2) return blockedEnds === 0 ? 500 : 50; return 10; }
-        function checkWin(x, y, player) { const directions = [[1, 0], [0, 1], [1, 1], [1, -1]]; for (let [dx, dy] of directions) { let count = 1; for (let i = 1; i < 5; i++) { const nx = x + dx * i, ny = y + dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE || board[ny][nx] !== player) break; count++; } for (let i = 1; i < 5; i++) { const nx = x - dx * i, ny = y - dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE || board[ny][nx] !== player) break; count++; } if (count >= 5) return true; } return false; }
-
-        // Start
-        init();
 
     </script>
 </body>
