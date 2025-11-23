@@ -553,7 +553,11 @@
         const tournamentGrid = document.getElementById('tournament-grid');
         const startBtn = document.getElementById('start-btn');
         const restartBtn = document.getElementById('restart-btn');
-
+        
+        // Added missing variables - These were causing the issue previously
+        // Note: They are fetched here but might be better to fetch inside functions
+        // for safety against null references in some contexts.
+        
         const customImage = new Image();
         customImage.src = 'https://popokoko.github.io/mywife.png';
 
@@ -993,10 +997,19 @@
                 ${mode === 'tournament' ? `<button class="btn-secondary" style="margin-top:10px" onclick="closeModal(); showTournamentSelection();">選擇對手</button>` : ''}
             `;
             modalOverlay.style.display = 'flex';
-            statusText.textContent = "遊戲結束";
+            
+            // FIX: Fetch elements inside function
+            const statusText = document.getElementById('status-text');
+            if (statusText) statusText.textContent = "遊戲結束";
         }
 
         function updateUI() {
+            // FIX: Fetch elements inside function
+            const statusText = document.getElementById('status-text');
+            const currentStoneIcon = document.getElementById('current-stone');
+            
+            if (!statusText || !currentStoneIcon) return;
+
             if (currentPlayer === 1) {
                 statusText.textContent = "黑子回合";
                 currentStoneIcon.className = "stone-icon stone-black";
