@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>經典五子棋 - jmucqjsmpmjmyoomwavjmovfomrhqi</title>
+    <title>經典五子棋 - 少女粉紅版</title>
     <style>
         body {
             margin: 0;
@@ -398,7 +398,7 @@
 
     <div id="ui-layer">
         <div class="card">
-            <h1>🌸 少女五子棋之jmucqjsmpmjmyoomwavjmovfomrhqi</h1>
+            <h1>🌸 少女五子棋</h1>
         </div>
         
         <div class="card">
@@ -468,7 +468,7 @@
 
         let userId = null;
 
-        // --- Global Variables attached to window for HTML access ---
+        // --- Data Init ---
         window.dowryCount = 0;
         window.ownedSkins = ['classic'];
         window.selectedSkin = 'classic';
@@ -500,7 +500,6 @@
                     window.ownedSkins = data.ownedSkins || ['classic'];
                     window.selectedSkin = data.selectedSkin || 'classic';
                 } else {
-                    // Initialize if new
                     setDoc(docRef, {
                         dowryCount: 0,
                         ownedSkins: ['classic'],
@@ -511,11 +510,10 @@
             });
         }
 
-        // Function to save data to Firestore
-        window.updateStorage = async function() {
+        function updateStorage() {
             if (!userId) return;
             const docRef = doc(db, 'artifacts', appId, 'users', userId, 'gamedata', 'profile');
-            await setDoc(docRef, {
+            setDoc(docRef, {
                 dowryCount: window.dowryCount,
                 ownedSkins: window.ownedSkins,
                 selectedSkin: window.selectedSkin
@@ -525,19 +523,12 @@
         function updateUIElements() {
             const dowryEl = document.getElementById('dowry-count');
             if (dowryEl) dowryEl.textContent = window.dowryCount;
-            
-            // Refresh store if open
             const storeDowryEl = document.getElementById('store-dowry');
             if (storeDowryEl) storeDowryEl.textContent = window.dowryCount;
-            
-            // Redraw board to reflect skin changes
-            if (typeof window.draw === 'function') window.draw();
+            window.draw();
         }
 
-        // --- EXPORTING GLOBAL FUNCTIONS FOR HTML BUTTONS ---
-        // Since we are in a module, functions are not global by default.
-        // We must attach them to window.
-
+        // --- Globals & Elements ---
         const canvas = document.getElementById('board');
         const ctx = canvas.getContext('2d');
         const gameContainer = document.getElementById('game-container');
@@ -554,10 +545,6 @@
         const startBtn = document.getElementById('start-btn');
         const restartBtn = document.getElementById('restart-btn');
         
-        // Added missing variables - These were causing the issue previously
-        // Note: They are fetched here but might be better to fetch inside functions
-        // for safety against null references in some contexts.
-        
         const customImage = new Image();
         customImage.src = 'https://popokoko.github.io/mywife.png';
 
@@ -565,7 +552,9 @@
         let CELL_SIZE = 600 / (GRID_SIZE + 1);
         let PADDING = CELL_SIZE;
 
-        let board = [];
+        // FIX: Initialize board with zeros immediately to prevent race condition with Firestore callback
+        let board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+        
         let currentPlayer = 1;
         let isGameOver = false;
         let lastMove = null;
@@ -600,53 +589,138 @@
             { name: "真愛", desc: "召喚老婆降臨佔據棋盤" }
         ];
 
-        window.init = function() {
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = 600 * dpr;
-            canvas.height = 600 * dpr;
-            ctx.scale(dpr, dpr);
-            
-            CELL_SIZE = 600 / (GRID_SIZE + 1);
-            PADDING = CELL_SIZE;
+        // --- Functions ---
 
-            board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
-            window.draw();
-            
-            canvas.addEventListener('click', handleInput);
-            canvas.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                handleInput(e.changedTouches[0]);
-            }, {passive: false});
+        // Declare window functions first
+        window.init = init;
+        window.draw = draw;
+        window.resetGame = resetGame;
+        window.reselectGame = reselectGame;
+        window.handleStartButtonClick = handleStartButtonClick;
+        window.showTournamentSelection = showTournamentSelection;
+        window.cancelTournament = cancelTournament;
+        window.startTournamentMatch = startTournamentMatch;
+        window.showStore = showStore;
+        window.showHelp = showHelp;
+        window.closeModal = closeModal;
+        window.updateStorage = updateStorage;
+        window.buySkin = buySkin;
+        window.equipSkin = equipSkin;
 
-            modeSelect.addEventListener('change', () => {
-                const mode = modeSelect.value;
-                if (mode === 'pve') {
-                    levelSelect.style.display = 'inline-block';
-                    startBtn.textContent = "💖 開始對戰";
-                } else if (mode === 'tournament') {
-                    levelSelect.style.display = 'none';
-                    startBtn.textContent = "🏆 選擇對手";
-                } else {
-                    levelSelect.style.display = 'none';
-                    startBtn.textContent = "💖 開始對戰";
-                }
-                if(isGameActive) window.resetGame();
-            });
-            
-            disasterToggle.addEventListener('change', () => {
-                if (isGameActive) {
-                    if (disasterToggle.checked) {
-                        scheduleNextDisaster();
-                    } else {
-                        clearTimeout(disasterTimeoutId);
-                    }
-                }
-            });
-
-            animate();
+        function reselectGame() {
+            isGameActive = false; isGameOver = false; restartBtn.disabled = true; clearTimeout(disasterTimeoutId); modalOverlay.style.display = 'none'; startOverlay.style.display = 'flex'; tournamentOverlay.style.display = 'none';
+            board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0)); activeEffects = []; particles = []; lastMove = null; gameContainer.classList.remove('blur-effect', 'freeze-effect'); document.querySelectorAll('.fog-cloud').forEach(el => el.remove()); draw();
         }
 
-        window.showHelp = function() {
+        function handleStartButtonClick() {
+            if (modeSelect.value === 'tournament') showTournamentSelection(); else startStandardGame();
+        }
+
+        function showTournamentSelection() {
+            startOverlay.style.display = 'none';
+            tournamentOverlay.style.display = 'flex';
+            generateTournamentOpponents();
+        }
+
+        function cancelTournament() {
+            tournamentOverlay.style.display = 'none';
+            startOverlay.style.display = 'flex';
+        }
+
+        function generateTournamentOpponents() {
+            tournamentGrid.innerHTML = '';
+            const prefixes = ["微風", "細雨", "陰天", "多雲", "陣雨", "雷雨", "豪雨", "颱風", "海嘯", "末日"];
+            const moods = ["淡淡的想念", "偶爾想起妳", "有點孤單", "總是掛念妳", "突然好想妳", "思念如潮水", "徹夜難眠", "呼喊妳名字", "沒妳活不了", "愛妳愛到死"];
+
+            for (let i = 1; i <= 10; i++) {
+                const card = document.createElement('div');
+                card.className = 'opponent-card';
+                card.onclick = () => startTournamentMatch(i);
+                const skill = tournamentSkills[i-1];
+                card.innerHTML = `
+                    <div class="opponent-header"><span class="opponent-level">Level ${i}</span></div>
+                    <div class="opponent-name">${prefixes[i-1]}級想念</div>
+                    <div class="opponent-desc">${moods[i-1]}</div>
+                    <div class="opponent-skill"><strong>技能：${skill.name}</strong>${skill.desc}</div>
+                `;
+                tournamentGrid.appendChild(card);
+            }
+        }
+
+        function startTournamentMatch(level) {
+            currentTournamentLevel = level;
+            tournamentOverlay.style.display = 'none';
+            let aiDifficulty = 1;
+            if (level >= 4 && level <= 7) aiDifficulty = 2;
+            if (level >= 8) aiDifficulty = 3;
+            levelSelect.value = aiDifficulty;
+            runStartAnimation();
+            isGameActive = true;
+            restartBtn.disabled = false;
+            resetGame(true);
+        }
+
+        function startStandardGame() {
+            startOverlay.style.display = 'none';
+            currentTournamentLevel = 0;
+            isGameActive = true;
+            restartBtn.disabled = false;
+            runStartAnimation();
+            resetGame();
+        }
+
+        function runStartAnimation() {
+            startRunner.classList.remove('active');
+            void startRunner.offsetWidth; 
+            startRunner.classList.add('active');
+            setTimeout(() => { startRunner.classList.remove('active'); }, 3000);
+        }
+
+        function resetGame(keepState = false) {
+            if (!isGameActive) return;
+            board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+            currentPlayer = 1;
+            isGameOver = false;
+            lastMove = null;
+            isThinking = false;
+            isInputBlocked = false;
+            modalOverlay.style.display = 'none';
+            particles = [];
+            activeEffects = [];
+            gameContainer.classList.remove('blur-effect', 'freeze-effect');
+            document.querySelectorAll('.fog-cloud').forEach(el => el.remove());
+            clearTimeout(disasterTimeoutId);
+            if (disasterToggle.checked) scheduleNextDisaster();
+            draw(); 
+        }
+
+        // Added missing updateUI function
+        function updateUI() {
+            const statusText = document.getElementById('status-text');
+            const currentStoneIcon = document.getElementById('current-stone');
+            if (!statusText || !currentStoneIcon) return;
+
+            if (currentPlayer === 1) {
+                statusText.textContent = "黑子回合";
+                currentStoneIcon.className = "stone-icon stone-black";
+            } else {
+                const mode = modeSelect.value;
+                if (!isGameActive) {
+                    statusText.textContent = "請點擊開始對戰";
+                } else if (mode === 'pve') {
+                    statusText.textContent = "電腦思考中...";
+                } else if (mode === 'tournament') {
+                    const prefixes = ["微風", "細雨", "陰天", "多雲", "陣雨", "雷雨", "豪雨", "颱風", "海嘯", "末日"];
+                    const name = currentTournamentLevel > 0 ? prefixes[currentTournamentLevel-1] + "級" : "電腦";
+                    statusText.textContent = `${name}思考中...`;
+                } else {
+                    statusText.textContent = "白子回合";
+                }
+                currentStoneIcon.className = "stone-icon stone-white";
+            }
+        }
+
+        function showHelp() {
             modalContent.innerHTML = `
                 <div class="help-content">
                     <h2>🌸 遊戲說明</h2>
@@ -673,7 +747,7 @@
             modalOverlay.style.display = 'flex';
         }
 
-        window.showStore = function() {
+        function showStore() {
             let itemsHtml = '';
             for (const [id, skin] of Object.entries(skins)) {
                 const owned = window.ownedSkins.includes(id);
@@ -711,7 +785,7 @@
             modalOverlay.style.display = 'flex';
         }
 
-        window.buySkin = function(id, price) {
+        function buySkin(id, price) {
             if (window.dowryCount >= price) {
                 window.dowryCount -= price;
                 window.ownedSkins.push(id);
@@ -723,121 +797,15 @@
             }
         };
 
-        window.equipSkin = function(id) {
+        function equipSkin(id) {
             window.selectedSkin = id;
             window.updateStorage();
             window.showStore();
             window.draw();
         };
 
-        window.closeModal = function() {
+        function closeModal() {
             modalOverlay.style.display = 'none';
-        }
-
-        window.reselectGame = function() {
-            isGameActive = false;
-            isGameOver = false;
-            restartBtn.disabled = true;
-            clearTimeout(disasterTimeoutId);
-            modalOverlay.style.display = 'none';
-            startOverlay.style.display = 'flex';
-            tournamentOverlay.style.display = 'none';
-            
-            board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
-            activeEffects = [];
-            particles = [];
-            lastMove = null;
-            gameContainer.classList.remove('blur-effect', 'freeze-effect');
-            const existingFog = document.querySelectorAll('.fog-cloud');
-            existingFog.forEach(el => el.remove());
-            
-            window.draw();
-        }
-
-        window.handleStartButtonClick = function() {
-            if (modeSelect.value === 'tournament') {
-                showTournamentSelection();
-            } else {
-                startStandardGame();
-            }
-        }
-
-        window.showTournamentSelection = function() {
-            startOverlay.style.display = 'none';
-            tournamentOverlay.style.display = 'flex';
-            generateTournamentOpponents();
-        }
-
-        window.cancelTournament = function() {
-            tournamentOverlay.style.display = 'none';
-            startOverlay.style.display = 'flex';
-        }
-
-        function generateTournamentOpponents() {
-            tournamentGrid.innerHTML = '';
-            const prefixes = ["微風", "細雨", "陰天", "多雲", "陣雨", "雷雨", "豪雨", "颱風", "海嘯", "末日"];
-            const moods = ["淡淡的想念", "偶爾想起妳", "有點孤單", "總是掛念妳", "突然好想妳", "思念如潮水", "徹夜難眠", "呼喊妳名字", "沒妳活不了", "愛妳愛到死"];
-
-            for (let i = 1; i <= 10; i++) {
-                const card = document.createElement('div');
-                card.className = 'opponent-card';
-                card.onclick = () => startTournamentMatch(i);
-                const skill = tournamentSkills[i-1];
-                card.innerHTML = `
-                    <div class="opponent-header"><span class="opponent-level">Level ${i}</span></div>
-                    <div class="opponent-name">${prefixes[i-1]}級想念</div>
-                    <div class="opponent-desc">${moods[i-1]}</div>
-                    <div class="opponent-skill"><strong>技能：${skill.name}</strong>${skill.desc}</div>
-                `;
-                tournamentGrid.appendChild(card);
-            }
-        }
-
-        window.startTournamentMatch = function(level) {
-            currentTournamentLevel = level;
-            tournamentOverlay.style.display = 'none';
-            let aiDifficulty = 1;
-            if (level >= 4 && level <= 7) aiDifficulty = 2;
-            if (level >= 8) aiDifficulty = 3;
-            levelSelect.value = aiDifficulty;
-            runStartAnimation();
-            isGameActive = true;
-            restartBtn.disabled = false;
-            window.resetGame(true);
-        }
-
-        function startStandardGame() {
-            startOverlay.style.display = 'none';
-            currentTournamentLevel = 0;
-            isGameActive = true;
-            restartBtn.disabled = false;
-            runStartAnimation();
-            window.resetGame();
-        }
-
-        function runStartAnimation() {
-            startRunner.classList.remove('active');
-            void startRunner.offsetWidth; 
-            startRunner.classList.add('active');
-            setTimeout(() => { startRunner.classList.remove('active'); }, 3000);
-        }
-
-        window.resetGame = function(keepState = false) {
-            if (!isGameActive) return;
-            board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
-            currentPlayer = 1;
-            isGameOver = false;
-            lastMove = null;
-            isThinking = false;
-            isInputBlocked = false;
-            modalOverlay.style.display = 'none';
-            particles = [];
-            activeEffects = [];
-            gameContainer.classList.remove('blur-effect', 'freeze-effect');
-            document.querySelectorAll('.fog-cloud').forEach(el => el.remove());
-            clearTimeout(disasterTimeoutId);
-            if (disasterToggle.checked) scheduleNextDisaster();
-            window.draw(); 
         }
 
         function triggerOpponentSkill() {
@@ -882,11 +850,14 @@
 
         function updateEffects() { for (let i = activeEffects.length - 1; i >= 0; i--) { let eff = activeEffects[i]; if (eff.type === 'meteor') { eff.y += 15; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } else if (eff.type === 'love') { eff.y += 5; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } else if (eff.type === 'tear') { eff.y += 8; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } else if (eff.type === 'tornado') { eff.x += (eff.targetX - eff.x) * 0.1; eff.progress += 0.05; if (Math.abs(eff.x - eff.targetX) < 5 && eff.progress > 1) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } } for (let i = particles.length - 1; i >= 0; i--) { let p = particles[i]; p.x += p.vx; p.y += p.vy; p.life -= 0.02; if (p.type === 'tear' || p.type === 'meteor') p.vy += 0.2; if (p.life <= 0) { particles.splice(i, 1); } } }
 
-        window.draw = function() {
+        function draw() {
             ctx.clearRect(0, 0, 600, 600);
             ctx.beginPath(); ctx.lineWidth = 1; ctx.strokeStyle = "#8B4C5E"; 
             for (let i = 0; i < GRID_SIZE; i++) { ctx.moveTo(PADDING, PADDING + i * CELL_SIZE); ctx.lineTo(PADDING + (GRID_SIZE - 1) * CELL_SIZE, PADDING + i * CELL_SIZE); ctx.moveTo(PADDING + i * CELL_SIZE, PADDING); ctx.lineTo(PADDING + i * CELL_SIZE, PADDING + (GRID_SIZE - 1) * CELL_SIZE); } ctx.stroke();
             const stars = [{x: 3, y: 3}, {x: 11, y: 3}, {x: 7, y: 7}, {x: 3, y: 11}, {x: 11, y: 11}]; ctx.fillStyle = "#8B4C5E"; stars.forEach(star => { ctx.beginPath(); ctx.arc(PADDING + star.x * CELL_SIZE, PADDING + star.y * CELL_SIZE, 4, 0, Math.PI * 2); ctx.fill(); });
+
+            // FIX: Check if board is ready before drawing content
+            if (!board || board.length === 0) return;
 
             for (let y = 0; y < GRID_SIZE; y++) {
                 for (let x = 0; x < GRID_SIZE; x++) {
@@ -910,7 +881,10 @@
             let currentStyle = skins['classic'];
             
             if (type === 1) { 
-                currentStyle = skins[window.selectedSkin];
+                // Fallback if skin is missing
+                let skinKey = window.selectedSkin;
+                if (!skins[skinKey]) skinKey = 'classic';
+                currentStyle = skins[skinKey];
             } else { 
                 currentStyle = { type: 'color', color1: ['#fff', '#f0e0e0'] }; 
             }
@@ -956,6 +930,67 @@
             ctx.shadowColor = "transparent";
         }
 
+        // Add missing drawDisasterResult
+        function drawDisasterResult(x, y, type) {
+            const cx = PADDING + x * CELL_SIZE;
+            const cy = PADDING + y * CELL_SIZE;
+            const size = CELL_SIZE * 0.4;
+            
+            ctx.save();
+            ctx.translate(cx, cy);
+
+            if (type === -1) { // Meteor Crater
+                ctx.fillStyle = "#444";
+                ctx.beginPath();
+                ctx.arc(0, 0, size, 0, Math.PI*2);
+                ctx.fill();
+                ctx.strokeStyle = "#FF4500";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(-size*0.7, -size*0.7); ctx.lineTo(size*0.7, size*0.7);
+                ctx.moveTo(size*0.7, -size*0.7); ctx.lineTo(-size*0.7, size*0.7);
+                ctx.stroke();
+            } else if (type === -2) { // Tornado Debris
+                ctx.fillStyle = "#aaa";
+                ctx.beginPath();
+                ctx.arc(0, 0, size*0.8, 0, Math.PI*2);
+                ctx.fill();
+                ctx.strokeStyle = "#555";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(0, 0, size*0.5, 0, Math.PI*1.5);
+                ctx.stroke();
+            } else if (type === -3) { // Love/Custom Image Debris
+                if (customImage.complete) {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, size * 1.2, 0, Math.PI * 2);
+                    ctx.clip();
+                    ctx.drawImage(customImage, -size*1.2, -size*1.2, size*2.4, size*2.4);
+                } else {
+                    ctx.fillStyle = "#FF69B4";
+                    ctx.beginPath();
+                    const topCurveHeight = size * 0.3;
+                    ctx.moveTo(0, topCurveHeight);
+                    ctx.bezierCurveTo(0, 0, -size, 0, -size, topCurveHeight);
+                    ctx.bezierCurveTo(-size, (size + topCurveHeight) / 2, 0, size, 0, size + topCurveHeight);
+                    ctx.bezierCurveTo(0, size, size, (size + topCurveHeight) / 2, size, topCurveHeight);
+                    ctx.bezierCurveTo(size, 0, 0, 0, 0, topCurveHeight);
+                    ctx.fill();
+                }
+            } else if (type === -4) { // Tear Puddle
+                ctx.fillStyle = "#4169E1";
+                ctx.beginPath();
+                ctx.arc(0, size*0.4, size*0.6, 0, Math.PI*2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(0, -size);
+                ctx.quadraticCurveTo(size*0.6, size*0.4, 0, size*0.4);
+                ctx.quadraticCurveTo(-size*0.6, size*0.4, 0, -size);
+                ctx.fill();
+            }
+            ctx.restore();
+        }
+
         function handleInput(e) { if (isGameOver || isThinking || !isGameActive || isInputBlocked) return; if ((modeSelect.value === 'pve' || modeSelect.value === 'tournament') && currentPlayer === 2) return; const rect = canvas.getBoundingClientRect(); const scaleX = 600 / rect.width; const scaleY = 600 / rect.height; const mouseX = (e.clientX - rect.left) * scaleX; const mouseY = (e.clientY - rect.top) * scaleY; const gridX = Math.round((mouseX - PADDING) / CELL_SIZE); const gridY = Math.round((mouseY - PADDING) / CELL_SIZE); if (gridX >= 0 && gridX < GRID_SIZE && gridY >= 0 && gridY < GRID_SIZE) { if (board[gridY][gridX] === 0) { placeStone(gridX, gridY); } } }
         function placeStone(x, y) { board[y][x] = currentPlayer; lastMove = {x, y}; if (checkWin(x, y, currentPlayer)) { endGame(currentPlayer); return; } currentPlayer = currentPlayer === 1 ? 2 : 1; updateUI(); const mode = modeSelect.value; if ((mode === 'pve' || mode === 'tournament') && currentPlayer === 2 && !isGameOver) { isThinking = true; setTimeout(makeAIMove, 500); } }
         function makeAIMove() { if (!isGameActive || isGameOver) return; if (modeSelect.value === 'tournament') { const skipped = triggerOpponentSkill(); if(skipped) return; } const level = parseInt(levelSelect.value); let move; if (currentTournamentLevel === 1 && Math.random() < 0.1) { move = getRandomMove(); } else { if (level === 1) move = getLevel1Move(); else if (level === 2) move = getLevel2Move(); else move = getLevel3Move(); } if (!move) move = getRandomMove(); if (move) placeStone(move.x, move.y); isThinking = false; }
@@ -975,62 +1010,49 @@
             let msg = winner === 1 ? "黑子獲勝!" : "白子獲勝!";
             const mode = modeSelect.value;
             let reward = 0;
-
             if ((mode === 'pve' || mode === 'tournament') && winner === 2) {
                  msg = mode === 'tournament' ? "思念太強，妳輸了！" : "電腦獲勝!";
             } else if (winner === 1 && mode === 'tournament') {
-                if (currentTournamentLevel === 10) reward = 520;
-                else if (currentTournamentLevel === 9) reward = 360;
-                else if (currentTournamentLevel === 8) reward = 225;
-                else reward = 10;
-                
+                if (currentTournamentLevel === 10) reward = 520; else if (currentTournamentLevel === 9) reward = 360; else if (currentTournamentLevel === 8) reward = 225; else reward = 10;
                 msg = `恭喜獲勝！<br>獲得 ${reward} 個嫁妝 🎁`;
                 window.dowryCount += reward;
                 window.updateStorage();
             }
-
-            modalContent.innerHTML = `
-                <div id="winner-text">${winner === 1 ? "🎉 恭喜獲勝!" : "💔 再接再厲"}</div>
-                ${reward > 0 ? `<div id="reward-text">🎁 +${reward} 嫁妝</div>` : ''}
-                <p style="color:#666; margin-bottom:20px;">${winner === 1 ? "妳的愛意戰勝了一切！" : "不要氣餒，愛需要堅持！"}</p>
-                <button class="btn-secondary" onclick="closeModal(); resetGame();">再來一局</button>
-                ${mode === 'tournament' ? `<button class="btn-secondary" style="margin-top:10px" onclick="closeModal(); showTournamentSelection();">選擇對手</button>` : ''}
-            `;
+            modalContent.innerHTML = `<div id="winner-text">${winner === 1 ? "🎉 恭喜獲勝!" : "💔 再接再厲"}</div>${reward > 0 ? `<div id="reward-text">🎁 +${reward} 嫁妝</div>` : ''}<p style="color:#666; margin-bottom:20px;">${winner === 1 ? "妳的愛意戰勝了一切！" : "不要氣餒，愛需要堅持！"}</p><button class="btn-secondary" onclick="window.closeModal(); window.resetGame();">再來一局</button>${mode === 'tournament' ? `<button class="btn-secondary" style="margin-top:10px" onclick="window.closeModal(); window.showTournamentSelection();">選擇對手</button>` : ''}`;
             modalOverlay.style.display = 'flex';
-            
-            // FIX: Fetch elements inside function
             const statusText = document.getElementById('status-text');
-            if (statusText) statusText.textContent = "遊戲結束";
+            if(statusText) statusText.textContent = "遊戲結束";
         }
 
-        function updateUI() {
-            // FIX: Fetch elements inside function
-            const statusText = document.getElementById('status-text');
-            const currentStoneIcon = document.getElementById('current-stone');
+        function init() {
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = 600 * dpr;
+            canvas.height = 600 * dpr;
+            ctx.scale(dpr, dpr);
+            CELL_SIZE = 600 / (GRID_SIZE + 1);
+            PADDING = CELL_SIZE;
+            board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+            draw();
             
-            if (!statusText || !currentStoneIcon) return;
-
-            if (currentPlayer === 1) {
-                statusText.textContent = "黑子回合";
-                currentStoneIcon.className = "stone-icon stone-black";
-            } else {
+            canvas.addEventListener('click', handleInput);
+            canvas.addEventListener('touchend', (e) => { e.preventDefault(); handleInput(e.changedTouches[0]); }, {passive: false});
+            
+            modeSelect.addEventListener('change', () => {
                 const mode = modeSelect.value;
-                if (!isGameActive) {
-                    statusText.textContent = "請點擊開始對戰";
-                } else if (mode === 'pve') {
-                    statusText.textContent = "電腦思考中...";
-                } else if (mode === 'tournament') {
-                    const prefixes = ["微風", "細雨", "陰天", "多雲", "陣雨", "雷雨", "豪雨", "颱風", "海嘯", "末日"];
-                    const name = currentTournamentLevel > 0 ? prefixes[currentTournamentLevel-1] + "級" : "電腦";
-                    statusText.textContent = `${name}思考中...`;
-                } else {
-                    statusText.textContent = "白子回合";
-                }
-                currentStoneIcon.className = "stone-icon stone-white";
-            }
+                if (mode === 'pve') { levelSelect.style.display = 'inline-block'; startBtn.textContent = "💖 開始對戰"; }
+                else if (mode === 'tournament') { levelSelect.style.display = 'none'; startBtn.textContent = "🏆 選擇對手"; }
+                else { levelSelect.style.display = 'none'; startBtn.textContent = "💖 開始對戰"; }
+                if(isGameActive) resetGame();
+            });
+            
+            disasterToggle.addEventListener('change', () => {
+                if (isGameActive) { if (disasterToggle.checked) scheduleNextDisaster(); else clearTimeout(disasterTimeoutId); }
+            });
+            animate();
         }
 
-        window.init();
+        // Start
+        init();
 
     </script>
 </body>
