@@ -3,351 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>經典五子棋 - hqibbpevnfjmucqjsmp</title>
+    <title>經典五子棋 - 少女粉紅版 (防崩潰版)</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #fff0f5; /* LavenderBlush */
-            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            /* Polka dot pattern in pink */
-            background-image: radial-gradient(#ffb6c1 15%, transparent 15%), radial-gradient(#ffb6c1 15%, transparent 15%);
-            background-position: 0 0, 15px 15px;
-            background-size: 30px 30px;
-            overflow-x: hidden;
-        }
-
-        #game-container {
-            position: relative;
-            box-shadow: 0 15px 35px rgba(255, 105, 180, 0.4);
-            border-radius: 15px;
-            padding: 20px;
-            background: #ffc0cb;
-            background: linear-gradient(135deg, #ffe4e1 0%, #ffb6c1 100%);
-            border: 4px solid #fff;
-            transition: transform 0.1s;
-            overflow: hidden;
-        }
-
-        /* Shake Animation */
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
-        }
-
-        .shake-effect {
-            animation: shake 0.5s;
-            animation-iteration-count: 1;
-        }
-
-        /* Blur Effect */
-        .blur-effect canvas {
-            filter: blur(8px);
-            transition: filter 0.5s;
-        }
-
-        /* Freeze Effect */
-        .freeze-effect canvas {
-            filter: hue-rotate(180deg) brightness(1.2);
-            transition: filter 0.5s;
-        }
-
-        canvas {
-            display: block;
-            cursor: pointer;
-            border-radius: 8px;
-            touch-action: none;
-            background-color: transparent; 
-            transition: filter 0.3s;
-        }
-
-        #ui-layer {
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            width: 600px;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px 20px;
-            border-radius: 20px;
-            box-shadow: 0 4px 10px rgba(255, 182, 193, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 2px solid #ffe4e1;
-        }
-
+        body { margin: 0; padding: 0; background-color: #fff0f5; font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background-image: radial-gradient(#ffb6c1 15%, transparent 15%), radial-gradient(#ffb6c1 15%, transparent 15%); background-position: 0 0, 15px 15px; background-size: 30px 30px; overflow-x: hidden; user-select: none; }
+        #game-container { position: relative; box-shadow: 0 15px 35px rgba(255, 105, 180, 0.4); border-radius: 15px; padding: 20px; background: #ffc0cb; background: linear-gradient(135deg, #ffe4e1 0%, #ffb6c1 100%); border: 4px solid #fff; transition: transform 0.1s; overflow: hidden; }
+        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+        .shake-effect { animation: shake 0.5s; animation-iteration-count: 1; }
+        .blur-effect canvas { filter: blur(8px); transition: filter 0.5s; }
+        .freeze-effect canvas { filter: hue-rotate(180deg) brightness(1.2); transition: filter 0.5s; }
+        canvas { display: block; cursor: pointer; border-radius: 8px; touch-action: none; background-color: transparent; transition: filter 0.3s; }
+        #ui-layer { margin-bottom: 20px; display: flex; justify-content: space-between; width: 600px; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .card { background: rgba(255, 255, 255, 0.9); padding: 10px 20px; border-radius: 20px; box-shadow: 0 4px 10px rgba(255, 182, 193, 0.3); display: flex; align-items: center; gap: 10px; border: 2px solid #ffe4e1; }
         h1 { margin: 0; font-size: 1.5rem; color: #d63384; }
-
-        /* Dowry Display */
-        .dowry-display {
-            font-weight: bold;
-            color: #d63384;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 1.1rem;
-        }
+        .dowry-display { font-weight: bold; color: #d63384; display: flex; align-items: center; gap: 5px; font-size: 1.1rem; }
         .dowry-icon { font-size: 1.2rem; }
-
-        .turn-indicator {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: #d63384;
-        }
-
-        .stone-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: inline-block;
-            border: 1px solid rgba(0,0,0,0.1);
-        }
-        /* Default icons for UI */
+        .turn-indicator { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 1.1rem; color: #d63384; }
+        .stone-icon { width: 20px; height: 20px; border-radius: 50%; display: inline-block; border: 1px solid rgba(0,0,0,0.1); }
         .stone-black { background: radial-gradient(circle at 30% 30%, #555, #222); }
         .stone-white { background: radial-gradient(circle at 30% 30%, #fff, #f0f0f0); border: 1px solid #ffb6c1; }
-
-        /* Controls */
-        .controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        select, button {
-            padding: 8px 15px;
-            font-size: 0.95rem;
-            border-radius: 20px;
-            border: 2px solid #ffb6c1;
-            font-family: inherit;
-            cursor: pointer;
-            outline: none;
-        }
-        
-        select {
-            background-color: #fff;
-            color: #d63384;
-        }
-
-        button {
-            background-color: #ff69b4; /* Hot Pink */
-            color: white;
-            border: none;
-            font-weight: bold;
-            box-shadow: 0 4px 0 #db7093; /* 3D effect */
-            transition: transform 0.1s, box-shadow 0.1s, background-color 0.2s, opacity 0.2s;
-        }
-        button:active {
-            transform: translateY(4px);
-            box-shadow: 0 0 0 #db7093;
-        }
+        .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        select, button { padding: 8px 15px; font-size: 0.95rem; border-radius: 20px; border: 2px solid #ffb6c1; font-family: inherit; cursor: pointer; outline: none; }
+        select { background-color: #fff; color: #d63384; }
+        button { background-color: #ff69b4; color: white; border: none; font-weight: bold; box-shadow: 0 4px 0 #db7093; transition: transform 0.1s, box-shadow 0.1s, background-color 0.2s, opacity 0.2s; }
+        button:active { transform: translateY(4px); box-shadow: 0 0 0 #db7093; }
         button:hover { background-color: #ff1493; }
-        
-        button:disabled {
-            background-color: #ffb6c1;
-            box-shadow: none;
-            cursor: not-allowed;
-            opacity: 0.6;
-            transform: none;
-        }
-
-        /* Secondary Button Style */
-        .btn-secondary {
-            background-color: #fff;
-            color: #ff69b4;
-            border: 2px solid #ff69b4;
-            box-shadow: 0 4px 0 #ffb6c1;
-        }
-        .btn-secondary:hover {
-            background-color: #fff0f5;
-            color: #ff1493;
-        }
-        .btn-secondary:active {
-            box-shadow: 0 0 0 #ffb6c1;
-        }
-
-        .toggle-label {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.95rem;
-            background: #fff;
-            padding: 8px 15px;
-            border-radius: 20px;
-            border: 2px solid #ffb6c1;
-            cursor: pointer;
-            user-select: none;
-            color: #d63384;
-        }
+        button:disabled { background-color: #ffb6c1; box-shadow: none; cursor: not-allowed; opacity: 0.6; transform: none; }
+        .btn-secondary { background-color: #fff; color: #ff69b4; border: 2px solid #ff69b4; box-shadow: 0 4px 0 #ffb6c1; }
+        .btn-secondary:hover { background-color: #fff0f5; color: #ff1493; }
+        .btn-secondary:active { box-shadow: 0 0 0 #ffb6c1; }
+        .toggle-label { display: flex; align-items: center; gap: 5px; font-size: 0.95rem; background: #fff; padding: 8px 15px; border-radius: 20px; border: 2px solid #ffb6c1; cursor: pointer; user-select: none; color: #d63384; }
         .toggle-label input { cursor: pointer; width: 16px; height: 16px; accent-color: #ff69b4; }
-
-        /* Modal Generic */
-        .modal-overlay {
-            display: none;
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255, 192, 203, 0.6);
-            backdrop-filter: blur(2px);
-            justify-content: center;
-            align-items: center;
-            border-radius: 15px;
-            z-index: 100;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 40px;
-            border-radius: 25px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(219, 112, 147, 0.3);
-            border: 4px solid #ffb6c1;
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-width: 600px;
-            width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-        
-        /* Store Styling */
-        .store-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .store-item {
-            border: 2px solid #eee;
-            border-radius: 10px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: all 0.2s;
-        }
+        .modal-overlay { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255, 192, 203, 0.6); backdrop-filter: blur(2px); justify-content: center; align-items: center; border-radius: 15px; z-index: 100; }
+        .modal-content { background: white; padding: 40px; border-radius: 25px; text-align: center; box-shadow: 0 10px 30px rgba(219, 112, 147, 0.3); border: 4px solid #ffb6c1; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-width: 600px; width: 90%; max-height: 85vh; overflow-y: auto; }
+        .store-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin-top: 20px; }
+        .store-item { border: 2px solid #eee; border-radius: 10px; padding: 10px; display: flex; flex-direction: column; align-items: center; transition: all 0.2s; }
         .store-item:hover { border-color: #ff69b4; transform: translateY(-2px); }
         .store-item.active { border-color: #ff1493; background-color: #fff0f5; box-shadow: 0 0 10px rgba(255,20,147,0.2); }
-        .store-preview {
-            width: 40px; height: 40px; margin-bottom: 10px;
-            border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+        .store-preview { width: 40px; height: 40px; margin-bottom: 10px; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .store-name { font-weight: bold; font-size: 0.9rem; color: #555; margin-bottom: 5px; }
         .store-price { font-size: 0.85rem; color: #d63384; margin-bottom: 8px; }
         .store-btn { padding: 5px 10px; font-size: 0.8rem; width: 100%; }
-
-        /* Help Content */
         .help-content { text-align: left; }
         .help-content h2 { color: #ff1493; text-align: center; margin-top: 0; border-bottom: 2px dashed #ffb6c1; padding-bottom: 10px; }
         .help-item { margin-bottom: 15px; }
         .help-item h3 { color: #d63384; margin-bottom: 5px; font-size: 1.1rem; }
         .help-item p { color: #666; font-size: 0.9rem; margin: 0; line-height: 1.4; }
-
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         #winner-text { font-size: 2rem; margin-bottom: 20px; color: #ff1493; }
         #reward-text { font-size: 1.2rem; color: #d63384; margin-bottom: 20px; font-weight: bold;}
-
-        /* --- Full Screen Disaster Alert --- */
-        #disaster-alert {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            font-size: 4rem; 
-            font-weight: 900;
-            width: 100%;
-            text-align: center;
-            background: rgba(50, 0, 20, 0.7);
-            padding: 40px 0;
-            color: #fff;
-            opacity: 0;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
-            pointer-events: none;
-            z-index: 50;
-            white-space: nowrap;
-            text-shadow: 0 0 30px currentColor;
-        }
+        #disaster-alert { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 4rem; font-weight: 900; width: 100%; text-align: center; background: rgba(50, 0, 20, 0.7); padding: 40px 0; color: #fff; opacity: 0; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s; pointer-events: none; z-index: 50; white-space: nowrap; text-shadow: 0 0 30px currentColor; }
         #disaster-alert.active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-
-        /* --- Start Game Overlay --- */
-        #start-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(3px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 20;
-            border-radius: 11px;
-        }
-
-        #start-btn {
-            font-size: 2rem;
-            padding: 15px 50px;
-            border-radius: 50px;
-            background-color: #ff1493;
-            color: white;
-            border: 4px solid #fff;
-            box-shadow: 0 0 15px #ff69b4, 0 6px 0 #c71585;
-            cursor: pointer;
-            animation: pulse 1.5s infinite ease-in-out;
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
-        }
+        #toast-message { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(255, 20, 147, 0.95); color: white; padding: 15px 30px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; z-index: 2000; opacity: 0; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); white-space: nowrap; }
+        #toast-message.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        #start-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(3px); display: flex; justify-content: center; align-items: center; z-index: 20; border-radius: 11px; }
+        #start-btn { font-size: 2rem; padding: 15px 50px; border-radius: 50px; background-color: #ff1493; color: white; border: 4px solid #fff; box-shadow: 0 0 15px #ff69b4, 0 6px 0 #c71585; cursor: pointer; animation: pulse 1.5s infinite ease-in-out; text-shadow: 2px 2px 0 rgba(0,0,0,0.1); }
         #start-btn:hover { transform: scale(1.05); background-color: #ff0080; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-        /* --- Tournament Overlay --- */
-        #tournament-overlay {
-            display: none;
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255, 240, 245, 0.98);
-            z-index: 25;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 11px;
-            padding: 20px;
-            overflow-y: auto;
-        }
+        #tournament-overlay { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255, 240, 245, 0.98); z-index: 25; flex-direction: column; align-items: center; justify-content: center; border-radius: 11px; padding: 20px; overflow-y: auto; }
         .tournament-title { font-size: 1.8rem; color: #d63384; margin-bottom: 20px; text-shadow: 1px 1px 0 #fff; }
         .tournament-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%; max-width: 550px; }
-        .opponent-card {
-            background: white;
-            border: 2px solid #ffb6c1;
-            border-radius: 15px;
-            padding: 15px;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
+        .opponent-card { background: white; border: 2px solid #ffb6c1; border-radius: 15px; padding: 15px; text-align: left; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; display: flex; flex-direction: column; }
         .opponent-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3); border-color: #ff1493; }
         .opponent-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
         .opponent-level { font-size: 0.8rem; background: #ff69b4; color: white; padding: 2px 8px; border-radius: 10px; }
@@ -355,55 +70,30 @@
         .opponent-desc { font-size: 0.8rem; color: #888; margin-bottom: 5px; font-style: italic; }
         .opponent-skill { font-size: 0.85rem; color: #c71585; background: #fff0f5; padding: 5px; border-radius: 5px; border: 1px dashed #ffb6c1; margin-top: auto; }
         .opponent-skill strong { display: block; color: #ff1493; }
-
-        /* --- Fog Overlay --- */
-        .fog-cloud {
-            position: absolute;
-            width: 150px; height: 150px;
-            background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 70%);
-            opacity: 0.9; pointer-events: none;
-            border-radius: 50%;
-            animation: floatFog 5s infinite ease-in-out;
-            z-index: 4;
-        }
+        .fog-cloud { position: absolute; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 70%); opacity: 0.9; pointer-events: none; border-radius: 50%; animation: floatFog 5s infinite ease-in-out; z-index: 4; }
         @keyframes floatFog { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(10px, 15px); } }
-
-        /* --- Start Game Runner Animation --- */
-        #start-runner {
-            position: fixed; top: 50%; left: 100vw;
-            transform: translateY(-50%);
-            height: 350px;
-            z-index: 9999;
-            pointer-events: none;
-            display: none;
-        }
+        #start-runner { position: fixed; top: 50%; left: 100vw; transform: translateY(-50%); height: 350px; z-index: 9999; pointer-events: none; display: none; }
         #start-runner.active { display: block; animation: run-across 2.5s linear forwards; }
         @keyframes run-across { 0% { left: 100vw; } 100% { left: -600px; } }
-
-        @media (max-width: 650px) {
-            #ui-layer { width: 95vw; flex-direction: column; align-items: stretch; }
-            canvas { width: 95vw; height: 95vw; }
-            .controls { flex-direction: column; align-items: stretch; }
-            .toggle-label { justify-content: center; }
-            #disaster-alert { font-size: 2.5rem; padding: 20px 0; }
-            #start-runner { height: 180px; }
-            .tournament-grid { grid-template-columns: 1fr; gap: 10px; }
-        }
+        @media (max-width: 650px) { #ui-layer { width: 95vw; flex-direction: column; align-items: stretch; } canvas { width: 95vw; height: 95vw; } .controls { flex-direction: column; align-items: stretch; } .toggle-label { justify-content: center; } #disaster-alert { font-size: 2.5rem; padding: 20px 0; } #start-runner { height: 180px; } .tournament-grid { grid-template-columns: 1fr; gap: 10px; } }
     </style>
 </head>
 <body>
 
     <!-- Runner Image (Hidden initially) -->
     <img id="start-runner" src="https://popokoko.github.io/love_us_run-removebg-preview.png" alt="Let's Go!">
+    
+    <!-- Toast Message -->
+    <div id="toast-message">提示訊息</div>
 
     <div id="ui-layer">
         <div class="card">
-            <h1>🌸 少女五子棋之hqibbpevnfjmucqjsmp</h1>
+            <h1>🌸 少女五子棋</h1>
         </div>
         
         <div class="card">
             <div class="dowry-display" title="目前擁有的嫁妝">
-                <span class="dowry-icon">🎁</span> <span id="dowry-count">...</span> 嫁妝
+                <span class="dowry-icon">🎁</span> <span id="dowry-count">0</span> 嫁妝
             </div>
         </div>
 
@@ -421,17 +111,17 @@
             <label class="toggle-label" title="隨機出現特效災害">
                 <input type="checkbox" id="disaster-toggle"> 🌪️ 動態天災
             </label>
-            <button id="reselect-btn" class="btn-secondary" onclick="reselectGame()">🔄 重新選擇</button>
-            <button id="restart-btn" onclick="resetGame()" disabled>重新開始</button>
-            <button class="btn-secondary" onclick="showStore()">🏪 商城</button>
-            <button class="btn-secondary" onclick="showHelp()">❓ 說明</button>
+            <button id="reselect-btn" class="btn-secondary" onclick="window.reselectGame()">🔄 重新選擇</button>
+            <button id="restart-btn" onclick="window.resetGame()" disabled>重新開始</button>
+            <button class="btn-secondary" onclick="window.showStore()">🏪 商城</button>
+            <button class="btn-secondary" onclick="window.showHelp()">❓ 說明</button>
         </div>
     </div>
 
     <div id="game-container">
         <!-- Start Overlay -->
         <div id="start-overlay">
-            <button id="start-btn" onclick="handleStartButtonClick()">💖 開始對戰</button>
+            <button id="start-btn" onclick="window.handleStartButtonClick()">💖 開始對戰</button>
         </div>
 
         <!-- Tournament Selection Overlay -->
@@ -440,7 +130,7 @@
             <div class="tournament-grid" id="tournament-grid">
                 <!-- Generated by JS -->
             </div>
-            <button style="margin-top:20px; background:#ccc; border:none; padding: 10px 30px; border-radius: 20px; color: white; font-weight: bold;" onclick="cancelTournament()">返回</button>
+            <button style="margin-top:20px; background:#ccc; border:none; padding: 10px 30px; border-radius: 20px; color: white; font-weight: bold;" onclick="window.cancelTournament()">返回</button>
         </div>
 
         <!-- Modal Container (Generic for Help, Store, EndGame) -->
@@ -459,47 +149,54 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
         import { getFirestore, doc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
-        // Firebase Config & Init
+        // Firebase Config
         const firebaseConfig = {
-          apiKey: "AIzaSyACGrG89M5AlJSJmzU9v7PEOXqNMK-zKr0",
-          authDomain: "gomoku-love-game.firebaseapp.com",
-          projectId: "gomoku-love-game",
-          storageBucket: "gomoku-love-game.firebasestorage.app",
-          messagingSenderId: "488500423250",
-          appId: "1:488500423250:web:f83df27227ac8bc89b8d8b"
-};
+            apiKey: "AIzaSyACGrG89M5AlJSJmzU9v7PEOXqNMK-zKr0",
+            authDomain: "gomoku-love-game.firebaseapp.com",
+            projectId: "gomoku-love-game",
+            storageBucket: "gomoku-love-game.firebasestorage.app",
+            messagingSenderId: "488500423250",
+            appId: "1:488500423250:web:f83df27227ac8bc89b8d8b"
+        };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = "my-gomoku-game"; // 這裡可以自己取一個喜歡的名字
 
-        let userId = null;
+        // Use global variable attached to window to avoid scope issues
+        window.currentUserId = null;
 
-        // --- Global Variables attached to window for HTML access ---
+        // --- Data Init ---
         window.dowryCount = 0;
         window.ownedSkins = ['classic'];
         window.selectedSkin = 'classic';
 
-        // Auth Flow
+        // Auth
         const initAuth = async () => {
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
-            } else {
+            try {
+                // Try anonymous login for simplicity in standalone
                 await signInAnonymously(auth);
+            } catch (e) {
+                console.warn("Auth failed, running offline:", e);
+                // Fallback to local storage data immediately if auth fails
+                window.dowryCount = parseInt(localStorage.getItem('dowryCount')) || 0;
+                window.ownedSkins = JSON.parse(localStorage.getItem('ownedSkins')) || ['classic'];
+                window.selectedSkin = localStorage.getItem('selectedSkin') || 'classic';
+                updateUIElements();
             }
         };
         initAuth();
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                userId = user.uid;
+                window.currentUserId = user.uid;
                 loadUserData();
             }
         });
 
         function loadUserData() {
-            if (!userId) return;
-            const docRef = doc(db, 'artifacts', appId, 'users', userId, 'gamedata', 'profile');
+            if (!window.currentUserId) return;
+            const docRef = doc(db, 'users', window.currentUserId);
             onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
@@ -507,7 +204,6 @@
                     window.ownedSkins = data.ownedSkins || ['classic'];
                     window.selectedSkin = data.selectedSkin || 'classic';
                 } else {
-                    // Initialize if new
                     setDoc(docRef, {
                         dowryCount: 0,
                         ownedSkins: ['classic'],
@@ -518,33 +214,32 @@
             });
         }
 
-        // Function to save data to Firestore
+        // Save Data
         window.updateStorage = async function() {
-            if (!userId) return;
-            const docRef = doc(db, 'artifacts', appId, 'users', userId, 'gamedata', 'profile');
+            // Always save to local storage as backup
+            localStorage.setItem('dowryCount', window.dowryCount);
+            localStorage.setItem('ownedSkins', JSON.stringify(window.ownedSkins));
+            localStorage.setItem('selectedSkin', window.selectedSkin);
+            
+            if (!window.currentUserId) return;
+            const docRef = doc(db, 'users', window.currentUserId);
             await setDoc(docRef, {
                 dowryCount: window.dowryCount,
                 ownedSkins: window.ownedSkins,
                 selectedSkin: window.selectedSkin
             }, { merge: true });
+            updateUIElements();
         }
 
         function updateUIElements() {
             const dowryEl = document.getElementById('dowry-count');
             if (dowryEl) dowryEl.textContent = window.dowryCount;
-            
-            // Refresh store if open
             const storeDowryEl = document.getElementById('store-dowry');
             if (storeDowryEl) storeDowryEl.textContent = window.dowryCount;
-            
-            // Redraw board to reflect skin changes
             if (typeof window.draw === 'function') window.draw();
         }
 
-        // --- EXPORTING GLOBAL FUNCTIONS FOR HTML BUTTONS ---
-        // Since we are in a module, functions are not global by default.
-        // We must attach them to window.
-
+        // --- Game Globals ---
         const canvas = document.getElementById('board');
         const ctx = canvas.getContext('2d');
         const gameContainer = document.getElementById('game-container');
@@ -560,7 +255,13 @@
         const tournamentGrid = document.getElementById('tournament-grid');
         const startBtn = document.getElementById('start-btn');
         const restartBtn = document.getElementById('restart-btn');
-
+        
+        const imgHaha = new Image();
+        imgHaha.src = 'https://popokoko.github.io/images/box_Q_YA__haha-removebg-preview.png';
+        const imgLove = new Image();
+        imgLove.src = 'https://popokoko.github.io/images/images/box_Q_YA__loveu-removebg-preview.png';
+        const imgOnlyLove = new Image();
+        imgOnlyLove.src = 'https://popokoko.github.io/images/only_love.png';
         const customImage = new Image();
         customImage.src = 'https://popokoko.github.io/mywife.png';
 
@@ -568,7 +269,9 @@
         let CELL_SIZE = 600 / (GRID_SIZE + 1);
         let PADDING = CELL_SIZE;
 
-        let board = [];
+        // Ensure board is initialized immediately
+        let board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+        
         let currentPlayer = 1;
         let isGameOver = false;
         let lastMove = null;
@@ -576,6 +279,7 @@
         let isGameActive = false;
         let currentTournamentLevel = 0;
         let isInputBlocked = false;
+        let skillUsageCount = 0;
         
         let disasterTimeoutId = null;
         let particles = [];
@@ -584,8 +288,8 @@
 
         const skins = {
             'classic': { name: '經典黑白', price: 0, type: 'color', color1: ['#554444', '#1a1a1a'], color2: ['#fff', '#f0e0e0'] },
-            'pink': { name: '櫻花粉系', price: 50, type: 'color', color1: ['#ff69b4', '#c71585'], color2: ['#fff0f5', '#ffb6c1'] },
-            'galaxy': { name: '璀璨星空', price: 120, type: 'color', color1: ['#191970', '#000000'], color2: ['#ffd700', '#fffacd'] },
+            'pink': { name: '櫻花粉系', price: 50, type: 'shape', shape: 'flower', color1: '#ff69b4', color2: '#ffb6c1' }, 
+            'galaxy': { name: '璀璨星空', price: 120, type: 'shape', shape: 'star', color1: '#191970', color2: '#ffd700' }, 
             'heart': { name: '熱戀愛心', price: 360, type: 'shape', shape: 'heart', color1: '#ff0000', color2: '#ffc0cb' },
             'cat': { name: '萌萌貓掌', price: 520, type: 'pattern', pattern: 'paw', color1: '#8b4513', color2: '#ffe4c4' }
         };
@@ -600,178 +304,60 @@
             { name: "凍結", desc: "暫停你的操作 2 秒" },
             { name: "混亂", desc: "將你的一顆棋子變成我的" },
             { name: "暴風", desc: "召喚龍捲風摧毀區域" },
-            { name: "真愛", desc: "召喚老婆降臨佔據棋盤" }
+            { name: "唯愛", desc: "召喚 Only Love 降臨佔據棋盤" }
         ];
 
-        window.init = function() {
+        // --- Functions ---
+
+        function init() {
             const dpr = window.devicePixelRatio || 1;
             canvas.width = 600 * dpr;
             canvas.height = 600 * dpr;
             ctx.scale(dpr, dpr);
-            
             CELL_SIZE = 600 / (GRID_SIZE + 1);
             PADDING = CELL_SIZE;
-
+            
             board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
-            window.draw();
+            updateUI();
+            draw();
             
             canvas.addEventListener('click', handleInput);
-            canvas.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                handleInput(e.changedTouches[0]);
-            }, {passive: false});
-
+            canvas.addEventListener('touchend', (e) => { e.preventDefault(); handleInput(e.changedTouches[0]); }, {passive: false});
+            
             modeSelect.addEventListener('change', () => {
                 const mode = modeSelect.value;
-                if (mode === 'pve') {
-                    levelSelect.style.display = 'inline-block';
-                    startBtn.textContent = "💖 開始對戰";
-                } else if (mode === 'tournament') {
-                    levelSelect.style.display = 'none';
-                    startBtn.textContent = "🏆 選擇對手";
-                } else {
-                    levelSelect.style.display = 'none';
-                    startBtn.textContent = "💖 開始對戰";
-                }
+                if (mode === 'pve') { levelSelect.style.display = 'inline-block'; startBtn.textContent = "💖 開始對戰"; }
+                else if (mode === 'tournament') { levelSelect.style.display = 'none'; startBtn.textContent = "🏆 選擇對手"; }
+                else { levelSelect.style.display = 'none'; startBtn.textContent = "💖 開始對戰"; }
                 if(isGameActive) window.resetGame();
             });
             
             disasterToggle.addEventListener('change', () => {
-                if (isGameActive) {
-                    if (disasterToggle.checked) {
-                        scheduleNextDisaster();
-                    } else {
-                        clearTimeout(disasterTimeoutId);
-                    }
-                }
+                if (isGameActive) { if (disasterToggle.checked) scheduleNextDisaster(); else clearTimeout(disasterTimeoutId); }
             });
-
             animate();
         }
 
-        window.showHelp = function() {
-            modalContent.innerHTML = `
-                <div class="help-content">
-                    <h2>🌸 遊戲說明</h2>
-                    <div class="help-item">
-                        <h3>🤖 人機對戰 (PvE)</h3>
-                        <p>與不同難度(簡單/普通/大師)的電腦AI進行對戰，磨練妳的棋藝。</p>
-                    </div>
-                    <div class="help-item">
-                        <h3>👥 雙人對戰 (PvP)</h3>
-                        <p>與朋友在同一台裝置上輪流下棋，享受面對面的樂趣。</p>
-                    </div>
-                    <div class="help-item">
-                        <h3>🏆 我想妳大賽 (Tournament)</h3>
-                        <p>挑戰 10 個不同等級的對手！獲勝可得嫁妝！<br>
-                        <span style="color:#ff1493">★ 冠軍 (Lv10): 520 嫁妝</span><br>
-                        <span style="color:#ff1493">★ 亞軍 (Lv9): 360 嫁妝</span><br>
-                        <span style="color:#ff1493">★ 季軍 (Lv8): 225 嫁妝</span><br>
-                        <span>★ 其他等級: 10 嫁妝</span>
-                        </p>
-                    </div>
-                    <button class="btn-secondary" style="width:100%; margin-top:10px;" onclick="closeModal()">知道了！</button>
-                </div>
-            `;
-            modalOverlay.style.display = 'flex';
-        }
-
-        window.showStore = function() {
-            let itemsHtml = '';
-            for (const [id, skin] of Object.entries(skins)) {
-                const owned = window.ownedSkins.includes(id);
-                const active = window.selectedSkin === id;
-                let btnText = owned ? (active ? "已裝備" : "裝備") : `購買 $${skin.price}`;
-                let btnClass = owned ? (active ? "store-btn" : "store-btn btn-secondary") : "store-btn";
-                let btnAction = owned ? `equipSkin('${id}')` : `buySkin('${id}', ${skin.price})`;
-                let itemClass = active ? "store-item active" : "store-item";
-
-                let previewStyle = "";
-                if (skin.type === 'color') {
-                    previewStyle = `background: radial-gradient(circle at 30% 30%, ${skin.color1[0]}, ${skin.color1[1]});`;
-                } else if (skin.type === 'shape' || skin.type === 'pattern') {
-                    previewStyle = `background: ${skin.color1};`;
-                }
-
-                itemsHtml += `
-                    <div class="${itemClass}">
-                        <div class="store-preview" style="${previewStyle}"></div>
-                        <div class="store-name">${skin.name}</div>
-                        <div class="store-price">${owned ? "已擁有" : `$${skin.price}`}</div>
-                        <button class="${btnClass}" onclick="${btnAction}" ${active ? "disabled" : ""}>${btnText}</button>
-                    </div>
-                `;
-            }
-
-            modalContent.innerHTML = `
-                <h2 style="color:#ff1493">🏪 時尚商城</h2>
-                <p>目前嫁妝: <strong id="store-dowry">${window.dowryCount}</strong> 🎁</p>
-                <div class="store-grid">
-                    ${itemsHtml}
-                </div>
-                <button class="btn-secondary" style="width:100%; margin-top:20px;" onclick="closeModal()">關閉</button>
-            `;
-            modalOverlay.style.display = 'flex';
-        }
-
-        window.buySkin = function(id, price) {
-            if (window.dowryCount >= price) {
-                window.dowryCount -= price;
-                window.ownedSkins.push(id);
-                window.updateStorage();
-                window.showStore(); 
-                alert(`購買成功！獲得 ${skins[id].name}`);
-            } else {
-                alert("嫁妝不足！快去參加比賽賺取吧！");
-            }
-        };
-
-        window.equipSkin = function(id) {
-            window.selectedSkin = id;
-            window.updateStorage();
-            window.showStore();
-            window.draw();
-        };
-
-        window.closeModal = function() {
-            modalOverlay.style.display = 'none';
-        }
+        window.init = init;
 
         window.reselectGame = function() {
-            isGameActive = false;
-            isGameOver = false;
-            restartBtn.disabled = true;
-            clearTimeout(disasterTimeoutId);
-            modalOverlay.style.display = 'none';
-            startOverlay.style.display = 'flex';
-            tournamentOverlay.style.display = 'none';
-            
-            board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
-            activeEffects = [];
-            particles = [];
-            lastMove = null;
-            gameContainer.classList.remove('blur-effect', 'freeze-effect');
-            const existingFog = document.querySelectorAll('.fog-cloud');
-            existingFog.forEach(el => el.remove());
-            
-            window.draw();
-        }
+            isGameActive = false; isGameOver = false; restartBtn.disabled = true; clearTimeout(disasterTimeoutId); modalOverlay.style.display = 'none'; startOverlay.style.display = 'flex'; tournamentOverlay.style.display = 'none';
+            board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0)); activeEffects = []; particles = []; lastMove = null; gameContainer.classList.remove('blur-effect', 'freeze-effect'); document.querySelectorAll('.fog-cloud').forEach(el => el.remove()); draw();
+        };
 
         window.handleStartButtonClick = function() {
-            if (modeSelect.value === 'tournament') {
-                showTournamentSelection();
-            } else {
-                startStandardGame();
-            }
-        }
+            if (modeSelect.value === 'tournament') showTournamentSelection(); else startStandardGame();
+        };
 
-        window.showTournamentSelection = function() {
+        window.showTournamentSelection = showTournamentSelection;
+        function showTournamentSelection() {
             startOverlay.style.display = 'none';
             tournamentOverlay.style.display = 'flex';
             generateTournamentOpponents();
         }
 
-        window.cancelTournament = function() {
+        window.cancelTournament = cancelTournament;
+        function cancelTournament() {
             tournamentOverlay.style.display = 'none';
             startOverlay.style.display = 'flex';
         }
@@ -796,7 +382,8 @@
             }
         }
 
-        window.startTournamentMatch = function(level) {
+        window.startTournamentMatch = startTournamentMatch;
+        function startTournamentMatch(level) {
             currentTournamentLevel = level;
             tournamentOverlay.style.display = 'none';
             let aiDifficulty = 1;
@@ -806,7 +393,7 @@
             runStartAnimation();
             isGameActive = true;
             restartBtn.disabled = false;
-            window.resetGame(true);
+            resetGame(true);
         }
 
         function startStandardGame() {
@@ -815,7 +402,7 @@
             isGameActive = true;
             restartBtn.disabled = false;
             runStartAnimation();
-            window.resetGame();
+            resetGame();
         }
 
         function runStartAnimation() {
@@ -825,7 +412,8 @@
             setTimeout(() => { startRunner.classList.remove('active'); }, 3000);
         }
 
-        window.resetGame = function(keepState = false) {
+        window.resetGame = resetGame;
+        function resetGame(keepState = false) {
             if (!isGameActive) return;
             board = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
             currentPlayer = 1;
@@ -833,6 +421,7 @@
             lastMove = null;
             isThinking = false;
             isInputBlocked = false;
+            skillUsageCount = 0;
             modalOverlay.style.display = 'none';
             particles = [];
             activeEffects = [];
@@ -840,170 +429,15 @@
             document.querySelectorAll('.fog-cloud').forEach(el => el.remove());
             clearTimeout(disasterTimeoutId);
             if (disasterToggle.checked) scheduleNextDisaster();
-            window.draw(); 
-        }
-
-        function triggerOpponentSkill() {
-            if (currentTournamentLevel === 0 || isGameOver) return;
-            if (Math.random() > 0.3) return;
-            const skillId = currentTournamentLevel;
-            const skillName = tournamentSkills[skillId-1].name;
-            const color = "#d63384";
-            setTimeout(() => {
-                switch(skillId) {
-                    case 1: break;
-                    case 2: showAlert(`技能：${skillName}!`, color); gameContainer.classList.add('blur-effect'); setTimeout(() => gameContainer.classList.remove('blur-effect'), 3000); break;
-                    case 3: if (lastMove && board[lastMove.y][lastMove.x] === 1) { showAlert(`技能：${skillName}!`, color); board[lastMove.y][lastMove.x] = 0; currentPlayer = 1; isThinking = false; window.draw(); return true; } break;
-                    case 4: showAlert(`技能：${skillName}!`, color); spawnFog(); break;
-                    case 5: showAlert(`技能：${skillName}!`, color); for(let i=0; i<2; i++) spawnObstacle(-4); window.draw(); break;
-                    case 6: showAlert(`技能：${skillName}!`, color); destroyRandomPlayerStone(); window.draw(); break;
-                    case 7: showAlert(`技能：${skillName}!`, color); isInputBlocked = true; gameContainer.classList.add('freeze-effect'); setTimeout(() => { isInputBlocked = false; gameContainer.classList.remove('freeze-effect'); }, 2000); break;
-                    case 8: showAlert(`技能：${skillName}!`, color); swapPlayerStoneToAI(); window.draw(); break;
-                    case 9: showAlert(`技能：${skillName}!`, color); spawnDisasterEffect({id: -2, name: 'tornado'}, 7, 7); break;
-                    case 10: showAlert(`技能：${skillName}!`, color); spawnDisasterEffect({id: -3, name: 'love'}, 7, 7); break;
-                }
-            }, 500);
-            return false;
-        }
-        
-        function spawnFog() { for(let i=0; i<3; i++) { const fog = document.createElement('div'); fog.className = 'fog-cloud'; fog.style.left = Math.random() * 80 + '%'; fog.style.top = Math.random() * 80 + '%'; gameContainer.appendChild(fog); setTimeout(() => fog.remove(), 5000); } }
-        function destroyRandomPlayerStone() { let playerStones = []; for(let y=0; y<GRID_SIZE; y++) for(let x=0; x<GRID_SIZE; x++) if(board[y][x] === 1) playerStones.push({x, y}); if(playerStones.length > 0) { const target = playerStones[Math.floor(Math.random() * playerStones.length)]; board[target.y][target.x] = -1; spawnParticles(PADDING + target.x * CELL_SIZE, PADDING + target.y * CELL_SIZE, 'meteor'); } }
-        function spawnObstacle(typeId) { let x, y; do { x = Math.floor(Math.random() * GRID_SIZE); y = Math.floor(Math.random() * GRID_SIZE); } while(board[y][x] !== 0); board[y][x] = typeId; }
-        function swapPlayerStoneToAI() { let playerStones = []; for(let y=0; y<GRID_SIZE; y++) for(let x=0; x<GRID_SIZE; x++) if(board[y][x] === 1) playerStones.push({x, y}); if(playerStones.length > 0) { const target = playerStones[Math.floor(Math.random() * playerStones.length)]; board[target.y][target.x] = 2; } }
-        function scheduleNextDisaster() { if (isGameOver || !disasterToggle.checked || !isGameActive) return; const delay = Math.floor(Math.random() * 8000) + 4000; disasterTimeoutId = setTimeout(() => { triggerDisaster(); scheduleNextDisaster(); }, delay); }
-        function triggerDisaster() { if (isGameOver || !isGameActive) return; const x = Math.floor(Math.random() * GRID_SIZE); const y = Math.floor(Math.random() * GRID_SIZE); const types = [{ id: -1, name: 'meteor', text: '🔥 隕石衝擊！', color: '#FF4500' }, { id: -2, name: 'tornado', text: '🌪️ 龍捲風來襲！', color: '#00FFFF' }, { id: -3, name: 'love', text: '💖 老婆降臨！', color: '#FF69B4' }, { id: -4, name: 'tear', text: '💧 相思成災...', color: '#4169E1' }]; const disaster = types[Math.floor(Math.random() * types.length)]; spawnDisasterEffect(disaster, x, y); showAlert(disaster.text, disaster.color); }
-        function spawnDisasterEffect(disaster, gridX, gridY) { const targetX = PADDING + gridX * CELL_SIZE; const targetY = PADDING + gridY * CELL_SIZE; activeEffects.push({ type: disaster.name, gridX: gridX, gridY: gridY, disasterId: disaster.id, progress: 0, x: disaster.name === 'meteor' || disaster.name === 'love' || disaster.name === 'tear' ? targetX : targetX - 100, y: disaster.name === 'meteor' || disaster.name === 'love' || disaster.name === 'tear' ? -50 : targetY, targetX: targetX, targetY: targetY }); }
-        function applyDisasterDamage(effect) { board[effect.gridY][effect.gridX] = effect.disasterId; gameContainer.classList.remove('shake-effect'); void gameContainer.offsetWidth; gameContainer.classList.add('shake-effect'); spawnParticles(effect.targetX, effect.targetY, effect.type); }
-        function spawnParticles(x, y, type) { let count = 20; let color = '#fff'; if (type === 'meteor') { count = 30; color = '#ffaa00'; } else if (type === 'tornado') { count = 20; color = '#88ffff'; } else if (type === 'love') { count = 15; color = '#ff69b4'; } else if (type === 'tear') { count = 15; color = '#4169e1'; } for (let i = 0; i < count; i++) { particles.push({ x: x, y: y, vx: (Math.random() - 0.5) * 10, vy: (Math.random() - 0.5) * 10, life: 1.0, color: color, type: type }); } }
-        function showAlert(text, color) { disasterAlert.textContent = text; disasterAlert.style.color = color; disasterAlert.style.textShadow = `0 0 20px ${color}, 2px 2px 0 #000`; disasterAlert.classList.add('active'); setTimeout(() => { disasterAlert.classList.remove('active'); }, 2000); }
-
-        function animate() {
-            window.draw(); 
-            updateEffects();
-            animationFrameId = requestAnimationFrame(animate);
-        }
-
-        function updateEffects() { for (let i = activeEffects.length - 1; i >= 0; i--) { let eff = activeEffects[i]; if (eff.type === 'meteor') { eff.y += 15; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } else if (eff.type === 'love') { eff.y += 5; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } else if (eff.type === 'tear') { eff.y += 8; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } else if (eff.type === 'tornado') { eff.x += (eff.targetX - eff.x) * 0.1; eff.progress += 0.05; if (Math.abs(eff.x - eff.targetX) < 5 && eff.progress > 1) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } } for (let i = particles.length - 1; i >= 0; i--) { let p = particles[i]; p.x += p.vx; p.y += p.vy; p.life -= 0.02; if (p.type === 'tear' || p.type === 'meteor') p.vy += 0.2; if (p.life <= 0) { particles.splice(i, 1); } } }
-
-        window.draw = function() {
-            ctx.clearRect(0, 0, 600, 600);
-            ctx.beginPath(); ctx.lineWidth = 1; ctx.strokeStyle = "#8B4C5E"; 
-            for (let i = 0; i < GRID_SIZE; i++) { ctx.moveTo(PADDING, PADDING + i * CELL_SIZE); ctx.lineTo(PADDING + (GRID_SIZE - 1) * CELL_SIZE, PADDING + i * CELL_SIZE); ctx.moveTo(PADDING + i * CELL_SIZE, PADDING); ctx.lineTo(PADDING + i * CELL_SIZE, PADDING + (GRID_SIZE - 1) * CELL_SIZE); } ctx.stroke();
-            const stars = [{x: 3, y: 3}, {x: 11, y: 3}, {x: 7, y: 7}, {x: 3, y: 11}, {x: 11, y: 11}]; ctx.fillStyle = "#8B4C5E"; stars.forEach(star => { ctx.beginPath(); ctx.arc(PADDING + star.x * CELL_SIZE, PADDING + star.y * CELL_SIZE, 4, 0, Math.PI * 2); ctx.fill(); });
-
-            for (let y = 0; y < GRID_SIZE; y++) {
-                for (let x = 0; x < GRID_SIZE; x++) {
-                    const val = board[y][x];
-                    if (val > 0) drawStone(x, y, val);
-                    else if (val < 0) drawDisasterResult(x, y, val);
-                }
-            }
-            if (lastMove && board[lastMove.y][lastMove.x] > 0) { ctx.beginPath(); const cx = PADDING + lastMove.x * CELL_SIZE; const cy = PADDING + lastMove.y * CELL_SIZE; ctx.fillStyle = "#ff1493"; ctx.fillRect(cx - 4, cy - 4, 8, 8); }
-            drawActiveEffects(); drawParticles();
-        }
-
-        function drawActiveEffects() { activeEffects.forEach(eff => { ctx.save(); ctx.translate(eff.x, eff.y); if (eff.type === 'meteor') { const grad = ctx.createRadialGradient(0, 0, 5, 0, 0, 20); grad.addColorStop(0, '#ffff00'); grad.addColorStop(0.5, '#ffaa00'); grad.addColorStop(1, 'transparent'); ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(0, 0, 20, 0, Math.PI*2); ctx.fill(); } else if (eff.type === 'tornado') { ctx.rotate(Date.now() / 100); ctx.strokeStyle = "rgba(0, 255, 255, 0.6)"; ctx.lineWidth = 3; ctx.beginPath(); for(let i=0; i<3; i++) { ctx.arc(0, i*5, 10 + i*5, 0, Math.PI); } ctx.stroke(); } else if (eff.type === 'love') { if (customImage.complete) { ctx.drawImage(customImage, -30, -30, 60, 60); } else { ctx.fillStyle = "#FF1493"; ctx.font = "30px Arial"; ctx.fillText("❤", -15, 10); } } else if (eff.type === 'tear') { ctx.fillStyle = "#00BFFF"; ctx.font = "30px Arial"; ctx.fillText("💧", -15, 10); } ctx.restore(); }); }
-        function drawParticles() { particles.forEach(p => { ctx.globalAlpha = p.life; ctx.fillStyle = p.color; ctx.beginPath(); if (p.type === 'love') { ctx.font = "12px Arial"; ctx.fillText("❤", p.x, p.y); } else if (p.type === 'tornado') { ctx.rect(p.x, p.y, 3, 3); ctx.fill(); } else { ctx.arc(p.x, p.y, 3, 0, Math.PI*2); ctx.fill(); } }); ctx.globalAlpha = 1.0; }
-
-        function drawStone(x, y, type) {
-            const cx = PADDING + x * CELL_SIZE;
-            const cy = PADDING + y * CELL_SIZE;
-            const radius = CELL_SIZE * 0.45;
-            
-            let currentStyle = skins['classic'];
-            
-            if (type === 1) { 
-                currentStyle = skins[window.selectedSkin];
-            } else { 
-                currentStyle = { type: 'color', color1: ['#fff', '#f0e0e0'] }; 
-            }
-
-            if (currentStyle.type === 'color') {
-                ctx.beginPath();
-                ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-                ctx.shadowColor = "rgba(0, 0, 0, 0.2)"; ctx.shadowBlur = 5; ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2;
-                const grad = ctx.createRadialGradient(cx - radius/3, cy - radius/3, radius/10, cx, cy, radius);
-                grad.addColorStop(0, currentStyle.color1[0]); 
-                grad.addColorStop(1, currentStyle.color1[1]); 
-                ctx.fillStyle = grad;
-                ctx.fill();
-            } else if (currentStyle.type === 'shape' && currentStyle.shape === 'heart') {
-                ctx.shadowColor = "rgba(0, 0, 0, 0.2)"; ctx.shadowBlur = 5; ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2;
-                ctx.fillStyle = currentStyle.color1;
-                ctx.beginPath();
-                const size = radius; 
-                const topCurveHeight = size * 0.3;
-                ctx.save();
-                ctx.translate(cx, cy - size/2);
-                ctx.moveTo(0, topCurveHeight);
-                ctx.bezierCurveTo(0, 0, -size, 0, -size, topCurveHeight);
-                ctx.bezierCurveTo(-size, (size + topCurveHeight) / 2, 0, size, 0, size + topCurveHeight);
-                ctx.bezierCurveTo(0, size, size, (size + topCurveHeight) / 2, size, topCurveHeight);
-                ctx.bezierCurveTo(size, 0, 0, 0, 0, topCurveHeight);
-                ctx.fill();
-                ctx.restore();
-            } else if (currentStyle.type === 'pattern' && currentStyle.pattern === 'paw') {
-                ctx.shadowColor = "rgba(0, 0, 0, 0.2)"; ctx.shadowBlur = 5; ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2;
-                ctx.fillStyle = currentStyle.color1;
-                ctx.beginPath();
-                ctx.ellipse(cx, cy + 3, radius * 0.5, radius * 0.4, 0, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = currentStyle.color2;
-                for(let i=-1.5; i<=1.5; i+=1) {
-                    ctx.beginPath();
-                    ctx.arc(cx + i * 10, cy - 8 - Math.abs(i)*3, radius * 0.18, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-            
-            ctx.shadowColor = "transparent";
-        }
-
-        function handleInput(e) { if (isGameOver || isThinking || !isGameActive || isInputBlocked) return; if ((modeSelect.value === 'pve' || modeSelect.value === 'tournament') && currentPlayer === 2) return; const rect = canvas.getBoundingClientRect(); const scaleX = 600 / rect.width; const scaleY = 600 / rect.height; const mouseX = (e.clientX - rect.left) * scaleX; const mouseY = (e.clientY - rect.top) * scaleY; const gridX = Math.round((mouseX - PADDING) / CELL_SIZE); const gridY = Math.round((mouseY - PADDING) / CELL_SIZE); if (gridX >= 0 && gridX < GRID_SIZE && gridY >= 0 && gridY < GRID_SIZE) { if (board[gridY][gridX] === 0) { placeStone(gridX, gridY); } } }
-        function placeStone(x, y) { board[y][x] = currentPlayer; lastMove = {x, y}; if (checkWin(x, y, currentPlayer)) { endGame(currentPlayer); return; } currentPlayer = currentPlayer === 1 ? 2 : 1; updateUI(); const mode = modeSelect.value; if ((mode === 'pve' || mode === 'tournament') && currentPlayer === 2 && !isGameOver) { isThinking = true; setTimeout(makeAIMove, 500); } }
-        function makeAIMove() { if (!isGameActive || isGameOver) return; if (modeSelect.value === 'tournament') { const skipped = triggerOpponentSkill(); if(skipped) return; } const level = parseInt(levelSelect.value); let move; if (currentTournamentLevel === 1 && Math.random() < 0.1) { move = getRandomMove(); } else { if (level === 1) move = getLevel1Move(); else if (level === 2) move = getLevel2Move(); else move = getLevel3Move(); } if (!move) move = getRandomMove(); if (move) placeStone(move.x, move.y); isThinking = false; }
-        function getRandomMove() { for(let y=0; y<GRID_SIZE; y++) for(let x=0; x<GRID_SIZE; x++) if(board[y][x] === 0) return {x, y}; return null; }
-        function getLevel1Move() { let candidates = []; for (let y = 0; y < GRID_SIZE; y++) for (let x = 0; x < GRID_SIZE; x++) if (board[y][x] === 0 && hasNeighbor(x, y, 2)) candidates.push({x, y}); if (candidates.length === 0) return getRandomMove(); return candidates[Math.floor(Math.random() * candidates.length)]; }
-        function getLevel2Move() { return getBestMoveByScore(false); }
-        function getLevel3Move() { return getBestMoveByScore(true); }
-        function getBestMoveByScore(isHard) { let bestScore = -Infinity; let bestMoves = []; for (let y = 0; y < GRID_SIZE; y++) { for (let x = 0; x < GRID_SIZE; x++) { if (board[y][x] === 0) { if (!hasNeighbor(x, y, 2) && board[7][7] !== 0) continue; let attackScore = evaluatePoint(x, y, 2); let defenseScore = evaluatePoint(x, y, 1); let currentScore; if (isHard) { if (attackScore >= 10000) currentScore = 20000; else if (defenseScore >= 10000) currentScore = 10000; else currentScore = attackScore + defenseScore; } else { let noise = Math.random() * 20; currentScore = attackScore + (defenseScore * 0.8) + noise; } if (currentScore > bestScore) { bestScore = currentScore; bestMoves = [{x, y}]; } else if (currentScore === bestScore) { bestMoves.push({x, y}); } } } } if (bestMoves.length === 0) return getRandomMove(); return bestMoves[Math.floor(Math.random() * bestMoves.length)]; }
-        function hasNeighbor(x, y, radius) { for (let dy = -radius; dy <= radius; dy++) for (let dx = -radius; dx <= radius; dx++) { if (dx === 0 && dy === 0) continue; let nx = x + dx, ny = y + dy; if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) if (board[ny][nx] !== 0) return true; } return false; }
-        function evaluatePoint(x, y, player) { let score = 0; const dirs = [[1,0], [0,1], [1,1], [1,-1]]; for (let dir of dirs) score += evaluateLine(x, y, dir[0], dir[1], player); return score; }
-        function evaluateLine(x, y, dx, dy, player) { let count = 1; let blockedEnds = 0; let i = 1; while (true) { let nx = x + dx * i; let ny = y + dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE) { blockedEnds++; break; } const val = board[ny][nx]; if (val === player) { count++; } else if (val === 0) { break; } else { blockedEnds++; break; } i++; } i = 1; while (true) { let nx = x - dx * i; let ny = y - dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE) { blockedEnds++; break; } const val = board[ny][nx]; if (val === player) { count++; } else if (val === 0) { break; } else { blockedEnds++; break; } i++; } if (blockedEnds >= 2 && count < 5) return 0; if (count >= 5) return 100000; if (count === 4) return blockedEnds === 0 ? 10000 : 2500; if (count === 3) return blockedEnds === 0 ? 3000 : 500; if (count === 2) return blockedEnds === 0 ? 500 : 50; return 10; }
-        function checkWin(x, y, player) { const directions = [[1, 0], [0, 1], [1, 1], [1, -1]]; for (let [dx, dy] of directions) { let count = 1; for (let i = 1; i < 5; i++) { const nx = x + dx * i, ny = y + dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE || board[ny][nx] !== player) break; count++; } for (let i = 1; i < 5; i++) { const nx = x - dx * i, ny = y - dy * i; if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE || board[ny][nx] !== player) break; count++; } if (count >= 5) return true; } return false; }
-
-        function endGame(winner) {
-            isGameOver = true;
-            clearTimeout(disasterTimeoutId);
-            let msg = winner === 1 ? "黑子獲勝!" : "白子獲勝!";
-            const mode = modeSelect.value;
-            let reward = 0;
-
-            if ((mode === 'pve' || mode === 'tournament') && winner === 2) {
-                 msg = mode === 'tournament' ? "思念太強，妳輸了！" : "電腦獲勝!";
-            } else if (winner === 1 && mode === 'tournament') {
-                if (currentTournamentLevel === 10) reward = 520;
-                else if (currentTournamentLevel === 9) reward = 360;
-                else if (currentTournamentLevel === 8) reward = 225;
-                else reward = 10;
-                
-                msg = `恭喜獲勝！<br>獲得 ${reward} 個嫁妝 🎁`;
-                window.dowryCount += reward;
-                window.updateStorage();
-            }
-
-            modalContent.innerHTML = `
-                <div id="winner-text">${winner === 1 ? "🎉 恭喜獲勝!" : "💔 再接再厲"}</div>
-                ${reward > 0 ? `<div id="reward-text">🎁 +${reward} 嫁妝</div>` : ''}
-                <p style="color:#666; margin-bottom:20px;">${winner === 1 ? "妳的愛意戰勝了一切！" : "不要氣餒，愛需要堅持！"}</p>
-                <button class="btn-secondary" onclick="closeModal(); resetGame();">再來一局</button>
-                ${mode === 'tournament' ? `<button class="btn-secondary" style="margin-top:10px" onclick="closeModal(); showTournamentSelection();">選擇對手</button>` : ''}
-            `;
-            modalOverlay.style.display = 'flex';
-            statusText.textContent = "遊戲結束";
+            draw(); 
+            updateUI();
         }
 
         function updateUI() {
+            const statusText = document.getElementById('status-text');
+            const currentStoneIcon = document.getElementById('current-stone');
+            if (!statusText || !currentStoneIcon) return;
+
             if (currentPlayer === 1) {
                 statusText.textContent = "黑子回合";
                 currentStoneIcon.className = "stone-icon stone-black";
@@ -1024,7 +458,437 @@
             }
         }
 
-        window.init();
+        window.showHelp = showHelp;
+        function showHelp() {
+            modalContent.innerHTML = `
+                <div class="help-content">
+                    <h2>🌸 遊戲說明</h2>
+                    <div class="help-item">
+                        <h3>🤖 人機對戰 (PvE)</h3>
+                        <p>與不同難度(簡單/普通/大師)的電腦AI進行對戰，磨練妳的棋藝。</p>
+                    </div>
+                    <div class="help-item">
+                        <h3>👥 雙人對戰 (PvP)</h3>
+                        <p>與朋友在同一台裝置上輪流下棋，享受面對面的樂趣。</p>
+                    </div>
+                    <div class="help-item">
+                        <h3>🏆 我想妳大賽 (Tournament)</h3>
+                        <p>挑戰 10 個不同等級的對手！獲勝可得嫁妝！<br>
+                        <span style="color:#ff1493">★ 冠軍 (Lv10): 520 嫁妝</span><br>
+                        <span style="color:#ff1493">★ 亞軍 (Lv9): 360 嫁妝</span><br>
+                        <span style="color:#ff1493">★ 季軍 (Lv8): 225 嫁妝</span><br>
+                        <span>★ 其他等級: 10 嫁妝</span>
+                        </p>
+                    </div>
+                    <button class="btn-secondary" style="width:100%; margin-top:10px;" onclick="window.closeModal()">知道了！</button>
+                </div>
+            `;
+            modalOverlay.style.display = 'flex';
+        }
+
+        window.showStore = showStore;
+        function showStore() {
+            let itemsHtml = '';
+            for (const [id, skin] of Object.entries(skins)) {
+                const owned = window.ownedSkins.includes(id);
+                const active = window.selectedSkin === id;
+                let btnText = owned ? (active ? "已裝備" : "裝備") : `購買 $${skin.price}`;
+                let btnClass = owned ? (active ? "store-btn" : "store-btn btn-secondary") : "store-btn";
+                let btnAction = owned ? `window.equipSkin('${id}')` : `window.buySkin('${id}', ${skin.price}, '${skin.name}')`;
+                let itemClass = active ? "store-item active" : "store-item";
+
+                let previewStyle = "";
+                if (skin.type === 'color') {
+                    previewStyle = `background: radial-gradient(circle at 30% 30%, ${skin.color1[0]}, ${skin.color1[1]});`;
+                } else if (skin.shape === 'flower') {
+                    previewStyle = `background: ${skin.color1}; clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%); border-radius: 50%;`;
+                } else if (skin.shape === 'star') {
+                    previewStyle = `background: ${skin.color1}; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); border-radius: 0;`;
+                } else if (skin.shape === 'heart') {
+                    previewStyle = `background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff0000'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E") no-repeat center/contain; border-radius: 0;`;
+                } else if (skin.pattern === 'paw') {
+                    previewStyle = `background: ${skin.color1}; border: 2px solid ${skin.color2}; border-radius: 50%;`;
+                }
+
+                itemsHtml += `
+                    <div class="${itemClass}">
+                        <div class="store-preview" style="${previewStyle}"></div>
+                        <div class="store-name">${skin.name}</div>
+                        <div class="store-price">${owned ? "已擁有" : `$${skin.price}`}</div>
+                        <button class="${btnClass}" onclick="${btnAction}" ${active ? "disabled" : ""}>${btnText}</button>
+                    </div>
+                `;
+            }
+
+            modalContent.innerHTML = `
+                <h2 style="color:#ff1493">🏪 時尚商城</h2>
+                <p>目前嫁妝: <strong id="store-dowry">${window.dowryCount}</strong> 🎁</p>
+                <div class="store-grid">
+                    ${itemsHtml}
+                </div>
+                <button class="btn-secondary" style="width:100%; margin-top:20px;" onclick="window.closeModal()">關閉</button>
+            `;
+            modalOverlay.style.display = 'flex';
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-message');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        window.buySkin = function(id, price, name) {
+            if (window.dowryCount >= price) {
+                window.dowryCount -= price;
+                window.ownedSkins.push(id);
+                window.updateStorage();
+                window.showStore(); 
+                showToast(`購買成功！獲得 ${name}`);
+            } else {
+                showToast("嫁妝不足！快去參加比賽賺取吧！ 🎁");
+            }
+        };
+
+        window.equipSkin = function(id) {
+            window.selectedSkin = id;
+            window.updateStorage();
+            window.showStore();
+            window.draw();
+        };
+
+        window.closeModal = function() {
+            modalOverlay.style.display = 'none';
+        }
+        function closeModal() {
+            modalOverlay.style.display = 'none';
+        }
+
+        function triggerOpponentSkill() {
+            if (currentTournamentLevel === 0 || isGameOver) return;
+            if (Math.random() > 0.3) return;
+            const skillId = currentTournamentLevel;
+            const skillName = tournamentSkills[skillId-1].name;
+            const color = "#d63384";
+            setTimeout(() => {
+                switch(skillId) {
+                    case 1: break;
+                    case 2: showAlert(`技能：${skillName}!`, color); gameContainer.classList.add('blur-effect'); setTimeout(() => gameContainer.classList.remove('blur-effect'), 3000); break;
+                    case 3: if (lastMove && board[lastMove.y][lastMove.x] === 1) { 
+                        showAlert(`技能：${skillName}!`, color); 
+                        board[lastMove.y][lastMove.x] = 0; 
+                        currentPlayer = 1; isThinking = false; draw(); 
+                        let pos = getRandomCoordinate();
+                        spawnDisasterEffect({id: 'haha', name: 'haha'}, pos.x, pos.y); 
+                        updateUI(); 
+                        return true; 
+                    } break;
+                    case 4: showAlert(`技能：${skillName}!`, color); spawnFog(); break;
+                    case 5: showAlert(`技能：${skillName}!`, color); for(let i=0; i<2; i++) spawnObstacle(-4); draw(); break;
+                    case 6: showAlert(`技能：${skillName}!`, color); destroyRandomPlayerStone(); draw(); break;
+                    case 7: showAlert(`技能：${skillName}!`, color); isInputBlocked = true; gameContainer.classList.add('freeze-effect'); setTimeout(() => { isInputBlocked = false; gameContainer.classList.remove('freeze-effect'); }, 2000); break;
+                    case 8: showAlert(`技能：${skillName}!`, color); swapPlayerStoneToAI(); 
+                        let pos8 = getRandomCoordinate();
+                        spawnDisasterEffect({id: 'haha', name: 'haha'}, pos8.x, pos8.y); 
+                        draw(); break;
+                    case 9: 
+                        let pos9 = getRandomCoordinate();
+                        showAlert(`技能：${skillName}!`, color);
+                        spawnDisasterEffect({id: -2, name: 'tornado'}, pos9.x, pos9.y); break;
+                    case 10: 
+                        let pos10 = getRandomCoordinate();
+                        showAlert(`技能：${skillName}!`, color);
+                        spawnDisasterEffect({id: -5, name: 'onlylove'}, pos10.x, pos10.y); break;
+                }
+            }, 2000);
+            return false;
+        }
+        
+        function spawnFog() { for(let i=0; i<3; i++) { const fog = document.createElement('div'); fog.className = 'fog-cloud'; fog.style.left = Math.random() * 80 + '%'; fog.style.top = Math.random() * 80 + '%'; gameContainer.appendChild(fog); setTimeout(() => fog.remove(), 5000); } }
+        function destroyRandomPlayerStone() { let playerStones = []; for(let y=0; y<GRID_SIZE; y++) for(let x=0; x<GRID_SIZE; x++) if(board[y][x] === 1) playerStones.push({x, y}); if(playerStones.length > 0) { const target = playerStones[Math.floor(Math.random() * playerStones.length)]; board[target.y][target.x] = -1; spawnParticles(PADDING + target.x * CELL_SIZE, PADDING + target.y * CELL_SIZE, 'meteor'); } }
+        function spawnObstacle(typeId) { let x, y; do { x = Math.floor(Math.random() * GRID_SIZE); y = Math.floor(Math.random() * GRID_SIZE); } while(board[y][x] !== 0); board[y][x] = typeId; }
+        function swapPlayerStoneToAI() { let playerStones = []; for(let y=0; y<GRID_SIZE; y++) for(let x=0; x<GRID_SIZE; x++) if(board[y][x] === 1) playerStones.push({x, y}); if(playerStones.length > 0) { const target = playerStones[Math.floor(Math.random() * playerStones.length)]; board[target.y][target.x] = 2; } }
+        
+        function scheduleNextDisaster() { 
+            if (isGameOver || !disasterToggle.checked || !isGameActive) return; 
+            // 調整時間：15000ms (15秒) + 0~20000ms (0~20秒) = 15~35秒
+            const delay = Math.floor(Math.random() * 20000) + 15000; 
+            disasterTimeoutId = setTimeout(() => { 
+                triggerDisaster(); 
+                scheduleNextDisaster(); 
+            }, delay); 
+        }
+
+        function triggerDisaster() { if (isGameOver || !isGameActive) return; const x = Math.floor(Math.random() * GRID_SIZE); const y = Math.floor(Math.random() * GRID_SIZE); const types = [{ id: -1, name: 'meteor', text: '🔥 隕石衝擊！', color: '#FF4500' }, { id: -2, name: 'tornado', text: '🌪️ 龍捲風來襲！', color: '#00FFFF' }, { id: -3, name: 'love', text: '💖 老婆降臨！', color: '#FF69B4' }, { id: -4, name: 'tear', text: '💧 相思成災...', color: '#4169E1' }]; const disaster = types[Math.floor(Math.random() * types.length)]; spawnDisasterEffect(disaster, x, y); showAlert(disaster.text, disaster.color); }
+        
+        function spawnDisasterEffect(disaster, gridX, gridY) { 
+            const targetX = PADDING + gridX * CELL_SIZE; 
+            const targetY = PADDING + gridY * CELL_SIZE; 
+            
+            let visualType = disaster.name;
+            if (disaster.name === 'love' || disaster.id === -3) visualType = 'love';
+            if (disaster.name === 'onlylove' || disaster.id === -5) visualType = 'onlylove';
+            if (disaster.name === 'haha') visualType = 'haha';
+            
+            activeEffects.push({ 
+                type: visualType, 
+                gridX: gridX, 
+                gridY: gridY, 
+                disasterId: disaster.id, 
+                progress: 0, 
+                x: visualType === 'meteor' || visualType === 'love' || visualType === 'tear' || visualType === 'onlylove' ? targetX : targetX - 100, 
+                y: visualType === 'meteor' || visualType === 'love' || visualType === 'tear' || visualType === 'onlylove' ? -50 : targetY, 
+                targetX: targetX, 
+                targetY: targetY 
+            }); 
+        }
+        
+        function applyDisasterDamage(effect) { 
+            if (typeof effect.disasterId === 'number') {
+                board[effect.gridY][effect.gridX] = effect.disasterId; 
+            }
+            gameContainer.classList.remove('shake-effect'); 
+            void gameContainer.offsetWidth; 
+            gameContainer.classList.add('shake-effect'); 
+            spawnParticles(effect.targetX, effect.targetY, effect.type); 
+        }
+        
+        function spawnParticles(x, y, type) { let count = 20; let color = '#fff'; if (type === 'meteor') { count = 30; color = '#ffaa00'; } else if (type === 'tornado') { count = 20; color = '#88ffff'; } else if (type === 'love') { count = 15; color = '#ff69b4'; } else if (type === 'tear') { count = 15; color = '#4169e1'; } for (let i = 0; i < count; i++) { particles.push({ x: x, y: y, vx: (Math.random() - 0.5) * 10, vy: (Math.random() - 0.5) * 10, life: 1.0, color: color, type: type }); } }
+        function drawParticles() { particles.forEach(p => { ctx.globalAlpha = p.life; ctx.fillStyle = p.color; ctx.beginPath(); if (p.type === 'love') { ctx.font = "12px Arial"; ctx.fillText("❤", p.x, p.y); } else if (p.type === 'tornado') { ctx.rect(p.x, p.y, 3, 3); ctx.fill(); } else { ctx.arc(p.x, p.y, 3, 0, Math.PI*2); ctx.fill(); } }); ctx.globalAlpha = 1.0; }
+        function showAlert(text, color) { disasterAlert.textContent = text; disasterAlert.style.color = color; disasterAlert.style.textShadow = `0 0 20px ${color}, 2px 2px 0 #000`; disasterAlert.classList.add('active'); setTimeout(() => { disasterAlert.classList.remove('active'); }, 2000); }
+
+        function animate() {
+            window.draw(); 
+            updateEffects();
+            animationFrameId = requestAnimationFrame(animate);
+        }
+
+        function updateEffects() { 
+            for (let i = activeEffects.length - 1; i >= 0; i--) { 
+                let eff = activeEffects[i]; 
+                if (eff.type === 'meteor') { eff.y += 15; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } 
+                else if (eff.type === 'love') { eff.y += 5; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } 
+                else if (eff.type === 'onlylove') { eff.y += 3; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } 
+                else if (eff.type === 'tear') { eff.y += 8; if (eff.y >= eff.targetY) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } 
+                else if (eff.type === 'tornado') { eff.x += (eff.targetX - eff.x) * 0.1; eff.progress += 0.05; if (Math.abs(eff.x - eff.targetX) < 5 && eff.progress > 1) { applyDisasterDamage(eff); activeEffects.splice(i, 1); } } 
+                else if (eff.type === 'haha') { eff.y -= 2; eff.progress += 0.05; if (eff.progress > 2) { activeEffects.splice(i, 1); } } 
+            } 
+            for (let i = particles.length - 1; i >= 0; i--) { 
+                let p = particles[i]; p.x += p.vx; p.y += p.vy; p.life -= 0.02; if (p.type === 'tear' || p.type === 'meteor') p.vy += 0.2; if (p.life <= 0) { particles.splice(i, 1); } 
+            } 
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, 600, 600);
+            ctx.beginPath(); ctx.lineWidth = 1; ctx.strokeStyle = "#8B4C5E"; 
+            for (let i = 0; i < GRID_SIZE; i++) { ctx.moveTo(PADDING, PADDING + i * CELL_SIZE); ctx.lineTo(PADDING + (GRID_SIZE - 1) * CELL_SIZE, PADDING + i * CELL_SIZE); ctx.moveTo(PADDING + i * CELL_SIZE, PADDING); ctx.lineTo(PADDING + i * CELL_SIZE, PADDING + (GRID_SIZE - 1) * CELL_SIZE); } ctx.stroke();
+            const stars = [{x: 3, y: 3}, {x: 11, y: 3}, {x: 7, y: 7}, {x: 3, y: 11}, {x: 11, y: 11}]; ctx.fillStyle = "#8B4C5E"; stars.forEach(star => { ctx.beginPath(); ctx.arc(PADDING + star.x * CELL_SIZE, PADDING + star.y * CELL_SIZE, 4, 0, Math.PI * 2); ctx.fill(); });
+
+            if (!board || board.length === 0) return;
+
+            for (let y = 0; y < GRID_SIZE; y++) {
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    const val = board[y][x];
+                    if (val > 0) drawStone(x, y, val);
+                    else if (val < 0) drawDisasterResult(x, y, val);
+                }
+            }
+            if (lastMove && board[lastMove.y][lastMove.x] > 0) { ctx.beginPath(); const cx = PADDING + lastMove.x * CELL_SIZE; const cy = PADDING + lastMove.y * CELL_SIZE; ctx.fillStyle = "#ff1493"; ctx.fillRect(cx - 4, cy - 4, 8, 8); }
+            drawActiveEffects(); drawParticles();
+        }
+
+        function drawActiveEffects() { 
+            activeEffects.forEach(eff => { 
+                ctx.save(); 
+                ctx.translate(eff.x, eff.y); 
+                if (eff.type === 'meteor') { const grad = ctx.createRadialGradient(0, 0, 5, 0, 0, 20); grad.addColorStop(0, '#ffff00'); grad.addColorStop(0.5, '#ffaa00'); grad.addColorStop(1, 'transparent'); ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(0, 0, 20, 0, Math.PI*2); ctx.fill(); } 
+                else if (eff.type === 'tornado') { ctx.rotate(Date.now() / 100); ctx.strokeStyle = "rgba(0, 255, 255, 0.6)"; ctx.lineWidth = 3; ctx.beginPath(); for(let i=0; i<3; i++) { ctx.arc(0, i*5, 10 + i*5, 0, Math.PI); } ctx.stroke(); } 
+                else if (eff.type === 'love') { if (imgLove.complete && imgLove.naturalWidth !== 0) { ctx.drawImage(imgLove, -30, -30, 60, 60); } else { ctx.fillStyle = "#FF1493"; ctx.font = "30px Arial"; ctx.fillText("❤", -15, 10); } } 
+                else if (eff.type === 'onlylove') { if (imgOnlyLove.complete && imgOnlyLove.naturalWidth !== 0) { ctx.drawImage(imgOnlyLove, -50, -50, 100, 100); } else { ctx.fillStyle = "#FF1493"; ctx.fillText("Only Love", -30, 0); } } 
+                else if (eff.type === 'tear') { ctx.fillStyle = "#00BFFF"; ctx.font = "30px Arial"; ctx.fillText("💧", -15, 10); } 
+                else if (eff.type === 'haha') { if (imgHaha.complete && imgHaha.naturalWidth !== 0) { ctx.drawImage(imgHaha, -40, -40, 80, 80); } else { ctx.fillStyle = "#FF1493"; ctx.font = "30px Arial"; ctx.fillText("Haha", -25, 10); } }
+                ctx.restore(); 
+            }); 
+        }
+
+        function drawDisasterResult(x, y, type) {
+            const cx = PADDING + x * CELL_SIZE;
+            const cy = PADDING + y * CELL_SIZE;
+            const size = CELL_SIZE * 0.4;
+            ctx.save();
+            ctx.translate(cx, cy);
+
+            if (type === -1) { /* ... meteor ... */ ctx.fillStyle = "#444"; ctx.beginPath(); ctx.arc(0, 0, size, 0, Math.PI*2); ctx.fill(); ctx.strokeStyle = "#FF4500"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-size*0.7, -size*0.7); ctx.lineTo(size*0.7, size*0.7); ctx.moveTo(size*0.7, -size*0.7); ctx.lineTo(-size*0.7, size*0.7); ctx.stroke(); }
+            else if (type === -2) { /* ... tornado ... */ ctx.fillStyle = "#aaa"; ctx.beginPath(); ctx.arc(0, 0, size*0.8, 0, Math.PI*2); ctx.fill(); ctx.strokeStyle = "#555"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, size*0.5, 0, Math.PI*1.5); ctx.stroke(); }
+            else if (type === -3) { /* ... mywife ... */ if (customImage.complete && customImage.naturalWidth !== 0) { ctx.beginPath(); ctx.arc(0, 0, size * 1.2, 0, Math.PI * 2); ctx.clip(); ctx.drawImage(customImage, -size*1.2, -size*1.2, size*2.4, size*2.4); } else { ctx.fillStyle = "#FF69B4"; ctx.beginPath(); const topCurveHeight = size * 0.3; ctx.moveTo(0, topCurveHeight); ctx.bezierCurveTo(0, 0, -size, 0, -size, topCurveHeight); ctx.bezierCurveTo(-size, (size + topCurveHeight) / 2, 0, size, 0, size + topCurveHeight); ctx.bezierCurveTo(0, size, size, (size + topCurveHeight) / 2, size, topCurveHeight); ctx.bezierCurveTo(size, 0, 0, 0, 0, topCurveHeight); ctx.fill(); } }
+            else if (type === -4) { /* ... tear ... */ ctx.fillStyle = "#4169E1"; ctx.beginPath(); ctx.arc(0, size*0.4, size*0.6, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.moveTo(0, -size); ctx.quadraticCurveTo(size*0.6, size*0.4, 0, size*0.4); ctx.quadraticCurveTo(-size*0.6, size*0.4, 0, -size); ctx.fill(); }
+            else if (type === -5) { // Only Love (Level 10)
+                 if (imgOnlyLove.complete && imgOnlyLove.naturalWidth !== 0) {
+                    // Draw circular clipped image for Only Love
+                    ctx.beginPath();
+                    ctx.arc(0, 0, size * 1.5, 0, Math.PI * 2);
+                    ctx.clip();
+                    ctx.drawImage(imgOnlyLove, -size*1.5, -size*1.5, size*3, size*3);
+                } else {
+                    ctx.fillStyle = "#FF1493";
+                    ctx.fillText("Only Love", -20, 5);
+                }
+            }
+            ctx.restore();
+        }
+
+        function drawStone(x, y, type) {
+            const cx = PADDING + x * CELL_SIZE;
+            const cy = PADDING + y * CELL_SIZE;
+            const radius = CELL_SIZE * 0.45;
+            
+            let currentStyle = skins['classic'];
+            
+            if (type === 1) { 
+                let skinKey = window.selectedSkin;
+                if (!skins[skinKey]) skinKey = 'classic';
+                currentStyle = skins[skinKey];
+            } else { 
+                currentStyle = { type: 'color', color1: ['#fff', '#f0e0e0'] }; 
+            }
+
+            if (currentStyle.type === 'color') {
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                ctx.shadowColor = "rgba(0, 0, 0, 0.2)"; ctx.shadowBlur = 5; ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2;
+                const grad = ctx.createRadialGradient(cx - radius/3, cy - radius/3, radius/10, cx, cy, radius);
+                grad.addColorStop(0, currentStyle.color1[0]); 
+                grad.addColorStop(1, currentStyle.color1[1]); 
+                ctx.fillStyle = grad;
+                ctx.fill();
+            } else if (currentStyle.type === 'shape') {
+                ctx.shadowColor = "rgba(0, 0, 0, 0.2)"; ctx.shadowBlur = 5; ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2;
+                ctx.fillStyle = currentStyle.color1;
+                
+                if (currentStyle.shape === 'flower') {
+                    const petalRadius = radius * 0.5;
+                    for (let i = 0; i < 5; i++) {
+                        const angle = (i * 2 * Math.PI) / 5 - (Math.PI/2);
+                        const px = cx + Math.cos(angle) * (radius * 0.4);
+                        const py = cy + Math.sin(angle) * (radius * 0.4);
+                        ctx.beginPath();
+                        ctx.arc(px, py, petalRadius, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.fillStyle = "#fff";
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, radius * 0.2, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (currentStyle.shape === 'star') {
+                    ctx.beginPath();
+                    const spikes = 5;
+                    const outerRadius = radius;
+                    const innerRadius = radius * 0.5;
+                    let rot = Math.PI / 2 * 3;
+                    let x = cx;
+                    let y = cy;
+                    let step = Math.PI / spikes;
+
+                    ctx.moveTo(cx, cy - outerRadius);
+                    for (let i = 0; i < spikes; i++) {
+                        x = cx + Math.cos(rot) * outerRadius;
+                        y = cy + Math.sin(rot) * outerRadius;
+                        ctx.lineTo(x, y);
+                        rot += step;
+
+                        x = cx + Math.cos(rot) * innerRadius;
+                        y = cy + Math.sin(rot) * innerRadius;
+                        ctx.lineTo(x, y);
+                        rot += step;
+                    }
+                    ctx.lineTo(cx, cy - outerRadius);
+                    ctx.closePath();
+                    ctx.fill();
+                } else if (currentStyle.shape === 'heart') {
+                    ctx.beginPath();
+                    const size = radius; 
+                    const topCurveHeight = size * 0.3;
+                    ctx.save();
+                    ctx.translate(cx, cy - size/2);
+                    ctx.moveTo(0, topCurveHeight);
+                    ctx.bezierCurveTo(0, 0, -size, 0, -size, topCurveHeight);
+                    ctx.bezierCurveTo(-size, (size + topCurveHeight) / 2, 0, size, 0, size + topCurveHeight);
+                    ctx.bezierCurveTo(0, size, size, (size + topCurveHeight) / 2, size, topCurveHeight);
+                    ctx.bezierCurveTo(size, 0, 0, 0, 0, topCurveHeight);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            } else if (currentStyle.type === 'pattern' && currentStyle.pattern === 'paw') {
+                ctx.shadowColor = "rgba(0, 0, 0, 0.2)"; ctx.shadowBlur = 5; ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2;
+                ctx.fillStyle = currentStyle.color1;
+                ctx.beginPath();
+                ctx.ellipse(cx, cy + 3, radius * 0.5, radius * 0.4, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = currentStyle.color2;
+                for(let i=-1.5; i<=1.5; i+=1) {
+                    ctx.beginPath();
+                    ctx.arc(cx + i * 10, cy - 8 - Math.abs(i)*3, radius * 0.18, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            ctx.shadowColor = "transparent";
+        }
+
+        function endGame(winner) {
+            isGameOver = true;
+            clearTimeout(disasterTimeoutId);
+            let msg = winner === 1 ? "黑子獲勝!" : "白子獲勝!";
+            const mode = modeSelect.value;
+            let reward = 0;
+            let extraHtml = ''; 
+
+            if ((mode === 'pve' || mode === 'tournament') && winner === 2) {
+                 msg = mode === 'tournament' ? "思念太強，妳輸了！" : "電腦獲勝!";
+            } else if (winner === 1 && mode === 'tournament') {
+                if (currentTournamentLevel === 10) {
+                    reward = 520;
+                    extraHtml = `<img src="https://popokoko.github.io/images/only_love.png" style="max-width: 100%; height: auto; border-radius: 15px; margin-bottom: 15px; border: 2px solid #ff69b4; box-shadow: 0 0 15px #ffb6c1;">`;
+                }
+                else if (currentTournamentLevel === 9) reward = 360;
+                else if (currentTournamentLevel === 8) reward = 225;
+                else reward = 10;
+                
+                msg = `恭喜獲勝！<br>獲得 ${reward} 個嫁妝 🎁`;
+                window.dowryCount += reward;
+                window.updateStorage();
+            }
+
+            modalContent.innerHTML = `
+                ${extraHtml}
+                <div id="winner-text">${winner === 1 ? "🎉 恭喜獲勝!" : "💔 再接再厲"}</div>
+                ${reward > 0 ? `<div id="reward-text">🎁 +${reward} 嫁妝</div>` : ''}
+                <p style="color:#666; margin-bottom:20px;">${winner === 1 ? "妳的愛意戰勝了一切！" : "不要氣餒，愛需要堅持！"}</p>
+                <button class="btn-secondary" onclick="window.closeModal(); window.resetGame();">再來一局</button>
+                ${mode === 'tournament' ? `<button class="btn-secondary" style="margin-top:10px" onclick="window.closeModal(); window.showTournamentSelection();">選擇對手</button>` : ''}
+            `;
+            modalOverlay.style.display = 'flex';
+            const statusText = document.getElementById('status-text');
+            if(statusText) statusText.textContent = "遊戲結束";
+        }
+
+        // --- EXPORTING GLOBAL FUNCTIONS FOR HTML BUTTONS ---
+        window.init = init;
+        window.draw = draw;
+        window.resetGame = resetGame;
+        window.reselectGame = reselectGame;
+        window.handleStartButtonClick = handleStartButtonClick;
+        window.showTournamentSelection = showTournamentSelection;
+        window.cancelTournament = cancelTournament;
+        window.startTournamentMatch = startTournamentMatch;
+        window.showStore = showStore;
+        window.showHelp = showHelp;
+        window.closeModal = closeModal;
+        window.updateStorage = updateStorage;
+        window.buySkin = buySkin;
+        window.equipSkin = equipSkin;
 
     </script>
 </body>
