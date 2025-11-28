@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEACELOVE CORE | AI 應用</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@700;800&family=Poppins:wght@700;800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --color-core-start: #00c6ff; --color-core-end: #0072ff; --color-hues-start: #ffafbd; --color-hues-end: #c94b4b; }
+        .font-heading { font-family: 'Montserrat', 'Poppins', sans-serif; }
+        .font-body { font-family: 'Inter', 'Roboto', sans-serif; }
+        .text-gradient-core { background: linear-gradient(to right, var(--color-core-start), var(--color-core-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-gradient-hues { background: linear-gradient(to right, var(--color-hues-start), var(--color-hues-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .bg-gradient-core { background: linear-gradient(135deg, var(--color-core-start), var(--color-core-end)); }
+    </style>
+</head>
+<body class="font-body bg-white text-gray-800">
+
+    <!-- 統一導覽列 -->
+    <header class="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 rounded-b-lg mx-auto max-w-7xl px-4">
+        <nav class="container mx-auto flex items-center justify-end h-20">
+            <div class="hidden md:flex items-center space-x-6 lg:space-x-8 font-medium">
+                <a href="index.html#home" class="hover:text-gradient-core transition-colors">首頁</a>
+                <a href="index.html#about" class="hover:text-gradient-core transition-colors">關於我們</a>
+                <a href="index.html#core" class="hover:text-gradient-core transition-colors">P.L. CORE</a>
+                <a href="index.html#hues" class="hover:text-gradient-hues transition-colors">P.L. HUES</a>
+                <a href="index.html#insights" class="hover:text-gradient-hues transition-colors">靈感誌</a>
+                <a href="index.html#contact" class="bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">聯絡我們</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-gray-700 focus:outline-none">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-8 6h8"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden flex-col items-center space-y-4 py-6 text-center font-medium">
+            <a href="index.html#home" class="block w-full py-2 hover:bg-gray-100 rounded-lg">首頁</a>
+            <a href="index.html#about" class="block w-full py-2 hover:bg-gray-100 rounded-lg">關於我們</a>
+            <a href="index.html#core" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. CORE</a>
+            <a href="index.html#hues" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. HUES</a>
+            <a href="index.html#insights" class="block w-full py-2 hover:bg-gray-100 rounded-lg">靈感誌</a>
+            <a href="index.html#contact" class="block w-full bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg">聯絡我們</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- 產品主視覺 -->
+        <section id="product-hero" class="relative overflow-hidden min-h-[60vh] flex items-center justify-center py-20 bg-gray-50">
+            <div class="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-gradient-core rounded-full opacity-30 blur-3xl animate-pulse"></div>
+            <div class="container mx-auto px-6 text-center z-10">
+                <div class="flex justify-center mb-10">
+                    <div class="w-32 h-32 bg-gradient-core rounded-3xl flex items-center justify-center mb-6 shadow-2xl">
+                        <!-- Chart/AI Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M3 4h18v12a2 2 0 01-2 2H5a2 2 0 01-2-2V4z" />
+                        </svg>
+                    </div>
+                </div>
+                <h1 class="font-heading text-4xl md:text-6xl font-extrabold mb-6"><span class="text-gradient-core">Enterprise AI Solutions</span></h1>
+                <p class="font-heading text-2xl md:text-3xl text-gray-600">AI 應用 (知識庫、客服與本地部署)</p>
+                <p class="mt-8 text-lg max-w-2xl mx-auto text-gray-700">企業本地 AI 應用，協助企業在保護資料、降低延遲、控制成本與維持合規性等多個層面獲得實質競爭優勢。</p>
+            </div>
+        </section>
+
+        <!-- 產品詳細內容 -->
+        <section id="product-details" class="py-24 bg-white">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <article class="prose lg:prose-xl max-w-none font-body">
+                    <h2 class="font-heading text-2xl font-bold mb-4">掌握 AI，重塑企業競爭力</h2>
+                    <p class="mb-6">在 AI 時代，如何安全、高效地運用人工智慧是企業轉型的關鍵。PEACELOVE 提供的 AI 解決方案不只是導入工具，更是為企業量身打造的智慧大腦，專注於解決資料隱私、運算成本與即時性等核心挑戰。</p>
+                    
+                    <h3 class="font-heading text-xl font-bold mb-3">核心應用場景</h3>
+                    <ul class="list-disc pl-6 mb-6 space-y-4">
+                        <li>
+                            <strong>企業專屬 AI 知識庫 (Enterprise AI Knowledge Base):</strong> 
+                            <p class="text-gray-600 text-base mt-1">導入 RAG (檢索增強生成) 技術，將企業龐大的內部文件（PDF、規章、技術手冊）轉化為可對話的智慧資產。員工可即時獲取準確資訊，大幅提升工作效率。</p>
+                        </li>
+                        <li>
+                            <strong>智慧 AI 客服 (Intelligent AI Customer Service):</strong> 
+                            <p class="text-gray-600 text-base mt-1">提供 24/7 不間斷的客戶支援。透過自然語言處理 (NLP) 技術，精準理解客戶意圖，解決常見問題，並在必要時無縫轉接人工客服，提升客戶滿意度。</p>
+                        </li>
+                        <li>
+                            <strong>本地化部署 (Local Deployment / On-Premise):</strong> 
+                            <p class="text-gray-600 text-base mt-1">無需將敏感數據上傳至公有雲。我們協助企業在本地伺服器部署私有化大模型 (LLM)，確保數據絕對安全、合規，並擁有最低的延遲。</p>
+                        </li>
+                    </ul>
+
+                    <h3 class="font-heading text-xl font-bold mb-3">為何選擇本地 AI？</h3>
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <h4 class="font-bold text-blue-600 mb-1">資料隱私 (Privacy)</h4>
+                            <p class="text-sm">數據不出門，徹底杜絕洩密風險，符合嚴格的資安法規。</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <h4 class="font-bold text-blue-600 mb-1">成本控制 (Cost)</h4>
+                            <p class="text-sm">避免昂貴的 API Token 計費，透過一次性硬體投資長期降低營運成本。</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <h4 class="font-bold text-blue-600 mb-1">低延遲 (Latency)</h4>
+                            <p class="text-sm">本地運算無需網路傳輸等待，即時響應關鍵業務需求。</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <h4 class="font-bold text-blue-600 mb-1">客製化 (Customization)</h4>
+                            <p class="text-sm">針對企業特定領域知識進行微調 (Fine-tuning)，打造最懂您的 AI。</p>
+                        </div>
+                    </div>
+
+                    <blockquote class="border-l-4 border-blue-400 text-xl font-medium p-4 bg-blue-50">"將 AI 的力量留在企業內部，讓智慧成為您最堅實的資產。"</blockquote>
+                </article>
+                <div class="text-center mt-20">
+                    <a href="index.html#core" class="w-full md:w-auto inline-block px-8 py-4 rounded-full bg-gradient-core text-white font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all">&larr; 返回 P.L. CORE</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-16">
+        <div class="container mx-auto px-6 text-center">
+            <p class="font-heading text-2xl font-bold text-white mb-4">Innovate. Collaborate. Inspire.</p>
+            <div class="flex justify-center space-x-6 my-8">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.069-4.85.069s-3.584-.011-4.85-.069c-3.252-.149-4.771-1.664-4.919-4.919-.058-1.265-.069-1.644-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919 4.919C8.416 2.175 8.796 2.163 12 2.163zM12 0C8.741 0 8.333.014 7.053.072 2.69 1.106 1.106 2.69 1.072 7.053.014 8.333 0 8.741 0 12s.014 3.667.072 4.947c.149 3.225 1.664 4.771 4.919 4.919C8.333 23.986 8.741 24 12 24s3.667-.014 4.947-.072c3.225-.149 4.771-1.664 4.919-4.919C23.986 15.667 24 15.259 24 12s-.014-3.667-.072-4.947c-.149-3.225-1.664-4.771-4.919-4.919C15.667.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"></path></svg></a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.93L18.901 1.153zm-3.68 19.5h2.15l-12.3-17.1H2.7l12.52 17.1z"></path></svg></a>
+            </div>
+            <p class="text-sm text-gray-500">&copy; 2025 PEACELOVE Inc. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
+    </script>
+</body>
+</html>
