@@ -5,39 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PEACELOVE HUES | 極簡主義</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Montserrat:wght@700;800&family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@700;800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root { --color-core-start: #00c6ff; --color-core-end: #0072ff; --color-hues-start: #ffafbd; --color-hues-end: #c94b4b; }
         .font-serif { font-family: 'Playfair Display', serif; }
         .font-body { font-family: 'Inter', sans-serif; }
-        /* 極簡風格：柔和、乾淨 */
+        .text-gradient-core { background: linear-gradient(to right, var(--color-core-start), var(--color-core-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-gradient-hues { background: linear-gradient(to right, var(--color-hues-start), var(--color-hues-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .bg-gradient-core { background: linear-gradient(135deg, var(--color-core-start), var(--color-core-end)); }
     </style>
 </head>
 <body class="font-body bg-stone-50 text-stone-800">
 
-    <!-- 導航 -->
-    <header class="bg-stone-50 sticky top-0 z-50">
-        <nav class="container mx-auto flex items-center justify-between h-24 px-6 border-b border-stone-200">
-            <a href="creator_hub_apparel.html" class="text-stone-500 hover:text-stone-900 transition-colors tracking-wide text-sm uppercase">
-                &larr; Back to Hub
-            </a>
-            <div class="font-serif text-2xl italic">Minimal Collection</div>
-            <div class="w-12"></div> <!-- Spacer -->
+    <!-- 統一導覽列 -->
+    <header class="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 rounded-b-lg mx-auto max-w-7xl px-4">
+        <nav class="container mx-auto flex items-center justify-end h-20">
+            <div class="hidden md:flex items-center space-x-6 lg:space-x-8 font-medium">
+                <a href="index.html#home" class="hover:text-gradient-core transition-colors">首頁</a>
+                <a href="index.html#about" class="hover:text-gradient-core transition-colors">關於我們</a>
+                <a href="index.html#core" class="hover:text-gradient-core transition-colors">P.L. CORE</a>
+                <a href="index.html#hues" class="hover:text-gradient-hues transition-colors">P.L. HUES</a>
+                <a href="index.html#insights" class="hover:text-gradient-hues transition-colors">靈感誌</a>
+                <a href="index.html#contact" class="bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">聯絡我們</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-gray-700 focus:outline-none">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-8 6h8"></path></svg>
+                </button>
+            </div>
         </nav>
+        <div id="mobile-menu" class="hidden md:hidden flex-col items-center space-y-4 py-6 text-center font-medium">
+            <a href="index.html#home" class="block w-full py-2 hover:bg-gray-100 rounded-lg">首頁</a>
+            <a href="index.html#about" class="block w-full py-2 hover:bg-gray-100 rounded-lg">關於我們</a>
+            <a href="index.html#core" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. CORE</a>
+            <a href="index.html#hues" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. HUES</a>
+            <a href="index.html#insights" class="block w-full py-2 hover:bg-gray-100 rounded-lg">靈感誌</a>
+            <a href="index.html#contact" class="block w-full bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg">聯絡我們</a>
+        </div>
     </header>
 
-    <!-- Hero -->
     <section class="py-32 bg-white">
         <div class="container mx-auto px-6 text-center">
-            <h1 class="font-serif text-5xl md:text-6xl mb-6 text-stone-900">
-                Less is More.
-            </h1>
-            <p class="text-lg text-stone-500 max-w-lg mx-auto font-light leading-relaxed">
-                捨去繁複，回歸本質。專注於剪裁、材質與舒適度，打造永不過時的經典單品。
-            </p>
+            <h1 class="font-serif text-5xl md:text-6xl mb-6 text-stone-900">Less is More.</h1>
+            <p class="text-lg text-stone-500 max-w-lg mx-auto font-light leading-relaxed">捨去繁複，回歸本質。專注於剪裁、材質與舒適度，打造永不過時的經典單品。</p>
         </div>
     </section>
 
-    <!-- 分類按鈕 -->
     <section class="pb-12 bg-white">
         <div class="container mx-auto px-6 flex justify-center gap-6 text-sm tracking-widest">
             <a href="creator_hub_apparel.html" class="text-stone-400 hover:text-stone-900 transition-colors">ALL</a>
@@ -47,50 +60,29 @@
         </div>
     </section>
 
-    <!-- 產品列表 -->
     <section class="py-20 bg-stone-50">
         <div class="container mx-auto px-6">
             <div class="grid md:grid-cols-3 gap-x-12 gap-y-16">
-                
-                <!-- Minimal Item 1 -->
                 <div class="group cursor-pointer">
-                    <div class="aspect-[4/5] overflow-hidden bg-gray-200 mb-6">
-                        <img src="https://placehold.co/800x1000/e5e5e5/999?text=Basic+Tee" alt="Basic Tee" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                    </div>
-                    <div class="text-center">
-                        <h3 class="font-serif text-lg mb-2">素面純棉 Tee</h3>
-                        <p class="text-stone-500 text-sm mb-3">Organic Cotton / White</p>
-                        <p class="text-stone-800 font-medium">$980</p>
-                    </div>
+                    <div class="aspect-[4/5] overflow-hidden bg-gray-200 mb-6"><img src="https://placehold.co/800x1000/e5e5e5/999?text=Basic+Tee" alt="Basic Tee" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"></div>
+                    <div class="text-center"><h3 class="font-serif text-lg mb-2">素面純棉 Tee</h3><p class="text-stone-500 text-sm mb-3">Organic Cotton / White</p><p class="text-stone-800 font-medium">$980</p></div>
                 </div>
-
-                <!-- Minimal Item 2 -->
                 <div class="group cursor-pointer">
-                    <div class="aspect-[4/5] overflow-hidden bg-gray-200 mb-6">
-                        <img src="https://placehold.co/800x1000/d6d3d1/999?text=Linen+Shirt" alt="Linen Shirt" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                    </div>
-                    <div class="text-center">
-                        <h3 class="font-serif text-lg mb-2">亞麻寬版襯衫</h3>
-                        <p class="text-stone-500 text-sm mb-3">Natural Linen / Beige</p>
-                        <p class="text-stone-800 font-medium">$1,880</p>
-                    </div>
+                    <div class="aspect-[4/5] overflow-hidden bg-gray-200 mb-6"><img src="https://placehold.co/800x1000/d6d3d1/999?text=Linen+Shirt" alt="Linen Shirt" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"></div>
+                    <div class="text-center"><h3 class="font-serif text-lg mb-2">亞麻寬版襯衫</h3><p class="text-stone-500 text-sm mb-3">Natural Linen / Beige</p><p class="text-stone-800 font-medium">$1,880</p></div>
                 </div>
-
-                <!-- Minimal Item 3 -->
                 <div class="group cursor-pointer">
-                    <div class="aspect-[4/5] overflow-hidden bg-gray-200 mb-6">
-                        <img src="https://placehold.co/800x1000/a8a29e/eee?text=Trousers" alt="Trousers" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                    </div>
-                    <div class="text-center">
-                        <h3 class="font-serif text-lg mb-2">直筒西裝褲</h3>
-                        <p class="text-stone-500 text-sm mb-3">Wool Blend / Charcoal</p>
-                        <p class="text-stone-800 font-medium">$2,480</p>
-                    </div>
+                    <div class="aspect-[4/5] overflow-hidden bg-gray-200 mb-6"><img src="https://placehold.co/800x1000/a8a29e/eee?text=Trousers" alt="Trousers" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"></div>
+                    <div class="text-center"><h3 class="font-serif text-lg mb-2">直筒西裝褲</h3><p class="text-stone-500 text-sm mb-3">Wool Blend / Charcoal</p><p class="text-stone-800 font-medium">$2,480</p></div>
                 </div>
-
             </div>
         </div>
     </section>
 
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
+    </script>
 </body>
 </html>
