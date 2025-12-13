@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PEACELOVE | 後台管理 (Animal Crossing Edition)</title>
+    <title>PEACELOVE | 後台管理 (Sakura Edition)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入圓潤可愛的字體 -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Varela+Round&display=swap" rel="stylesheet">
     <style>
-        /* --- 動物森友會風格設定 --- */
+        /* --- 動物森友會：櫻花粉少女風格設定 --- */
         :root {
-            --ac-green: #8dd6a1;      /* 標誌性的薄荷綠 */
-            --ac-green-dark: #6ebf85; /* 深一點的綠 */
-            --ac-cream: #fffdf5;      /* 奶油白 (卡片背景) */
-            --ac-brown: #795548;      /* 土壤褐 (文字顏色) */
-            --ac-pink: #ffb7b2;       /* 愛意粉 */
-            --ac-bg-base: #fcf9ed;    /* 背景基底色 (米黃) */
-            --ac-bg-stripe: #f2efe4;  /* 背景條紋色 (稍深米黃) */
+            --ac-main: #ffb7c5;       /* 主色：櫻花粉 */
+            --ac-main-dark: #ff8fa3;  /* 深色：深櫻花 */
+            --ac-cream: #fff9fa;      /* 卡片背景：透粉白 */
+            --ac-brown: #795548;      /* 文字：巧克力褐 */
+            --ac-accent: #ff80ab;     /* 強調：亮粉紅 */
+            --ac-bg-base: #fff0f5;    /* 背景：淡粉紅 (LavenderBlush) */
+            --ac-bg-stripe: #ffe6ea;  /* 背景條紋 */
+            --ac-border: #f8bbd0;     /* 邊框：玫瑰粉 */
         }
 
         body {
             font-family: 'Varela Round', 'Nunito', sans-serif;
             background-color: var(--ac-bg-base);
-            /* 改為簡潔的斜紋背景，模擬信紙或 Nook 介面質感 */
+            /* 櫻花信紙風格斜紋背景 */
             background-image: repeating-linear-gradient(
                 45deg,
                 var(--ac-bg-base),
@@ -37,15 +38,15 @@
         .ac-card {
             background-color: var(--ac-cream);
             border-radius: 30px;
-            /* 圓潤的邊框與陰影 */
-            box-shadow: 6px 6px 0px rgba(121, 85, 72, 0.1), inset 0 0 0 4px #fff;
-            border: 4px solid #e6e0d4;
+            /* 柔和的粉色陰影 */
+            box-shadow: 6px 6px 0px rgba(255, 183, 197, 0.4), inset 0 0 0 4px #fff;
+            border: 4px solid var(--ac-border);
         }
 
         /* AC 風格輸入框 */
         .ac-input {
             background-color: #fff;
-            border: 3px solid #e6e0d4;
+            border: 3px solid var(--ac-border);
             border-radius: 18px;
             padding: 12px 18px;
             color: var(--ac-brown);
@@ -53,9 +54,10 @@
             font-size: 1rem;
         }
         .ac-input:focus {
-            border-color: var(--ac-green);
+            border-color: var(--ac-accent);
             outline: none;
-            box-shadow: 0 0 0 4px rgba(141, 214, 161, 0.2);
+            /* 粉紅光暈 */
+            box-shadow: 0 0 0 4px rgba(255, 128, 171, 0.25);
         }
 
         /* AC 風格按鈕 */
@@ -78,41 +80,64 @@
         }
         
         .btn-leaf {
-            background-color: var(--ac-green);
+            background-color: var(--ac-main);
             color: #fff;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
         }
-        .btn-leaf:hover { background-color: var(--ac-green-dark); }
+        .btn-leaf:hover { background-color: var(--ac-main-dark); }
 
         .btn-love {
-            background-color: var(--ac-pink);
+            background-color: var(--ac-accent);
             color: #fff;
         }
-        .btn-love:hover { background-color: #ff9e9e; }
+        .btn-love:hover { background-color: #ff4081; }
 
         .btn-cancel {
-            background-color: #e0e0e0;
-            color: #777;
+            background-color: #ffebee; /* 極淡粉 */
+            color: #ef9a9a;
         }
-        .btn-cancel:hover { background-color: #d0d0d0; }
+        .btn-cancel:hover { background-color: #ffcdd2; color: #d32f2f; }
 
-        /* 葉子裝飾圖示 */
-        .leaf-icon {
+        /* 花瓣裝飾圖示 (取代原本的葉子) */
+        .petal-icon {
             display: inline-block;
             width: 20px; 
             height: 20px;
-            background-color: var(--ac-green);
-            border-radius: 20px 0px;
+            background-color: var(--ac-main);
+            border-radius: 20px 0px 20px 0px; /* 花瓣形狀 */
             transform: rotate(45deg);
             margin-right: 8px;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         /* 選擇選單優化 */
         select.ac-input {
             appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23795548' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff80ab' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
             background-position: right 15px center;
             background-size: 15px;
+        }
+
+        /* Logo 動森化風格 */
+        .ac-logo-container {
+            background-color: #fff;
+            border-radius: 50%;
+            padding: 25px; 
+            border: 4px solid var(--ac-border); /* 玫瑰粉邊框 */
+            box-shadow: 0 6px 0 rgba(255, 183, 197, 0.3);
+            display: inline-block;
+            margin-bottom: 10px;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .ac-logo-container:hover {
+            transform: rotate(10deg) scale(1.05);
+        }
+        .ac-logo-img {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.1));
         }
     </style>
 </head>
@@ -120,30 +145,35 @@
 
     <!-- 登入區塊 -->
     <div id="login-section" class="ac-card p-10 w-full max-w-md relative">
-        <!-- 裝飾：小葉子浮動 -->
-        <div class="absolute -top-5 -left-5 transform -rotate-12 bg-white p-3 rounded-full shadow-md border-4 border-[#fff59d]">
-            <div class="leaf-icon" style="width: 30px; height: 30px;"></div>
+        <!-- 裝飾：櫻花浮動 -->
+        <div class="absolute -top-5 -left-5 transform -rotate-12 bg-white p-3 rounded-full shadow-md border-4 border-[#ffcdd2]">
+            <span class="text-3xl">🌸</span>
         </div>
 
         <div class="text-center mb-8">
+            <!-- 動森化 Logo -->
+            <div class="ac-logo-container">
+                <img src="https://popokoko.github.io/us.png" alt="PEACELOVE Logo" class="ac-logo-img">
+            </div>
+            
             <h1 class="text-3xl font-extrabold text-[#795548] mb-2 tracking-tight">
                 PEACELOVE
             </h1>
-            <p class="text-[#8d6e63] text-sm bg-[#fff9c4] inline-block px-5 py-1.5 rounded-full font-bold">
-                後台管理中心
+            <p class="text-[#8d6e63] text-sm bg-[#ffebee] inline-block px-5 py-1.5 rounded-full font-bold text-pink-400">
+                滿滿愛意的後台
             </p>
         </div>
         <form id="login-form" class="space-y-5">
             <div>
                 <label class="block text-sm font-bold text-[#8d6e63] mb-2 ml-1">Nook ID (Email)</label>
-                <input type="email" id="admin-email" required class="ac-input w-full" placeholder="tom.nook@island.com">
+                <input type="email" id="admin-email" required class="ac-input w-full" placeholder="love@peacelove.com">
             </div>
             <div>
                 <label class="block text-sm font-bold text-[#8d6e63] mb-2 ml-1">密碼</label>
                 <input type="password" id="admin-password" required class="ac-input w-full" placeholder="••••••••">
             </div>
             <button type="submit" class="ac-btn btn-leaf w-full py-3 mt-6 text-lg">
-                登入系統
+                開啟心意
             </button>
             <div id="login-error" class="hidden p-4 bg-red-50 border-2 border-red-200 text-red-500 text-sm rounded-2xl text-center font-bold"></div>
         </form>
@@ -151,14 +181,15 @@
 
     <!-- 管理區塊 (預設隱藏) -->
     <div id="admin-section" class="w-full max-w-6xl hidden">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-8 bg-[#fffdf5]/90 p-5 rounded-[30px] shadow-sm border-4 border-white">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 bg-[#fff9fa]/90 p-5 rounded-[30px] shadow-sm border-4 border-white">
             <div class="flex items-center gap-4 mb-4 md:mb-0">
-                <div class="bg-[#ffccbc] p-3 rounded-full border-4 border-white shadow-sm">
-                    <span class="text-2xl">🎁</span>
+                <!-- 頂部小 Logo -->
+                <div class="bg-pink-100 p-2 rounded-full border-4 border-white shadow-sm overflow-hidden bg-white">
+                     <img src="https://popokoko.github.io/us.png" alt="Logo" class="w-12 h-12 object-contain filter drop-shadow-sm">
                 </div>
                 <div>
                     <h1 class="text-2xl font-extrabold text-[#795548]">P.L. HUES 倉庫管理</h1>
-                    <p class="text-sm text-[#a1887f] font-bold">今天也要充滿愛意地整理商品喔！</p>
+                    <p class="text-sm text-pink-400 font-bold">今天也要傳遞思念與美好喔！🌸</p>
                 </div>
             </div>
             <button id="logout-btn" class="ac-btn btn-cancel px-6 py-2.5 text-sm">
@@ -169,17 +200,17 @@
         <div class="grid lg:grid-cols-3 gap-8">
             <!-- 上架/編輯表單 -->
             <div class="lg:col-span-1">
-                <div class="ac-card p-6 sticky top-8 bg-[#fffdf5]">
+                <div class="ac-card p-6 sticky top-8 bg-[#fff9fa]">
                     <!-- 標題會動態改變 -->
-                    <h2 id="form-title" class="text-xl font-extrabold mb-6 text-[#795548] flex items-center border-b-2 border-[#f0f0f0] pb-3">
-                        <span class="leaf-icon"></span> 新增好物
+                    <h2 id="form-title" class="text-xl font-extrabold mb-6 text-[#795548] flex items-center border-b-2 border-[#ffcdd2] pb-3">
+                        <span class="petal-icon"></span> 新增好物
                     </h2>
                     
                     <form id="add-product-form" class="space-y-4">
                         <input type="hidden" id="edit-id">
                         
-                        <div class="bg-[#fcf8e3] p-4 rounded-2xl border-2 border-[#f4e7b0] border-dashed">
-                            <label class="block text-xs font-bold text-[#8d6e63] mb-2 uppercase tracking-wider">Category</label>
+                        <div class="bg-[#ffebee] p-4 rounded-2xl border-2 border-[#ffcdd2] border-dashed">
+                            <label class="block text-xs font-bold text-[#e57373] mb-2 uppercase tracking-wider">Category</label>
                             <select id="p-category" class="ac-input w-full bg-white cursor-pointer">
                                 <option value="street">🧢 街頭潮流 (Street)</option>
                                 <option value="minimal">🌿 極簡主義 (Minimal)</option>
@@ -189,7 +220,7 @@
                         
                         <div>
                             <label class="block text-sm font-bold text-[#8d6e63] mb-1 ml-1">產品名稱</label>
-                            <input type="text" id="p-name" required class="ac-input w-full" placeholder="例如：媽媽的愛心毛衣">
+                            <input type="text" id="p-name" required class="ac-input w-full" placeholder="例如：櫻花季限定 Tee">
                         </div>
                         
                         <div>
@@ -199,7 +230,7 @@
                         
                         <div class="relative">
                             <label class="block text-sm font-bold text-[#8d6e63] mb-1 ml-1">鈴錢 (價格)</label>
-                            <span class="absolute left-4 top-[38px] text-gray-400 font-bold">$</span>
+                            <span class="absolute left-4 top-[38px] text-pink-300 font-bold">$</span>
                             <input type="number" id="p-price" required class="ac-input w-full pl-8">
                         </div>
                         
@@ -232,14 +263,14 @@
             <!-- 產品列表 -->
             <div class="lg:col-span-2">
                 <div class="ac-card p-6 min-h-[500px]">
-                    <h2 class="text-xl font-extrabold mb-6 text-[#795548] flex items-center border-b-2 border-[#f0f0f0] pb-4">
+                    <h2 class="text-xl font-extrabold mb-6 text-[#795548] flex items-center border-b-2 border-[#ffcdd2] pb-4">
                         📦 現有收藏
                     </h2>
                     <div id="product-list" class="space-y-4">
                         <!-- 產品項目由 JS 生成 -->
                         <div class="text-center text-[#a1887f] py-12 flex flex-col items-center">
                             <span class="text-4xl mb-4 opacity-50">🎈</span>
-                            <p class="font-bold">正在讀取資料中...</p>
+                            <p class="font-bold">正在從氣球禮物中讀取資料...</p>
                         </div>
                     </div>
                 </div>
@@ -374,7 +405,7 @@
         function resetFormState() {
             addProductForm.reset();
             editIdInput.value = "";
-            formTitle.innerHTML = '<span class="leaf-icon"></span> 新增好物';
+            formTitle.innerHTML = '<span class="petal-icon"></span> 新增好物';
             submitBtn.textContent = "上架禮物";
             submitBtn.classList.remove('btn-leaf');
             submitBtn.classList.add('btn-love');
@@ -432,7 +463,7 @@
                     const safeLink = (p.link || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
 
                     const item = document.createElement('div');
-                    item.className = "flex items-center gap-4 bg-white p-4 rounded-[20px] border-2 border-[#f0f0f0] hover:border-[#8dd6a1] transition-colors shadow-sm group";
+                    item.className = "flex items-center gap-4 bg-white p-4 rounded-[20px] border-2 border-[#ffebee] hover:border-[#ff80ab] transition-colors shadow-sm group";
                     item.innerHTML = `
                         <div class="relative w-16 h-16 flex-shrink-0">
                             <img src="${p.image}" class="w-16 h-16 object-cover rounded-[15px] bg-gray-100 border-2 border-white shadow-sm">
@@ -443,10 +474,10 @@
                             <div class="flex items-center gap-2 mb-1 flex-wrap">
                                 <span class="text-[10px] px-2 py-0.5 rounded-full ${catColor} font-bold uppercase tracking-wider shadow-sm">${p.category || 'general'}</span>
                                 <h3 class="font-bold text-[#5d4037] truncate text-lg">${p.name}</h3>
-                                ${p.link ? '<a href="' + p.link + '" target="_blank" class="text-xs text-[#81d4fa] hover:text-[#4fc3f7] bg-[#e1f5fe] px-1.5 py-0.5 rounded-md no-underline border border-[#b3e5fc]">🔗</a>' : ''}
+                                ${p.link ? '<a href="' + p.link + '" target="_blank" class="text-xs text-[#f48fb1] hover:text-[#e91e63] bg-[#fce4ec] px-1.5 py-0.5 rounded-md no-underline border border-[#f8bbd0]">🔗</a>' : ''}
                             </div>
                             <p class="text-sm text-[#a1887f] truncate">${p.description}</p>
-                            <p class="text-base font-extrabold text-[#8dd6a1] mt-1">$${p.price}</p>
+                            <p class="text-base font-extrabold text-[#ff80ab] mt-1">$${p.price}</p>
                         </div>
                         
                         <div class="flex gap-2">
