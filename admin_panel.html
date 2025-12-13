@@ -3,83 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PEACELOVE | 後台管理</title>
+    <title>PEACELOVE | 後台管理 (Animal Crossing Edition)</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 引入圓潤可愛的字體 -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Varela+Round&display=swap" rel="stylesheet">
+    <style>
+        /* --- 動物森友會風格設定 --- */
+        :root {
+            --ac-green: #8dd6a1;      /* 標誌性的薄荷綠 */
+            --ac-green-dark: #6ebf85; /* 深一點的綠 */
+            --ac-cream: #fffdf5;      /* 奶油白 (卡片背景) */
+            --ac-brown: #795548;      /* 土壤褐 (文字顏色) */
+            --ac-pink: #ffb7b2;       /* 愛意粉 */
+            --ac-bg-base: #fcf9ed;    /* 背景基底色 (米黃) */
+            --ac-bg-stripe: #f2efe4;  /* 背景條紋色 (稍深米黃) */
+        }
+
+        body {
+            font-family: 'Varela Round', 'Nunito', sans-serif;
+            background-color: var(--ac-bg-base);
+            /* 改為簡潔的斜紋背景，模擬信紙或 Nook 介面質感 */
+            background-image: repeating-linear-gradient(
+                45deg,
+                var(--ac-bg-base),
+                var(--ac-bg-base) 20px,
+                var(--ac-bg-stripe) 20px,
+                var(--ac-bg-stripe) 40px
+            );
+            color: var(--ac-brown);
+        }
+
+        /* AC 風格卡片 */
+        .ac-card {
+            background-color: var(--ac-cream);
+            border-radius: 30px;
+            /* 圓潤的邊框與陰影 */
+            box-shadow: 6px 6px 0px rgba(121, 85, 72, 0.1), inset 0 0 0 4px #fff;
+            border: 4px solid #e6e0d4;
+        }
+
+        /* AC 風格輸入框 */
+        .ac-input {
+            background-color: #fff;
+            border: 3px solid #e6e0d4;
+            border-radius: 18px;
+            padding: 12px 18px;
+            color: var(--ac-brown);
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+        .ac-input:focus {
+            border-color: var(--ac-green);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(141, 214, 161, 0.2);
+        }
+
+        /* AC 風格按鈕 */
+        .ac-btn {
+            border-radius: 25px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.1s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+        }
+        .ac-btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+        
+        .btn-leaf {
+            background-color: var(--ac-green);
+            color: #fff;
+        }
+        .btn-leaf:hover { background-color: var(--ac-green-dark); }
+
+        .btn-love {
+            background-color: var(--ac-pink);
+            color: #fff;
+        }
+        .btn-love:hover { background-color: #ff9e9e; }
+
+        .btn-cancel {
+            background-color: #e0e0e0;
+            color: #777;
+        }
+        .btn-cancel:hover { background-color: #d0d0d0; }
+
+        /* 葉子裝飾圖示 */
+        .leaf-icon {
+            display: inline-block;
+            width: 20px; 
+            height: 20px;
+            background-color: var(--ac-green);
+            border-radius: 20px 0px;
+            transform: rotate(45deg);
+            margin-right: 8px;
+        }
+        
+        /* 選擇選單優化 */
+        select.ac-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23795548' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 15px;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans min-h-screen flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center p-4">
 
     <!-- 登入區塊 -->
-    <div id="login-section" class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
-        <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold text-gray-800">管理員登入</h1>
-            <p class="text-gray-500 text-sm mt-2">請輸入管理憑證以存取後台</p>
+    <div id="login-section" class="ac-card p-10 w-full max-w-md relative">
+        <!-- 裝飾：小葉子浮動 -->
+        <div class="absolute -top-5 -left-5 transform -rotate-12 bg-white p-3 rounded-full shadow-md border-4 border-[#fff59d]">
+            <div class="leaf-icon" style="width: 30px; height: 30px;"></div>
         </div>
-        <form id="login-form" class="space-y-6">
+
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-extrabold text-[#795548] mb-2 tracking-tight">
+                PEACELOVE
+            </h1>
+            <p class="text-[#8d6e63] text-sm bg-[#fff9c4] inline-block px-5 py-1.5 rounded-full font-bold">
+                後台管理中心
+            </p>
+        </div>
+        <form id="login-form" class="space-y-5">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">電子信箱</label>
-                <input type="email" id="admin-email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                <label class="block text-sm font-bold text-[#8d6e63] mb-2 ml-1">Nook ID (Email)</label>
+                <input type="email" id="admin-email" required class="ac-input w-full" placeholder="tom.nook@island.com">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">密碼</label>
-                <input type="password" id="admin-password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                <label class="block text-sm font-bold text-[#8d6e63] mb-2 ml-1">密碼</label>
+                <input type="password" id="admin-password" required class="ac-input w-full" placeholder="••••••••">
             </div>
-            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold hover:bg-blue-700 transition-colors">登入系統</button>
-            <div id="login-error" class="hidden p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg"></div>
+            <button type="submit" class="ac-btn btn-leaf w-full py-3 mt-6 text-lg">
+                登入系統
+            </button>
+            <div id="login-error" class="hidden p-4 bg-red-50 border-2 border-red-200 text-red-500 text-sm rounded-2xl text-center font-bold"></div>
         </form>
     </div>
 
     <!-- 管理區塊 (預設隱藏) -->
     <div id="admin-section" class="w-full max-w-6xl hidden">
-        <header class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">產品上架管理</h1>
-            <button id="logout-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">登出</button>
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 bg-[#fffdf5]/90 p-5 rounded-[30px] shadow-sm border-4 border-white">
+            <div class="flex items-center gap-4 mb-4 md:mb-0">
+                <div class="bg-[#ffccbc] p-3 rounded-full border-4 border-white shadow-sm">
+                    <span class="text-2xl">🎁</span>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold text-[#795548]">P.L. HUES 倉庫管理</h1>
+                    <p class="text-sm text-[#a1887f] font-bold">今天也要充滿愛意地整理商品喔！</p>
+                </div>
+            </div>
+            <button id="logout-btn" class="ac-btn btn-cancel px-6 py-2.5 text-sm">
+                休息一下 (登出)
+            </button>
         </header>
 
         <div class="grid lg:grid-cols-3 gap-8">
             <!-- 上架/編輯表單 -->
             <div class="lg:col-span-1">
-                <div class="bg-white p-6 rounded-xl shadow-md sticky top-8">
-                    <h2 id="form-title" class="text-xl font-bold mb-4 border-b pb-2">新增產品</h2>
+                <div class="ac-card p-6 sticky top-8 bg-[#fffdf5]">
+                    <!-- 標題會動態改變 -->
+                    <h2 id="form-title" class="text-xl font-extrabold mb-6 text-[#795548] flex items-center border-b-2 border-[#f0f0f0] pb-3">
+                        <span class="leaf-icon"></span> 新增好物
+                    </h2>
                     
                     <form id="add-product-form" class="space-y-4">
                         <input type="hidden" id="edit-id">
                         
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">產品類別</label>
-                            <select id="p-category" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 outline-none bg-white">
-                                <option value="street">街頭潮流 (Street)</option>
-                                <option value="minimal">極簡主義 (Minimal)</option>
-                                <option value="limited">聯名限定 (Limited)</option>
+                        <div class="bg-[#fcf8e3] p-4 rounded-2xl border-2 border-[#f4e7b0] border-dashed">
+                            <label class="block text-xs font-bold text-[#8d6e63] mb-2 uppercase tracking-wider">Category</label>
+                            <select id="p-category" class="ac-input w-full bg-white cursor-pointer">
+                                <option value="street">🧢 街頭潮流 (Street)</option>
+                                <option value="minimal">🌿 極簡主義 (Minimal)</option>
+                                <option value="limited">✨ 聯名限定 (Limited)</option>
                             </select>
                         </div>
+                        
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">產品名稱</label>
-                            <input type="text" id="p-name" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">簡短說明</label>
-                            <input type="text" id="p-desc" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 outline-none" placeholder="例如: Designed by @Artist">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">價格 (TWD)</label>
-                            <input type="number" id="p-price" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">圖片網址</label>
-                            <input type="url" id="p-image" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 outline-none" placeholder="https://...">
-                            <p class="text-xs text-gray-500 mt-1">*請輸入公開的圖片連結</p>
-                        </div>
-                        <!-- 新增：購買連結欄位 -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">購買連結 (選填)</label>
-                            <input type="url" id="p-link" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 outline-none" placeholder="https://shopee.tw/...">
-                            <p class="text-xs text-gray-500 mt-1">*點擊按鈕時跳轉的網址</p>
+                            <label class="block text-sm font-bold text-[#8d6e63] mb-1 ml-1">產品名稱</label>
+                            <input type="text" id="p-name" required class="ac-input w-full" placeholder="例如：媽媽的愛心毛衣">
                         </div>
                         
-                        <div class="flex gap-2">
-                            <button type="submit" id="submit-btn" class="w-full bg-pink-600 text-white py-3 rounded-lg font-bold hover:bg-pink-700 transition-colors">發布產品</button>
-                            <button type="button" id="cancel-edit-btn" class="hidden w-1/3 bg-gray-500 text-white py-3 rounded-lg font-bold hover:bg-gray-600 transition-colors">取消</button>
+                        <div>
+                            <label class="block text-sm font-bold text-[#8d6e63] mb-1 ml-1">簡短說明</label>
+                            <input type="text" id="p-desc" required class="ac-input w-full" placeholder="寫下滿滿的思念...">
+                        </div>
+                        
+                        <div class="relative">
+                            <label class="block text-sm font-bold text-[#8d6e63] mb-1 ml-1">鈴錢 (價格)</label>
+                            <span class="absolute left-4 top-[38px] text-gray-400 font-bold">$</span>
+                            <input type="number" id="p-price" required class="ac-input w-full pl-8">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-bold text-[#8d6e63] mb-1 ml-1">照片 (URL)</label>
+                            <input type="url" id="p-image" required class="ac-input w-full" placeholder="https://...">
+                        </div>
+
+                        <!-- 購買連結 -->
+                        <div>
+                            <label class="block text-sm font-bold text-[#8d6e63] mb-1 ml-1">傳送門 (連結)</label>
+                            <input type="url" id="p-link" class="ac-input w-full" placeholder="https://shopee.tw/...">
+                            <p class="text-xs text-[#a1887f] mt-1.5 ml-2 flex items-center gap-1">
+                                <span>🔗</span> 點擊按鈕後會前往的地方
+                            </p>
+                        </div>
+                        
+                        <div class="flex gap-3 pt-4">
+                            <button type="submit" id="submit-btn" class="ac-btn btn-love w-full py-3 text-white shadow-md text-base">
+                                上架禮物
+                            </button>
+                            <button type="button" id="cancel-edit-btn" class="hidden ac-btn btn-cancel w-1/3 py-3 text-base">
+                                取消
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -87,10 +231,16 @@
 
             <!-- 產品列表 -->
             <div class="lg:col-span-2">
-                <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h2 class="text-xl font-bold mb-4 border-b pb-2">已上架產品</h2>
+                <div class="ac-card p-6 min-h-[500px]">
+                    <h2 class="text-xl font-extrabold mb-6 text-[#795548] flex items-center border-b-2 border-[#f0f0f0] pb-4">
+                        📦 現有收藏
+                    </h2>
                     <div id="product-list" class="space-y-4">
-                        <div class="text-center text-gray-500 py-8">載入中...</div>
+                        <!-- 產品項目由 JS 生成 -->
+                        <div class="text-center text-[#a1887f] py-12 flex flex-col items-center">
+                            <span class="text-4xl mb-4 opacity-50">🎈</span>
+                            <p class="font-bold">正在讀取資料中...</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -102,6 +252,7 @@
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, updateDoc, doc, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // 設定檔
         const firebaseConfig = {
             apiKey: "AIzaSyB5omg8yaumVDlvd8pGxub0EyX8SW2KifE", 
             authDomain: "peacelove-27b0d.firebaseapp.com",
@@ -116,6 +267,7 @@
         const db = getFirestore(app);
         const appId = 'peacelove'; 
 
+        // DOM 元素
         const loginSection = document.getElementById('login-section');
         const adminSection = document.getElementById('admin-section');
         const loginForm = document.getElementById('login-form');
@@ -129,36 +281,48 @@
         const cancelEditBtn = document.getElementById('cancel-edit-btn');
         const editIdInput = document.getElementById('edit-id');
 
+        // 1. 監聽登入狀態
         onAuthStateChanged(auth, (user) => {
             if (user) {
+                // 已登入
                 loginSection.classList.add('hidden');
                 adminSection.classList.remove('hidden');
                 loadProducts();
             } else {
+                // 未登入
                 loginSection.classList.remove('hidden');
                 adminSection.classList.add('hidden');
             }
         });
 
+        // 2. 登入功能
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('admin-email').value;
             const password = document.getElementById('admin-password').value;
+            
             loginError.classList.add('hidden'); 
             
             try {
                 await signInWithEmailAndPassword(auth, email, password);
             } catch (error) {
                 console.error("登入錯誤:", error);
-                let errorMsg = "登入失敗：請檢查帳號密碼";
-                if (error.code === 'auth/invalid-email') errorMsg = "Email 格式不正確";
+                let errorMsg = "哎呀！登入失敗了...";
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    errorMsg = "帳號或密碼不對喔，請再檢查一下！";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMsg = "Email 格式好像怪怪的？";
+                }
+                
                 loginError.textContent = errorMsg;
                 loginError.classList.remove('hidden');
             }
         });
 
+        // 3. 登出功能
         logoutBtn.addEventListener('click', () => signOut(auth));
 
+        // 4. 新增/更新產品
         addProductForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const category = document.getElementById('p-category').value;
@@ -182,7 +346,7 @@
                         image: image,
                         link: link
                     });
-                    alert("產品更新成功！");
+                    alert("✨ 修改成功！這份禮物更完美了！ ✨");
                     resetFormState();
                 } else {
                     await addDoc(productsRef, {
@@ -194,12 +358,12 @@
                         link: link,
                         timestamp: serverTimestamp()
                     });
-                    alert("產品上架成功！");
+                    alert("🎉 成功上架！村民們一定會喜歡的！ 🎉");
                     addProductForm.reset();
                 }
             } catch (error) {
                 console.error("操作錯誤:", error);
-                alert("操作失敗：" + error.message);
+                alert("糟糕，發生錯誤了：" + error.message);
             }
         });
 
@@ -210,10 +374,10 @@
         function resetFormState() {
             addProductForm.reset();
             editIdInput.value = "";
-            formTitle.textContent = "新增產品";
-            submitBtn.textContent = "發布產品";
-            submitBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-            submitBtn.classList.add('bg-pink-600', 'hover:bg-pink-700');
+            formTitle.innerHTML = '<span class="leaf-icon"></span> 新增好物';
+            submitBtn.textContent = "上架禮物";
+            submitBtn.classList.remove('btn-leaf');
+            submitBtn.classList.add('btn-love');
             cancelEditBtn.classList.add('hidden');
             submitBtn.classList.remove('w-2/3');
             submitBtn.classList.add('w-full');
@@ -228,13 +392,16 @@
             document.getElementById('p-link').value = link || '';
             editIdInput.value = id;
 
-            formTitle.textContent = "編輯產品";
-            submitBtn.textContent = "更新產品";
-            submitBtn.classList.remove('bg-pink-600', 'hover:bg-pink-700');
-            submitBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            formTitle.innerHTML = '✏️ 修改內容';
+            submitBtn.textContent = "儲存修改";
+            
+            submitBtn.classList.remove('btn-love');
+            submitBtn.classList.add('btn-leaf');
+            
             cancelEditBtn.classList.remove('hidden');
             submitBtn.classList.remove('w-full');
             submitBtn.classList.add('w-2/3');
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
@@ -245,7 +412,7 @@
             onSnapshot(q, (snapshot) => {
                 productList.innerHTML = '';
                 if(snapshot.empty) {
-                    productList.innerHTML = '<div class="text-center text-gray-500">目前沒有產品</div>';
+                    productList.innerHTML = '<div class="text-center text-gray-400 py-12 font-bold text-lg">🍃 這裡空空如也...<br>快去上架一些寶貝吧！</div>';
                     return;
                 }
 
@@ -253,36 +420,42 @@
                     const p = docSnap.data();
                     const id = docSnap.id;
                     
-                    let catColor = "bg-gray-200 text-gray-700";
-                    if(p.category === 'street') catColor = "bg-black text-white";
-                    if(p.category === 'minimal') catColor = "bg-stone-200 text-stone-800";
-                    if(p.category === 'limited') catColor = "bg-yellow-500 text-white";
+                    let catColor = "bg-gray-100 text-gray-600";
+                    let catIcon = "📦";
+                    if(p.category === 'street') { catColor = "bg-[#212121] text-[#f5f5f5]"; catIcon = "🧢"; }
+                    if(p.category === 'minimal') { catColor = "bg-[#d7ccc8] text-[#5d4037]"; catIcon = "🌿"; }
+                    if(p.category === 'limited') { catColor = "bg-[#fff9c4] text-[#fbc02d]"; catIcon = "✨"; }
 
-                    // 轉義特殊字符以避免 HTML 屬性錯誤
                     const safeName = (p.name || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
                     const safeDesc = (p.description || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
                     const safeImage = (p.image || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
                     const safeLink = (p.link || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
 
                     const item = document.createElement('div');
-                    item.className = "flex items-center gap-4 bg-gray-50 p-4 rounded-lg border hover:bg-gray-100 transition-colors";
+                    item.className = "flex items-center gap-4 bg-white p-4 rounded-[20px] border-2 border-[#f0f0f0] hover:border-[#8dd6a1] transition-colors shadow-sm group";
                     item.innerHTML = `
-                        <img src="${p.image}" class="w-16 h-16 object-cover rounded bg-gray-200">
-                        <div class="flex-grow">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="text-xs px-2 py-0.5 rounded ${catColor} font-bold uppercase">${p.category || 'general'}</span>
-                                <h3 class="font-bold text-gray-800">${p.name}</h3>
-                                ${p.link ? '<span class="text-xs text-blue-500 bg-blue-50 px-1 rounded ml-1">🔗 已設連結</span>' : ''}
-                            </div>
-                            <p class="text-sm text-gray-500">$${p.price} - ${p.description}</p>
+                        <div class="relative w-16 h-16 flex-shrink-0">
+                            <img src="${p.image}" class="w-16 h-16 object-cover rounded-[15px] bg-gray-100 border-2 border-white shadow-sm">
+                            <div class="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm text-xs border border-gray-100">${catIcon}</div>
                         </div>
+                        
+                        <div class="flex-grow min-w-0">
+                            <div class="flex items-center gap-2 mb-1 flex-wrap">
+                                <span class="text-[10px] px-2 py-0.5 rounded-full ${catColor} font-bold uppercase tracking-wider shadow-sm">${p.category || 'general'}</span>
+                                <h3 class="font-bold text-[#5d4037] truncate text-lg">${p.name}</h3>
+                                ${p.link ? '<a href="' + p.link + '" target="_blank" class="text-xs text-[#81d4fa] hover:text-[#4fc3f7] bg-[#e1f5fe] px-1.5 py-0.5 rounded-md no-underline border border-[#b3e5fc]">🔗</a>' : ''}
+                            </div>
+                            <p class="text-sm text-[#a1887f] truncate">${p.description}</p>
+                            <p class="text-base font-extrabold text-[#8dd6a1] mt-1">$${p.price}</p>
+                        </div>
+                        
                         <div class="flex gap-2">
                             <button onclick="editProduct('${id}', '${p.category}', '${safeName}', '${safeDesc}', '${p.price}', '${safeImage}', '${safeLink}')" 
-                                    class="text-blue-500 hover:text-blue-700 p-2 font-medium">
-                                編輯
+                                    class="bg-[#e3f2fd] text-[#1e88e5] w-10 h-10 rounded-full flex items-center justify-center hover:bg-[#bbdefb] hover:scale-110 transition-transform shadow-sm border border-[#bbdefb]" title="編輯">
+                                ✏️
                             </button>
-                            <button class="delete-btn text-red-500 hover:text-red-700 p-2 font-medium" data-id="${id}">
-                                刪除
+                            <button class="delete-btn bg-[#ffebee] text-[#e53935] w-10 h-10 rounded-full flex items-center justify-center hover:bg-[#ffcdd2] hover:scale-110 transition-transform shadow-sm border border-[#ffcdd2]" data-id="${id}" title="刪除">
+                                🗑️
                             </button>
                         </div>
                     `;
@@ -291,7 +464,7 @@
 
                 document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.addEventListener('click', async (e) => {
-                        if(confirm('確定要刪除此產品嗎？')) {
+                        if(confirm('💔 確定要讓這個寶貝離開嗎？')) {
                             const id = e.target.dataset.id;
                             const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', id);
                             try { await deleteDoc(docRef); } 
