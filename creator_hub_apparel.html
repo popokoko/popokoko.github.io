@@ -20,7 +20,7 @@
 </head>
 <body class="font-body bg-white text-gray-800">
 
-    <!-- 統一導覽列 -->
+    <!-- 導覽列 -->
     <header class="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 rounded-b-lg mx-auto max-w-7xl px-4">
         <nav class="container mx-auto flex items-center justify-end h-20">
             <div class="hidden md:flex items-center space-x-6 lg:space-x-8 font-medium">
@@ -74,7 +74,9 @@
         <!-- 產品展示 -->
         <section id="collections" class="py-20 bg-white">
             <div class="container mx-auto px-6">
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div id="product-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    
+                    <!-- 原有靜態內容 -->
                     <div class="group cursor-pointer">
                         <div class="relative overflow-hidden rounded-2xl shadow-lg mb-4 aspect-[3/4]"><img src="https://placehold.co/600x800/f3f4f6/C94B4B?text=Hues+Tee&font=montserrat" alt="Hues Tee" class="w-full h-full object-cover img-hover-zoom"><div class="absolute top-4 right-4 bg-white/90 backdrop-blur text-xs font-bold px-2 py-1 rounded">NEW</div><div class="absolute bottom-0 left-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"><button class="w-full py-3 bg-white text-black font-bold rounded-xl shadow-lg hover:bg-gray-50">加入購物車</button></div></div>
                         <h3 class="font-heading text-lg font-bold">PEACELOVE 經典漸變 Tee</h3><p class="text-sm text-gray-500 mb-2">Designed by @PopoKoko</p><p class="text-gradient-hues font-bold">$1,280 TWD</p>
@@ -83,47 +85,88 @@
                         <div class="relative overflow-hidden rounded-2xl shadow-lg mb-4 aspect-[3/4]"><img src="https://placehold.co/600x800/ffe4e6/C94B4B?text=Hoodie&font=montserrat" alt="Creator Hoodie" class="w-full h-full object-cover img-hover-zoom"><div class="absolute top-4 right-4 bg-black/80 text-white backdrop-blur text-xs font-bold px-2 py-1 rounded">HOT</div><div class="absolute bottom-0 left-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"><button class="w-full py-3 bg-white text-black font-bold rounded-xl shadow-lg hover:bg-gray-50">加入購物車</button></div></div>
                         <h3 class="font-heading text-lg font-bold">創作者聯名連帽衫 (粉紫)</h3><p class="text-sm text-gray-500 mb-2">Affinity Series x Artist A</p><p class="text-gradient-hues font-bold">$2,480 TWD</p>
                     </div>
-                    <div class="group cursor-pointer">
-                        <div class="relative overflow-hidden rounded-2xl shadow-lg mb-4 aspect-[3/4]"><img src="https://placehold.co/600x800/e0e7ff/0072ff?text=Cap&font=montserrat" alt="Logo Cap" class="w-full h-full object-cover img-hover-zoom"><div class="absolute bottom-0 left-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"><button class="w-full py-3 bg-white text-black font-bold rounded-xl shadow-lg hover:bg-gray-50">加入購物車</button></div></div>
-                        <h3 class="font-heading text-lg font-bold">P.L. 刺繡老帽</h3><p class="text-sm text-gray-500 mb-2">Unisex / Basic Collection</p><p class="text-gradient-hues font-bold">$880 TWD</p>
-                    </div>
-                    <div class="group cursor-pointer">
-                        <div class="relative overflow-hidden rounded-2xl shadow-lg mb-4 aspect-[3/4]"><img src="https://placehold.co/600x800/fdf2f8/db2777?text=Tote+Bag&font=montserrat" alt="Tote Bag" class="w-full h-full object-cover img-hover-zoom"><div class="absolute bottom-0 left-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"><button class="w-full py-3 bg-white text-black font-bold rounded-xl shadow-lg hover:bg-gray-50">加入購物車</button></div></div>
-                        <h3 class="font-heading text-lg font-bold">Love Yourself 帆布袋</h3><p class="text-sm text-gray-500 mb-2">Sustainable Material</p><p class="text-gradient-hues font-bold">$680 TWD</p>
-                    </div>
-                    <div class="group cursor-pointer">
-                        <div class="relative overflow-hidden rounded-2xl shadow-lg mb-4 aspect-[3/4]"><img src="https://placehold.co/600x800/333333/ffffff?text=Jacket&font=montserrat" alt="Jacket" class="w-full h-full object-cover img-hover-zoom"><div class="absolute top-4 right-4 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded">LIMITED</div><div class="absolute bottom-0 left-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"><button class="w-full py-3 bg-white text-black font-bold rounded-xl shadow-lg hover:bg-gray-50">加入購物車</button></div></div>
-                        <h3 class="font-heading text-lg font-bold">黑標機能外套 (CORE x HUES)</h3><p class="text-sm text-gray-500 mb-2">Water Resistant / Tech Wear</p><p class="text-gradient-hues font-bold">$4,680 TWD</p>
-                    </div>
-                    <div class="flex flex-col h-full rounded-2xl border-2 border-dashed border-pink-300 bg-pink-50 p-8 items-center justify-center text-center aspect-[3/4] hover:bg-pink-100 transition-colors cursor-pointer">
-                        <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-md mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg></div>
-                        <h3 class="font-heading text-xl font-bold mb-2">成為創作者</h3><p class="text-gray-600 mb-6">有獨特的時尚品味嗎？<br>加入 Creator Hub，設計您的專屬系列。</p><span class="text-pink-600 font-bold border-b-2 border-pink-600 pb-1">立即申請 &rarr;</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+                    
+                    <!-- 動態載入的產品將會附加在這裡 -->
 
-        <!-- 理念 -->
-        <section class="py-20 bg-gray-900 text-white">
-            <div class="container mx-auto px-6 text-center">
-                <h2 class="font-heading text-3xl md:text-4xl font-bold mb-8">Fashion Meets Technology</h2>
-                <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                    <div class="p-6"><div class="text-4xl mb-4">🛡️</div><h3 class="font-bold text-xl mb-2">Veritas 認證</h3><p class="text-gray-400">每一件聯名服飾都擁有區塊鏈數位證書，確保正品與限量編號。</p></div>
-                    <div class="p-6"><div class="text-4xl mb-4">🎨</div><h3 class="font-bold text-xl mb-2">AI 色彩分析</h3><p class="text-gray-400">使用 Chroma AI 掃描您的膚色，推薦最適合您的穿搭色系。</p></div>
-                    <div class="p-6"><div class="text-4xl mb-4">♻️</div><h3 class="font-bold text-xl mb-2">永續材質</h3><p class="text-gray-400">我們承諾使用環保與可回收材質，時尚不該以地球為代價。</p></div>
                 </div>
             </div>
         </section>
     </main>
 
     <footer class="bg-gray-800 text-gray-300 py-10 border-t border-gray-700">
-        <div class="container mx-auto px-6 text-center"><p class="font-heading text-xl font-bold text-white mb-2">PEACELOVE HUES</p><p class="text-sm text-gray-500">&copy; 2025 PEACELOVE Inc.</p></div>
+        <div class="container mx-auto px-6 text-center">
+            <p class="font-heading text-xl font-bold text-white mb-2">PEACELOVE HUES</p>
+            <p class="text-sm text-gray-500">&copy; 2025 PEACELOVE Inc.</p>
+        </div>
     </footer>
 
     <script>
         const menuBtn = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
+    </script>
+
+    <!-- Firebase 產品載入腳本 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB5omg8yaumVDlvd8pGxub0EyX8SW2KifE", 
+            authDomain: "peacelove-27b0d.firebaseapp.com",
+            projectId: "peacelove-27b0d",
+            storageBucket: "peacelove-27b0d.firebasestorage.app", 
+            messagingSenderId: "888936275412",
+            appId: "1:888936275412:web:a0852a693d01cc1884ca41"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app); 
+        const db = getFirestore(app);
+        const appId = 'peacelove'; // 確保與 Admin Panel 使用相同的 App ID
+
+        const productGrid = document.getElementById('product-grid');
+
+        function startProductListener() {
+            // 修正路徑: 使用 artifacts/peacelove/public/data/products
+            const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+            const q = query(productsRef, orderBy("timestamp", "desc"));
+
+            onSnapshot(q, (snapshot) => {
+                document.querySelectorAll('.dynamic-product').forEach(e => e.remove());
+
+                snapshot.forEach((doc) => {
+                    const p = doc.data();
+                    const card = document.createElement('div');
+                    card.className = 'group cursor-pointer dynamic-product';
+                    card.innerHTML = `
+                        <div class="relative overflow-hidden rounded-2xl shadow-lg mb-4 aspect-[3/4]">
+                            <img src="${p.image || 'https://placehold.co/600x800/eee/999?text=No+Image'}" alt="${p.name}" class="w-full h-full object-cover img-hover-zoom">
+                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur text-xs font-bold px-2 py-1 rounded">NEW</div>
+                            <div class="absolute bottom-0 left-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <button class="w-full py-3 bg-white text-black font-bold rounded-xl shadow-lg hover:bg-gray-50">加入購物車</button>
+                            </div>
+                        </div>
+                        <h3 class="font-heading text-lg font-bold">${p.name}</h3>
+                        <p class="text-sm text-gray-500 mb-2">${p.description || 'New Arrival'}</p>
+                        <p class="text-gradient-hues font-bold">$${p.price} TWD</p>
+                    `;
+                    productGrid.appendChild(card);
+                });
+            }, (error) => {
+                console.error("讀取產品失敗 (權限不足?):", error);
+            });
+        }
+
+        signInAnonymously(auth)
+            .then(() => {
+                startProductListener();
+            })
+            .catch((error) => {
+                console.error("匿名登入失敗，無法讀取動態產品:", error);
+            });
+
     </script>
 </body>
 </html>
