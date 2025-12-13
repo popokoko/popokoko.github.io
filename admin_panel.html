@@ -42,6 +42,15 @@
                 <div class="bg-white p-6 rounded-xl shadow-md sticky top-8">
                     <h2 class="text-xl font-bold mb-4 border-b pb-2">新增產品</h2>
                     <form id="add-product-form" class="space-y-4">
+                        <!-- 新增：類別選擇 -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">產品類別</label>
+                            <select id="p-category" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 outline-none bg-white">
+                                <option value="street">街頭潮流 (Street)</option>
+                                <option value="minimal">極簡主義 (Minimal)</option>
+                                <option value="limited">聯名限定 (Limited)</option>
+                            </select>
+                        </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">產品名稱</label>
                             <input type="text" id="p-name" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 outline-none">
@@ -82,9 +91,8 @@
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // 設定檔
         const firebaseConfig = {
-            apiKey: "AIzaSyB5omg8yaumVDlvd8pGxub0EyX8SW2KifE", // 請確認這是否為您正確的 API Key
+            apiKey: "AIzaSyB5omg8yaumVDlvd8pGxub0EyX8SW2KifE", 
             authDomain: "peacelove-27b0d.firebaseapp.com",
             projectId: "peacelove-27b0d",
             storageBucket: "peacelove-27b0d.firebasestorage.app",
@@ -95,9 +103,8 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = 'peacelove'; // 固定 App ID 以確保路徑一致
+        const appId = 'peacelove'; 
 
-        // DOM 元素
         const loginSection = document.getElementById('login-section');
         const adminSection = document.getElementById('admin-section');
         const loginForm = document.getElementById('login-form');
@@ -106,67 +113,48 @@
         const productList = document.getElementById('product-list');
         const loginError = document.getElementById('login-error');
 
-        // 1. 監聽登入狀態
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // 已登入
                 loginSection.classList.add('hidden');
                 adminSection.classList.remove('hidden');
                 loadProducts();
             } else {
-                // 未登入
                 loginSection.classList.remove('hidden');
                 adminSection.classList.add('hidden');
             }
         });
 
-        // 2. 登入功能
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('admin-email').value;
             const password = document.getElementById('admin-password').value;
-            
-            loginError.classList.add('hidden'); // 先隱藏舊錯誤
+            loginError.classList.add('hidden'); 
             
             try {
                 await signInWithEmailAndPassword(auth, email, password);
             } catch (error) {
-                console.error("登入錯誤詳細資訊:", error);
-                
-                let errorMsg = "登入失敗：";
-                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                    errorMsg += "帳號或密碼錯誤，請確認您已在 Firebase Console 建立此使用者。";
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMsg += "Email 格式不正確。";
-                } else if (error.code === 'auth/too-many-requests') {
-                    errorMsg += "嘗試次數過多，請稍後再試。";
-                } else if (error.code === 'auth/api-key-not-valid') {
-                    errorMsg += "API Key 無效，請檢查程式碼中的設定。";
-                } else {
-                    errorMsg += error.message;
-                }
-                
+                console.error("登入錯誤:", error);
+                let errorMsg = "登入失敗：請檢查帳號密碼";
+                if (error.code === 'auth/invalid-email') errorMsg = "Email 格式不正確";
                 loginError.textContent = errorMsg;
                 loginError.classList.remove('hidden');
             }
         });
 
-        // 3. 登出功能
         logoutBtn.addEventListener('click', () => signOut(auth));
 
-        // 4. 新增產品
         addProductForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const category = document.getElementById('p-category').value; // 獲取類別
             const name = document.getElementById('p-name').value;
             const desc = document.getElementById('p-desc').value;
             const price = document.getElementById('p-price').value;
             const image = document.getElementById('p-image').value;
 
             try {
-                // 修正路徑: 使用 artifacts/peacelove/public/data/products
                 const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
-                
                 await addDoc(productsRef, {
+                    category: category, // 儲存類別
                     name: name,
                     description: desc,
                     price: price,
@@ -177,17 +165,11 @@
                 addProductForm.reset();
             } catch (error) {
                 console.error("上架錯誤:", error);
-                if (error.code === 'permission-denied') {
-                    alert("上架失敗：權限不足。請檢查 Firebase Console 的 Firestore Rules 是否允許寫入。");
-                } else {
-                    alert("上架失敗：" + error.message);
-                }
+                alert("上架失敗：" + error.message);
             }
         });
 
-        // 5. 讀取與刪除列表
         function loadProducts() {
-            // 修正路徑: 使用 artifacts/peacelove/public/data/products
             const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
             const q = query(productsRef, orderBy("timestamp", "desc"));
             
@@ -202,12 +184,21 @@
                     const p = docSnap.data();
                     const id = docSnap.id;
                     
+                    // 根據類別顯示不同顏色的標籤
+                    let catColor = "bg-gray-200 text-gray-700";
+                    if(p.category === 'street') catColor = "bg-black text-white";
+                    if(p.category === 'minimal') catColor = "bg-stone-200 text-stone-800";
+                    if(p.category === 'limited') catColor = "bg-yellow-500 text-white";
+
                     const item = document.createElement('div');
                     item.className = "flex items-center gap-4 bg-gray-50 p-4 rounded-lg border hover:bg-gray-100";
                     item.innerHTML = `
                         <img src="${p.image}" class="w-16 h-16 object-cover rounded bg-gray-200">
                         <div class="flex-grow">
-                            <h3 class="font-bold text-gray-800">${p.name}</h3>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xs px-2 py-0.5 rounded ${catColor} font-bold uppercase">${p.category || 'general'}</span>
+                                <h3 class="font-bold text-gray-800">${p.name}</h3>
+                            </div>
                             <p class="text-sm text-gray-500">$${p.price} - ${p.description}</p>
                         </div>
                         <button class="delete-btn text-red-500 hover:text-red-700 p-2" data-id="${id}">
@@ -217,27 +208,16 @@
                     productList.appendChild(item);
                 });
 
-                // 綁定刪除按鈕
                 document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.addEventListener('click', async (e) => {
                         if(confirm('確定要刪除此產品嗎？')) {
                             const id = e.target.dataset.id;
-                            // 刪除時也使用相同路徑
                             const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', id);
-                            try {
-                                await deleteDoc(docRef);
-                            } catch(err) {
-                                console.error("刪除失敗:", err);
-                                alert("刪除失敗：請檢查權限");
-                            }
+                            try { await deleteDoc(docRef); } 
+                            catch(err) { alert("刪除失敗"); }
                         }
                     });
                 });
-            }, (error) => {
-                console.error("讀取失敗:", error);
-                if (error.code === 'permission-denied') {
-                    productList.innerHTML = '<div class="text-center text-red-500 p-4">讀取失敗：權限不足。<br>請前往 Firebase Console 設定 Firestore Rules。</div>';
-                }
             });
         }
     </script>
