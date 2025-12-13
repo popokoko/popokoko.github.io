@@ -12,31 +12,20 @@
     </style>
 </head>
 <body class="font-body bg-stone-50 text-stone-800">
-
-    <!-- 導航 -->
     <header class="bg-stone-50 sticky top-0 z-50">
         <nav class="container mx-auto flex items-center justify-between h-24 px-6 border-b border-stone-200">
-            <a href="creator_hub_apparel.html" class="text-stone-500 hover:text-stone-900 transition-colors tracking-wide text-sm uppercase">
-                &larr; Back to Hub
-            </a>
-            <div class="font-serif text-2xl italic">Minimal Collection</div>
-            <div class="w-12"></div> <!-- Spacer -->
+            <a href="creator_hub_apparel.html" class="text-stone-500 hover:text-stone-900 transition-colors tracking-wide text-sm uppercase">&larr; Back to Hub</a>
+            <div class="font-serif text-2xl italic">Minimal Collection</div><div class="w-12"></div>
         </nav>
     </header>
 
-    <!-- Hero -->
     <section class="py-32 bg-white">
         <div class="container mx-auto px-6 text-center">
-            <h1 class="font-serif text-5xl md:text-6xl mb-6 text-stone-900">
-                Less is More.
-            </h1>
-            <p class="text-lg text-stone-500 max-w-lg mx-auto font-light leading-relaxed">
-                捨去繁複，回歸本質。專注於剪裁、材質與舒適度，打造永不過時的經典單品。
-            </p>
+            <h1 class="font-serif text-5xl md:text-6xl mb-6 text-stone-900">Less is More.</h1>
+            <p class="text-lg text-stone-500 max-w-lg mx-auto font-light leading-relaxed">捨去繁複，回歸本質。專注於剪裁、材質與舒適度，打造永不過時的經典單品。</p>
         </div>
     </section>
 
-    <!-- 分類按鈕 -->
     <section class="pb-12 bg-white">
         <div class="container mx-auto px-6 flex justify-center gap-6 text-sm tracking-widest">
             <a href="creator_hub_apparel.html" class="text-stone-400 hover:text-stone-900 transition-colors">ALL</a>
@@ -46,17 +35,18 @@
         </div>
     </section>
 
-    <!-- 產品列表 -->
     <section class="py-20 bg-stone-50">
         <div class="container mx-auto px-6">
             <div id="product-grid" class="grid md:grid-cols-3 gap-x-12 gap-y-16">
-                 <!-- 動態載入 -->
-                 <div class="col-span-full text-center text-stone-400 py-12">Loading collection...</div>
+                 <div class="col-span-full text-center text-stone-400 py-12 font-serif italic">Loading collection...</div>
             </div>
         </div>
     </section>
 
-    <!-- Firebase 腳本 -->
+    <footer class="bg-gray-800 text-gray-300 py-10 border-t border-gray-700 mt-auto">
+        <div class="container mx-auto px-6 text-center"><p class="text-sm text-gray-500">&copy; 2025 PEACELOVE Inc.</p></div>
+    </footer>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -71,36 +61,35 @@
 
         function startProductListener() {
             const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
-            // 篩選：只顯示 minimal 類別
             const q = query(productsRef, where("category", "==", "minimal"));
 
             onSnapshot(q, (snapshot) => {
                 productGrid.innerHTML = '';
                 if (snapshot.empty) {
-                    productGrid.innerHTML = '<div class="col-span-full text-center text-stone-400 py-12">目前沒有極簡類別的產品。</div>';
+                    productGrid.innerHTML = '<div class="col-span-full text-center text-stone-400 py-12 font-serif italic">Currently no minimal items available.</div>';
                     return;
                 }
-
                 let products = [];
                 snapshot.forEach((doc) => products.push(doc.data()));
                 products.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
                 products.forEach((p) => {
+                    const cardClick = p.link ? `onclick="window.open('${p.link}', '_blank')"` : '';
+                    const cursorClass = p.link ? 'cursor-pointer' : 'cursor-default';
                     const card = document.createElement('div');
-                    card.className = 'group cursor-pointer dynamic-product';
+                    card.className = `group ${cursorClass} dynamic-product`;
+                    if (p.link) card.setAttribute('onclick', `window.open('${p.link}', '_blank')`);
+                    
                     card.innerHTML = `
-                        <div class="aspect-[4/5] overflow-hidden bg-gray-200 mb-6">
+                        <div class="aspect-[4/5] overflow-hidden bg-gray-200 mb-6 relative">
                             <img src="${p.image || 'https://placehold.co/800x1000/e5e5e5/999?text=No+Image'}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                            ${p.link ? '<div class="absolute bottom-0 w-full bg-stone-800 text-white text-center py-3 text-xs tracking-[0.2em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500">Shop Now</div>' : ''}
                         </div>
-                        <div class="text-center">
-                            <h3 class="font-serif text-lg mb-2">${p.name}</h3>
-                            <p class="text-stone-500 text-sm mb-3">${p.description || ''}</p>
-                            <p class="text-stone-800 font-medium">$${p.price}</p>
-                        </div>
+                        <div class="text-center"><h3 class="font-serif text-lg mb-2 text-stone-900">${p.name}</h3><p class="text-stone-500 text-sm mb-3 font-light">${p.description || ''}</p><p class="text-stone-800 font-medium tracking-wide">$${p.price}</p></div>
                     `;
                     productGrid.appendChild(card);
                 });
-            });
+            }, error => console.error(error));
         }
         signInAnonymously(auth).then(startProductListener);
     </script>
