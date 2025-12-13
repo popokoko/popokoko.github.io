@@ -5,53 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PEACELOVE HUES | 街頭潮流</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@700;800;900&family=Poppins:wght@700;800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --color-core-start: #00c6ff; --color-core-end: #0072ff; --color-hues-start: #ffafbd; --color-hues-end: #c94b4b; }
         .font-heading { font-family: 'Montserrat', sans-serif; }
         .font-body { font-family: 'Inter', sans-serif; }
-        .text-gradient-core { background: linear-gradient(to right, var(--color-core-start), var(--color-core-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .text-gradient-hues { background: linear-gradient(to right, var(--color-hues-start), var(--color-hues-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .bg-gradient-core { background: linear-gradient(135deg, var(--color-core-start), var(--color-core-end)); }
+        /* 街頭風格：更強烈的陰影與對比 */
         .street-card { transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .street-card:hover { transform: translate(-4px, -4px); box-shadow: 8px 8px 0px #000; }
     </style>
 </head>
 <body class="font-body bg-gray-50 text-gray-900">
 
-    <!-- 統一導覽列 -->
-    <header class="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 rounded-b-lg mx-auto max-w-7xl px-4">
-        <nav class="container mx-auto flex items-center justify-end h-20">
-            <div class="hidden md:flex items-center space-x-6 lg:space-x-8 font-medium">
-                <a href="index.html#home" class="hover:text-gradient-core transition-colors">首頁</a>
-                <a href="index.html#about" class="hover:text-gradient-core transition-colors">關於我們</a>
-                <a href="index.html#core" class="hover:text-gradient-core transition-colors">P.L. CORE</a>
-                <a href="index.html#hues" class="hover:text-gradient-hues transition-colors">P.L. HUES</a>
-                <a href="index.html#insights" class="hover:text-gradient-hues transition-colors">靈感誌</a>
-                <a href="index.html#contact" class="bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">聯絡我們</a>
-            </div>
-            <div class="md:hidden">
-                <button id="menu-btn" class="text-gray-700 focus:outline-none">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-8 6h8"></path></svg>
-                </button>
-            </div>
+    <!-- 導航 -->
+    <header class="bg-white sticky top-0 z-50 border-b-4 border-black">
+        <nav class="container mx-auto flex items-center justify-between h-20 px-6">
+            <a href="creator_hub_apparel.html" class="font-bold text-xl tracking-tighter hover:text-gray-600 transition-colors">
+                &larr; BACK TO HUB
+            </a>
+            <div class="font-heading font-black text-2xl tracking-widest uppercase">STREET</div>
         </nav>
-        <div id="mobile-menu" class="hidden md:hidden flex-col items-center space-y-4 py-6 text-center font-medium">
-            <a href="index.html#home" class="block w-full py-2 hover:bg-gray-100 rounded-lg">首頁</a>
-            <a href="index.html#about" class="block w-full py-2 hover:bg-gray-100 rounded-lg">關於我們</a>
-            <a href="index.html#core" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. CORE</a>
-            <a href="index.html#hues" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. HUES</a>
-            <a href="index.html#insights" class="block w-full py-2 hover:bg-gray-100 rounded-lg">靈感誌</a>
-            <a href="index.html#contact" class="block w-full bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg">聯絡我們</a>
-        </div>
     </header>
 
     <!-- Hero -->
     <section class="bg-black text-white py-24 relative overflow-hidden">
-        <div class="absolute inset-0 opacity-30 bg-[url('https://placehold.co/1920x1080/333333/666666?text=GRAFFITI')] bg-cover bg-center"></div>
+        <!-- 背景圖佔位 -->
+        <div class="absolute inset-0 opacity-30 bg-gray-800 bg-cover bg-center" style="background-image: url('https://placehold.co/1920x1080/333333/666666?text=GRAFFITI');"></div>
         <div class="container mx-auto px-6 relative z-10 text-center">
-            <h1 class="font-heading text-6xl md:text-8xl font-black mb-6 tracking-tighter">URBAN <span class="text-yellow-400">SOUL</span></h1>
-            <p class="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto font-light">定義街頭規則。大膽剪裁、高對比視覺，展現不妥協的態度。</p>
+            <h1 class="font-heading text-6xl md:text-8xl font-black mb-6 tracking-tighter">
+                URBAN <span class="text-yellow-400">SOUL</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto font-light">
+                定義街頭規則。大膽剪裁、高對比視覺，展現不妥協的態度。
+            </p>
         </div>
     </section>
 
@@ -68,27 +53,87 @@
     <!-- 產品列表 -->
     <section class="py-20">
         <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="street-card bg-white border-2 border-black p-4">
-                    <div class="aspect-square bg-gray-200 mb-4 overflow-hidden relative"><img src="https://placehold.co/600x600/111/FFF?text=Oversized+Tee" alt="Tee" class="w-full h-full object-cover"><span class="absolute top-2 left-2 bg-yellow-400 text-black font-bold px-2 py-1 text-sm border border-black">BEST SELLER</span></div>
-                    <h3 class="font-heading font-bold text-xl mb-1">Oversized 塗鴉 Tee</h3><p class="text-sm text-gray-500 mb-4">Cotton Heavyweight / Black</p><div class="flex justify-between items-center border-t-2 border-dashed border-gray-200 pt-4"><span class="font-bold text-xl">$1,480</span><button class="bg-black text-white px-4 py-2 font-bold hover:bg-yellow-400 hover:text-black transition-colors">BUY</button></div>
-                </div>
-                <div class="street-card bg-white border-2 border-black p-4">
-                    <div class="aspect-square bg-gray-200 mb-4 overflow-hidden relative"><img src="https://placehold.co/600x600/333/FFF?text=Cargo+Pants" alt="Cargo" class="w-full h-full object-cover"></div>
-                    <h3 class="font-heading font-bold text-xl mb-1">機能工裝褲</h3><p class="text-sm text-gray-500 mb-4">Multi-pocket / Tech Fabric</p><div class="flex justify-between items-center border-t-2 border-dashed border-gray-200 pt-4"><span class="font-bold text-xl">$2,280</span><button class="bg-black text-white px-4 py-2 font-bold hover:bg-yellow-400 hover:text-black transition-colors">BUY</button></div>
-                </div>
-                <div class="street-card bg-white border-2 border-black p-4">
-                    <div class="aspect-square bg-gray-200 mb-4 overflow-hidden relative"><img src="https://placehold.co/600x600/555/FFF?text=Hoodie" alt="Hoodie" class="w-full h-full object-cover"></div>
-                    <h3 class="font-heading font-bold text-xl mb-1">反光標語連帽衫</h3><p class="text-sm text-gray-500 mb-4">Reflective Print / Fleece</p><div class="flex justify-between items-center border-t-2 border-dashed border-gray-200 pt-4"><span class="font-bold text-xl">$2,680</span><button class="bg-black text-white px-4 py-2 font-bold hover:bg-yellow-400 hover:text-black transition-colors">BUY</button></div>
-                </div>
+            <div id="product-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 預設靜態內容 (載入中會被清空) -->
+                <div class="col-span-full text-center text-gray-500 py-12">正在載入最新潮流單品...</div>
             </div>
         </div>
     </section>
 
-    <script>
-        const menuBtn = document.getElementById('menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
+    <!-- Firebase 腳本 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        // 移除 orderBy，改由前端排序
+        import { getFirestore, collection, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = { 
+            apiKey: "AIzaSyB5omg8yaumVDlvd8pGxub0EyX8SW2KifE", 
+            authDomain: "peacelove-27b0d.firebaseapp.com", 
+            projectId: "peacelove-27b0d", 
+            storageBucket: "peacelove-27b0d.firebasestorage.app", 
+            messagingSenderId: "888936275412", 
+            appId: "1:888936275412:web:a0852a693d01cc1884ca41" 
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = 'peacelove';
+        const productGrid = document.getElementById('product-grid');
+
+        function startProductListener() {
+            const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+            
+            // 修正：只篩選類別，不使用 orderBy 以避免索引錯誤
+            const q = query(productsRef, where("category", "==", "street"));
+
+            onSnapshot(q, (snapshot) => {
+                // 清空載入提示
+                productGrid.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    productGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-12">目前沒有街頭潮流類別的產品。</div>';
+                    return;
+                }
+
+                // 1. 收集資料
+                let products = [];
+                snapshot.forEach((doc) => {
+                    products.push(doc.data());
+                });
+
+                // 2. 前端排序 (最新在上)
+                products.sort((a, b) => {
+                    const timeA = a.timestamp ? a.timestamp.seconds : 0;
+                    const timeB = b.timestamp ? b.timestamp.seconds : 0;
+                    return timeB - timeA; 
+                });
+
+                // 3. 渲染
+                products.forEach((p) => {
+                    const card = document.createElement('div');
+                    card.className = 'street-card bg-white border-2 border-black p-4 dynamic-product';
+                    card.innerHTML = `
+                        <div class="aspect-square bg-gray-200 mb-4 overflow-hidden relative">
+                            <img src="${p.image || 'https://placehold.co/600x600/eee/999?text=No+Image'}" alt="${p.name}" class="w-full h-full object-cover">
+                            <span class="absolute top-2 left-2 bg-yellow-400 text-black font-bold px-2 py-1 text-sm border border-black">NEW</span>
+                        </div>
+                        <h3 class="font-heading font-bold text-xl mb-1">${p.name}</h3>
+                        <p class="text-sm text-gray-500 mb-4">${p.description || ''}</p>
+                        <div class="flex justify-between items-center border-t-2 border-dashed border-gray-200 pt-4">
+                            <span class="font-bold text-xl">$${p.price}</span>
+                            <button class="bg-black text-white px-4 py-2 font-bold hover:bg-yellow-400 hover:text-black transition-colors">BUY</button>
+                        </div>
+                    `;
+                    productGrid.appendChild(card);
+                });
+            }, (error) => {
+                console.error("讀取失敗:", error);
+            });
+        }
+        
+        signInAnonymously(auth).then(startProductListener).catch(e => console.error(e));
     </script>
 </body>
 </html>
