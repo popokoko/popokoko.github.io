@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEACELOVE | 後台管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans min-h-screen flex items-center justify-center p-4">
+
+    <!-- 登入區塊 -->
+    <div id="login-section" class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-800">管理員登入</h1>
+            <p class="text-gray-500 text-sm mt-2">請輸入管理憑證以存取後台</p>
+        </div>
+        <form id="login-form" class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">電子信箱</label>
+                <input type="email" id="admin-email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">密碼</label>
+                <input type="password" id="admin-password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold hover:bg-blue-700 transition-colors">登入系統</button>
+            <div id="login-error" class="hidden p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg"></div>
+        </form>
+    </div>
+
+    <!-- 管理區塊 (預設隱藏) -->
+    <div id="admin-section" class="w-full max-w-6xl hidden">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">產品上架管理</h1>
+            <button id="logout-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">登出</button>
+        </header>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- 上架表單 -->
+            <div class="lg:col-span-1">
+                <div class="bg-white p-6 rounded-xl shadow-md sticky top-8">
+                    <h2 class="text-xl font-bold mb-4 border-b pb-2">新增產品</h2>
+                    <form id="add-product-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">產品名稱</label>
+                            <input type="text" id="p-name" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">簡短說明</label>
+                            <input type="text" id="p-desc" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 outline-none" placeholder="例如: Designed by @Artist">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">價格 (TWD)</label>
+                            <input type="number" id="p-price" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">圖片網址</label>
+                            <input type="url" id="p-image" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 outline-none" placeholder="https://...">
+                            <p class="text-xs text-gray-500 mt-1">*請輸入公開的圖片連結</p>
+                        </div>
+                        <button type="submit" class="w-full bg-pink-600 text-white py-3 rounded-lg font-bold hover:bg-pink-700 transition-colors">發布產品</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 產品列表 -->
+            <div class="lg:col-span-2">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h2 class="text-xl font-bold mb-4 border-b pb-2">已上架產品</h2>
+                    <div id="product-list" class="space-y-4">
+                        <!-- 產品項目由 JS 生成 -->
+                        <div class="text-center text-gray-500 py-8">載入中...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // 設定檔
+        const firebaseConfig = {
+            apiKey: "AIzaSyB5omg8yaumVDlvd8pGxub0EyX8SW2KifE", // 請確認這是否為您正確的 API Key
+            authDomain: "peacelove-27b0d.firebaseapp.com",
+            projectId: "peacelove-27b0d",
+            storageBucket: "peacelove-27b0d.firebasestorage.app",
+            messagingSenderId: "888936275412",
+            appId: "1:888936275412:web:a0852a693d01cc1884ca41"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = 'peacelove'; // 固定 App ID 以確保路徑一致
+
+        // DOM 元素
+        const loginSection = document.getElementById('login-section');
+        const adminSection = document.getElementById('admin-section');
+        const loginForm = document.getElementById('login-form');
+        const logoutBtn = document.getElementById('logout-btn');
+        const addProductForm = document.getElementById('add-product-form');
+        const productList = document.getElementById('product-list');
+        const loginError = document.getElementById('login-error');
+
+        // 1. 監聽登入狀態
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // 已登入
+                loginSection.classList.add('hidden');
+                adminSection.classList.remove('hidden');
+                loadProducts();
+            } else {
+                // 未登入
+                loginSection.classList.remove('hidden');
+                adminSection.classList.add('hidden');
+            }
+        });
+
+        // 2. 登入功能
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+            
+            loginError.classList.add('hidden'); // 先隱藏舊錯誤
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                console.error("登入錯誤詳細資訊:", error);
+                
+                let errorMsg = "登入失敗：";
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    errorMsg += "帳號或密碼錯誤，請確認您已在 Firebase Console 建立此使用者。";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMsg += "Email 格式不正確。";
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMsg += "嘗試次數過多，請稍後再試。";
+                } else if (error.code === 'auth/api-key-not-valid') {
+                    errorMsg += "API Key 無效，請檢查程式碼中的設定。";
+                } else {
+                    errorMsg += error.message;
+                }
+                
+                loginError.textContent = errorMsg;
+                loginError.classList.remove('hidden');
+            }
+        });
+
+        // 3. 登出功能
+        logoutBtn.addEventListener('click', () => signOut(auth));
+
+        // 4. 新增產品
+        addProductForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('p-name').value;
+            const desc = document.getElementById('p-desc').value;
+            const price = document.getElementById('p-price').value;
+            const image = document.getElementById('p-image').value;
+
+            try {
+                // 修正路徑: 使用 artifacts/peacelove/public/data/products
+                const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+                
+                await addDoc(productsRef, {
+                    name: name,
+                    description: desc,
+                    price: price,
+                    image: image,
+                    timestamp: serverTimestamp()
+                });
+                alert("產品上架成功！");
+                addProductForm.reset();
+            } catch (error) {
+                console.error("上架錯誤:", error);
+                if (error.code === 'permission-denied') {
+                    alert("上架失敗：權限不足。請檢查 Firebase Console 的 Firestore Rules 是否允許寫入。");
+                } else {
+                    alert("上架失敗：" + error.message);
+                }
+            }
+        });
+
+        // 5. 讀取與刪除列表
+        function loadProducts() {
+            // 修正路徑: 使用 artifacts/peacelove/public/data/products
+            const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+            const q = query(productsRef, orderBy("timestamp", "desc"));
+            
+            onSnapshot(q, (snapshot) => {
+                productList.innerHTML = '';
+                if(snapshot.empty) {
+                    productList.innerHTML = '<div class="text-center text-gray-500">目前沒有產品</div>';
+                    return;
+                }
+
+                snapshot.forEach((docSnap) => {
+                    const p = docSnap.data();
+                    const id = docSnap.id;
+                    
+                    const item = document.createElement('div');
+                    item.className = "flex items-center gap-4 bg-gray-50 p-4 rounded-lg border hover:bg-gray-100";
+                    item.innerHTML = `
+                        <img src="${p.image}" class="w-16 h-16 object-cover rounded bg-gray-200">
+                        <div class="flex-grow">
+                            <h3 class="font-bold text-gray-800">${p.name}</h3>
+                            <p class="text-sm text-gray-500">$${p.price} - ${p.description}</p>
+                        </div>
+                        <button class="delete-btn text-red-500 hover:text-red-700 p-2" data-id="${id}">
+                            刪除
+                        </button>
+                    `;
+                    productList.appendChild(item);
+                });
+
+                // 綁定刪除按鈕
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        if(confirm('確定要刪除此產品嗎？')) {
+                            const id = e.target.dataset.id;
+                            // 刪除時也使用相同路徑
+                            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', id);
+                            try {
+                                await deleteDoc(docRef);
+                            } catch(err) {
+                                console.error("刪除失敗:", err);
+                                alert("刪除失敗：請檢查權限");
+                            }
+                        }
+                    });
+                });
+            }, (error) => {
+                console.error("讀取失敗:", error);
+                if (error.code === 'permission-denied') {
+                    productList.innerHTML = '<div class="text-center text-red-500 p-4">讀取失敗：權限不足。<br>請前往 Firebase Console 設定 Firestore Rules。</div>';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
