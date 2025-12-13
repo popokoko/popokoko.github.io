@@ -40,11 +40,9 @@
             <!-- 上架/編輯表單 -->
             <div class="lg:col-span-1">
                 <div class="bg-white p-6 rounded-xl shadow-md sticky top-8">
-                    <!-- 標題會動態改變 -->
                     <h2 id="form-title" class="text-xl font-bold mb-4 border-b pb-2">新增產品</h2>
                     
                     <form id="add-product-form" class="space-y-4">
-                        <!-- 隱藏欄位：儲存正在編輯的產品 ID -->
                         <input type="hidden" id="edit-id">
                         
                         <div>
@@ -72,6 +70,12 @@
                             <input type="url" id="p-image" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 outline-none" placeholder="https://...">
                             <p class="text-xs text-gray-500 mt-1">*請輸入公開的圖片連結</p>
                         </div>
+                        <!-- 新增：購買連結欄位 -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">購買連結 (選填)</label>
+                            <input type="url" id="p-link" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 outline-none" placeholder="https://shopee.tw/...">
+                            <p class="text-xs text-gray-500 mt-1">*點擊按鈕時跳轉的網址</p>
+                        </div>
                         
                         <div class="flex gap-2">
                             <button type="submit" id="submit-btn" class="w-full bg-pink-600 text-white py-3 rounded-lg font-bold hover:bg-pink-700 transition-colors">發布產品</button>
@@ -86,7 +90,6 @@
                 <div class="bg-white p-6 rounded-xl shadow-md">
                     <h2 class="text-xl font-bold mb-4 border-b pb-2">已上架產品</h2>
                     <div id="product-list" class="space-y-4">
-                        <!-- 產品項目由 JS 生成 -->
                         <div class="text-center text-gray-500 py-8">載入中...</div>
                     </div>
                 </div>
@@ -97,7 +100,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        // 新增 updateDoc 模組
         import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, updateDoc, doc, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -114,7 +116,6 @@
         const db = getFirestore(app);
         const appId = 'peacelove'; 
 
-        // DOM 元素
         const loginSection = document.getElementById('login-section');
         const adminSection = document.getElementById('admin-section');
         const loginForm = document.getElementById('login-form');
@@ -123,13 +124,11 @@
         const productList = document.getElementById('product-list');
         const loginError = document.getElementById('login-error');
         
-        // 編輯相關 DOM
         const formTitle = document.getElementById('form-title');
         const submitBtn = document.getElementById('submit-btn');
         const cancelEditBtn = document.getElementById('cancel-edit-btn');
         const editIdInput = document.getElementById('edit-id');
 
-        // 1. 監聽登入狀態
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 loginSection.classList.add('hidden');
@@ -141,7 +140,6 @@
             }
         });
 
-        // 2. 登入功能
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('admin-email').value;
@@ -159,10 +157,8 @@
             }
         });
 
-        // 3. 登出功能
         logoutBtn.addEventListener('click', () => signOut(auth));
 
-        // 4. 新增/更新產品
         addProductForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const category = document.getElementById('p-category').value;
@@ -170,32 +166,32 @@
             const desc = document.getElementById('p-desc').value;
             const price = document.getElementById('p-price').value;
             const image = document.getElementById('p-image').value;
-            const editId = editIdInput.value; // 檢查是否有編輯 ID
+            const link = document.getElementById('p-link').value;
+            const editId = editIdInput.value;
 
             try {
                 const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
                 
                 if (editId) {
-                    // 更新模式
                     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', editId);
                     await updateDoc(docRef, {
                         category: category,
                         name: name,
                         description: desc,
                         price: price,
-                        image: image
-                        // 注意：更新時不修改 timestamp，以保持排序
+                        image: image,
+                        link: link
                     });
                     alert("產品更新成功！");
-                    resetFormState(); // 回復到新增模式
+                    resetFormState();
                 } else {
-                    // 新增模式
                     await addDoc(productsRef, {
                         category: category,
                         name: name,
                         description: desc,
                         price: price,
                         image: image,
+                        link: link,
                         timestamp: serverTimestamp()
                     });
                     alert("產品上架成功！");
@@ -207,12 +203,10 @@
             }
         });
 
-        // 取消編輯按鈕
         cancelEditBtn.addEventListener('click', () => {
             resetFormState();
         });
 
-        // 重置表單狀態 (回到新增模式)
         function resetFormState() {
             addProductForm.reset();
             editIdInput.value = "";
@@ -221,40 +215,29 @@
             submitBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
             submitBtn.classList.add('bg-pink-600', 'hover:bg-pink-700');
             cancelEditBtn.classList.add('hidden');
-            
-            // 恢復按鈕寬度
             submitBtn.classList.remove('w-2/3');
             submitBtn.classList.add('w-full');
         }
 
-        // 切換到編輯模式
-        window.editProduct = (id, category, name, desc, price, image) => {
-            // 填入資料到表單
+        window.editProduct = (id, category, name, desc, price, image, link) => {
             document.getElementById('p-category').value = category;
             document.getElementById('p-name').value = name;
             document.getElementById('p-desc').value = desc;
             document.getElementById('p-price').value = price;
             document.getElementById('p-image').value = image;
+            document.getElementById('p-link').value = link || '';
             editIdInput.value = id;
 
-            // 改變 UI 狀態
             formTitle.textContent = "編輯產品";
             submitBtn.textContent = "更新產品";
-            
-            // 改變按鈕顏色以示區別
             submitBtn.classList.remove('bg-pink-600', 'hover:bg-pink-700');
             submitBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
-            
-            // 顯示取消按鈕並調整寬度
             cancelEditBtn.classList.remove('hidden');
             submitBtn.classList.remove('w-full');
             submitBtn.classList.add('w-2/3');
-
-            // 滾動到表單頂部
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        // 5. 讀取與刪除列表
         function loadProducts() {
             const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
             const q = query(productsRef, orderBy("timestamp", "desc"));
@@ -275,10 +258,11 @@
                     if(p.category === 'minimal') catColor = "bg-stone-200 text-stone-800";
                     if(p.category === 'limited') catColor = "bg-yellow-500 text-white";
 
-                    // 處理單引號以避免 HTML 屬性錯誤
+                    // 轉義特殊字符以避免 HTML 屬性錯誤
                     const safeName = (p.name || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
                     const safeDesc = (p.description || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
                     const safeImage = (p.image || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                    const safeLink = (p.link || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
 
                     const item = document.createElement('div');
                     item.className = "flex items-center gap-4 bg-gray-50 p-4 rounded-lg border hover:bg-gray-100 transition-colors";
@@ -288,11 +272,12 @@
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="text-xs px-2 py-0.5 rounded ${catColor} font-bold uppercase">${p.category || 'general'}</span>
                                 <h3 class="font-bold text-gray-800">${p.name}</h3>
+                                ${p.link ? '<span class="text-xs text-blue-500 bg-blue-50 px-1 rounded ml-1">🔗 已設連結</span>' : ''}
                             </div>
                             <p class="text-sm text-gray-500">$${p.price} - ${p.description}</p>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="editProduct('${id}', '${p.category}', '${safeName}', '${safeDesc}', '${p.price}', '${safeImage}')" 
+                            <button onclick="editProduct('${id}', '${p.category}', '${safeName}', '${safeDesc}', '${p.price}', '${safeImage}', '${safeLink}')" 
                                     class="text-blue-500 hover:text-blue-700 p-2 font-medium">
                                 編輯
                             </button>
@@ -304,7 +289,6 @@
                     productList.appendChild(item);
                 });
 
-                // 綁定刪除按鈕
                 document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.addEventListener('click', async (e) => {
                         if(confirm('確定要刪除此產品嗎？')) {
