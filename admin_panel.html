@@ -32,6 +32,7 @@
                 var(--ac-bg-stripe) 40px
             );
             color: var(--ac-brown);
+            overflow-x: hidden; /* 防止拖曳出界導致卷軸 */
         }
 
         /* AC 風格卡片 */
@@ -164,19 +165,27 @@
             border: 1px solid #ffcdd2;
         }
 
-        /* --- 電影小車車樣式 --- */
+        /* --- 電影小車車樣式 (可拖曳版) --- */
         .movie-van-wrapper {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            z-index: 100;
+            z-index: 9999; /* 確保在最上層 */
             width: 260px;
             animation: car-float 3s ease-in-out infinite;
-            transition: transform 0.3s ease;
+            /* 移除 transition，避免拖曳時延遲 */
+            cursor: grab; /* 顯示可抓取手勢 */
+            user-select: none; /* 防止選中文字 */
         }
-        .movie-van-wrapper:hover {
+        
+        .movie-van-wrapper:active {
+            cursor: grabbing;
+        }
+
+        /* 拖曳時暫停動畫 */
+        .movie-van-wrapper.dragging {
             animation-play-state: paused;
-            transform: scale(1.05) translateY(-5px);
+            transition: none;
         }
 
         @keyframes car-float {
@@ -192,6 +201,24 @@
             position: relative;
             background-image: linear-gradient(to bottom, #fff 50%, var(--ac-main) 50%); /* 雙色車身 */
             box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+            pointer-events: none; /* 讓事件穿透到 wrapper */
+        }
+
+        /* 讓影片控制項可以點擊 */
+        .video-screen {
+            background: #000;
+            border: 3px solid var(--ac-brown);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            height: 140px; /* 螢幕高度 */
+            pointer-events: auto; /* 恢復影片點擊 */
+        }
+        
+        .video-screen video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .van-roof {
@@ -204,21 +231,6 @@
             border-radius: 8px 8px 0 0;
             border: 4px solid var(--ac-brown);
             border-bottom: none;
-        }
-
-        .video-screen {
-            background: #000;
-            border: 3px solid var(--ac-brown);
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            height: 140px; /* 螢幕高度 */
-        }
-        
-        .video-screen video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         .van-details {
@@ -302,14 +314,16 @@
                 滿滿愛意的後台
             </p>
         </div>
-        <form id="login-form" class="space-y-5">
+        <form id="login-form" class="space-y-5" autocomplete="off">
             <div>
                 <label class="block text-sm font-bold text-[#8d6e63] mb-2 ml-1">Nook ID (Email)</label>
-                <input type="email" id="admin-email" required class="ac-input w-full" placeholder="love@peacelove.com">
+                <!-- 加入 autocomplete="off" -->
+                <input type="email" id="admin-email" required class="ac-input w-full" placeholder="love@peacelove.com" autocomplete="off">
             </div>
             <div>
                 <label class="block text-sm font-bold text-[#8d6e63] mb-2 ml-1">密碼</label>
-                <input type="password" id="admin-password" required class="ac-input w-full" placeholder="••••••••">
+                <!-- 加入 autocomplete="new-password" 防止自動填充 -->
+                <input type="password" id="admin-password" required class="ac-input w-full" placeholder="••••••••" autocomplete="new-password">
             </div>
             <button type="submit" class="ac-btn btn-leaf w-full py-3 mt-6 text-lg">
                 開啟心意
@@ -430,11 +444,12 @@
         </div>
     </div>
 
-    <!-- 電影小車車 -->
-    <div class="movie-van-wrapper">
+    <!-- 電影小車車 (可拖曳) -->
+    <div class="movie-van-wrapper" id="movie-van">
         <div class="van-roof"></div>
         <div class="van-body">
             <div class="video-screen">
+                <!-- 注意：為了拖曳順暢，影片預設靜音播放 -->
                 <video autoplay loop muted playsinline controls class="w-full h-full object-cover">
                     <source src="https://popokoko.github.io/videoo/plove.mp4" type="video/mp4">
                     您的瀏覽器不支援影片標籤。
@@ -525,8 +540,15 @@
             }
         });
 
-        // 3. 登出功能
-        logoutBtn.addEventListener('click', () => signOut(auth));
+        // 3. 登出功能 (強化版)
+        logoutBtn.addEventListener('click', async () => {
+            await signOut(auth);
+            // 手動清除輸入框，確保不殘留
+            document.getElementById('admin-email').value = '';
+            document.getElementById('admin-password').value = '';
+            alert('👋 休息一下吧！已安全登出。');
+            window.location.reload(); // 重新整理確保狀態完全清除
+        });
 
         // 4. 新增/更新產品
         addProductForm.addEventListener('submit', async (e) => {
@@ -622,7 +644,7 @@
             
             onSnapshot(q, (snapshot) => {
                 productList.innerHTML = '';
-                permissionAlert.style.display = 'none'; // 隱藏錯誤提示
+                permissionAlert.style.display = 'none';
 
                 if(snapshot.empty) {
                     productList.innerHTML = '<div class="text-center text-gray-400 py-12 font-bold text-lg">🍃 這裡空空如也...<br>快去上架一些寶貝吧！</div>';
@@ -686,14 +708,93 @@
                     });
                 });
             }, (error) => {
-                // 這裡捕捉監聽器的權限錯誤
-                console.error("Firestore 監聽錯誤:", error);
+                console.error("Firestore 監聽失敗:", error);
                 if (error.code === 'permission-denied') {
                     productList.innerHTML = '';
                     permissionAlert.style.display = 'block';
                 }
             });
         }
+
+        // --- 露營車拖曳邏輯 ---
+        const van = document.getElementById('movie-van');
+        let isDragging = false;
+        let startX, startY;
+
+        // 滑鼠/觸控 按下
+        const startDrag = (e) => {
+            // 忽略點擊影片控制項的情況
+            if (e.target.tagName === 'VIDEO') return;
+            
+            isDragging = true;
+            van.classList.add('dragging');
+            van.style.cursor = 'grabbing';
+            
+            // 取得游標位置
+            const clientX = e.clientX || e.touches[0].clientX;
+            const clientY = e.clientY || e.touches[0].clientY;
+            
+            // 取得元素目前的 offset (相對於視窗)
+            const rect = van.getBoundingClientRect();
+            
+            // 計算游標與元素左上角的距離
+            startX = clientX - rect.left;
+            startY = clientY - rect.top;
+            
+            // 切換定位方式：從 bottom/right 改為 top/left 以便拖曳
+            // 注意：這會導致第一次點擊時位置微調，但對拖曳來說是必要的
+            van.style.bottom = 'auto';
+            van.style.right = 'auto';
+            van.style.left = rect.left + 'px';
+            van.style.top = rect.top + 'px';
+            
+            e.preventDefault(); // 防止選取文字等預設行為
+        };
+
+        // 滑鼠/觸控 移動
+        const onDrag = (e) => {
+            if (!isDragging) return;
+            
+            const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+            
+            // 計算新位置
+            let newX = clientX - startX;
+            let newY = clientY - startY;
+            
+            // 邊界檢查 (防止拖出視窗)
+            const winWidth = window.innerWidth;
+            const winHeight = window.innerHeight;
+            const vanWidth = van.offsetWidth;
+            const vanHeight = van.offsetHeight;
+            
+            if (newX < 0) newX = 0;
+            if (newY < 0) newY = 0;
+            if (newX + vanWidth > winWidth) newX = winWidth - vanWidth;
+            if (newY + vanHeight > winHeight) newY = winHeight - vanHeight;
+            
+            van.style.left = newX + 'px';
+            van.style.top = newY + 'px';
+        };
+
+        // 滑鼠/觸控 放開
+        const endDrag = () => {
+            if (isDragging) {
+                isDragging = false;
+                van.classList.remove('dragging');
+                van.style.cursor = 'grab';
+            }
+        };
+
+        // 綁定事件 (支援滑鼠與觸控)
+        van.addEventListener('mousedown', startDrag);
+        document.addEventListener('mousemove', onDrag);
+        document.addEventListener('mouseup', endDrag);
+        
+        van.addEventListener('touchstart', startDrag, {passive: false});
+        document.addEventListener('touchmove', onDrag, {passive: false});
+        document.addEventListener('touchend', endDrag);
+
     </script>
 </body>
 </html>
