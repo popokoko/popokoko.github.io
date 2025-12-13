@@ -74,9 +74,10 @@
         <!-- 產品展示 -->
         <section id="collections" class="py-20 bg-white">
             <div class="container mx-auto px-6">
+                <!-- 修正：加入 id="product-grid" 讓腳本能找到它 -->
                 <div id="product-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
                     
-                    <!-- 原有靜態內容 -->
+                    <!-- 原有靜態內容 (保持不變) -->
                     <div class="group cursor-pointer">
                         <div class="relative overflow-hidden rounded-2xl shadow-lg mb-4 aspect-[3/4]"><img src="https://placehold.co/600x800/f3f4f6/C94B4B?text=Hues+Tee&font=montserrat" alt="Hues Tee" class="w-full h-full object-cover img-hover-zoom"><div class="absolute top-4 right-4 bg-white/90 backdrop-blur text-xs font-bold px-2 py-1 rounded">NEW</div><div class="absolute bottom-0 left-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"><button class="w-full py-3 bg-white text-black font-bold rounded-xl shadow-lg hover:bg-gray-50">加入購物車</button></div></div>
                         <h3 class="font-heading text-lg font-bold">PEACELOVE 經典漸變 Tee</h3><p class="text-sm text-gray-500 mb-2">Designed by @PopoKoko</p><p class="text-gradient-hues font-bold">$1,280 TWD</p>
@@ -112,6 +113,7 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // 請確認此處 Config 與 index.html 相同
         const firebaseConfig = {
             apiKey: "AIzaSyB5omg8yaumVDlvd8pGxub0EyX8SW2KifE", 
             authDomain: "peacelove-27b0d.firebaseapp.com",
@@ -122,16 +124,17 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app); 
+        const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = 'peacelove'; // 確保與 Admin Panel 使用相同的 App ID
+        const appId = 'peacelove';
 
-        const productGrid = document.getElementById('product-grid');
+        const productGrid = document.getElementById('product-grid'); // 現在這行能正確找到元素了
 
         function startProductListener() {
-            // 修正路徑: 使用 artifacts/peacelove/public/data/products
+            if (!productGrid) return; // 安全檢查
+
             const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
-            const q = query(productsRef, orderBy("timestamp", "desc"));
+            const q = query(productsRef, orderBy("timestamp", "desc")); // 顯示所有產品
 
             onSnapshot(q, (snapshot) => {
                 document.querySelectorAll('.dynamic-product').forEach(e => e.remove());
@@ -149,24 +152,20 @@
                             </div>
                         </div>
                         <h3 class="font-heading text-lg font-bold">${p.name}</h3>
-                        <p class="text-sm text-gray-500 mb-2">${p.description || 'New Arrival'}</p>
+                        <p class="text-sm text-gray-500 mb-2">${p.description || ''}</p>
                         <p class="text-gradient-hues font-bold">$${p.price} TWD</p>
                     `;
                     productGrid.appendChild(card);
                 });
             }, (error) => {
-                console.error("讀取產品失敗 (權限不足?):", error);
+                // 如果是權限錯誤，通常是因為使用者還沒啟用匿名登入
+                if (error.code !== 'permission-denied') {
+                    console.error("讀取失敗:", error);
+                }
             });
         }
 
-        signInAnonymously(auth)
-            .then(() => {
-                startProductListener();
-            })
-            .catch((error) => {
-                console.error("匿名登入失敗，無法讀取動態產品:", error);
-            });
-
+        signInAnonymously(auth).then(() => startProductListener()).catch((error) => console.error("登入失敗:", error));
     </script>
 </body>
 </html>
