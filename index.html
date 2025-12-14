@@ -694,7 +694,7 @@
     <script type="module">
         // 匯入 Firebase 模組
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, onSnapshot, setDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // 匯入集中管理的設定
@@ -706,18 +706,28 @@
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
-            // 匿名登入
-            signInAnonymously(auth)
-                .then(() => {
-                    // console.log("Firebase 匿名登入成功");
+
+            // 監聽登入狀態，而不是直接強制登入
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // 已經有使用者 (可能是管理員或是之前的匿名使用者)
+                    // console.log("已偵測到使用者:", user.uid);
                     setupCounter();
-                })
-                .catch((error) => {
-                    console.error("Firebase 匿名登入失敗:", error);
-                    if (error.code === 'auth/configuration-not-found') {
-                        document.getElementById('bottle-container').innerHTML = "<p class='text-gray-500 p-4 text-sm'>錯誤：計數器認證失敗。<br>(請啟用匿名登入)</p>";
-                    }
-                });
+                } else {
+                    // 沒有使用者才進行匿名登入
+                    signInAnonymously(auth)
+                        .then(() => {
+                            // console.log("Firebase 匿名登入成功");
+                            setupCounter();
+                        })
+                        .catch((error) => {
+                            console.error("Firebase 匿名登入失敗:", error);
+                            if (error.code === 'auth/configuration-not-found') {
+                                document.getElementById('bottle-container').innerHTML = "<p class='text-gray-500 p-4 text-sm'>錯誤：計數器認證失敗。<br>(請啟用匿名登入)</p>";
+                            }
+                        });
+                }
+            });
         } catch (e) {
             console.error("Firebase 初始化失敗:", e);
         }
