@@ -770,25 +770,16 @@
         window.selectedSkin = 'classic';
 
         // Auth
-        const initAuth = async () => {
-            try {
-                // Try anonymous login for simplicity in standalone
-                await signInAnonymously(auth);
-            } catch (e) {
-                console.warn("Auth failed, running offline:", e);
-                // Fallback to local storage data immediately if auth fails
-                window.dowryCount = parseInt(localStorage.getItem('dowryCount')) || 0;
-                window.ownedSkins = JSON.parse(localStorage.getItem('ownedSkins')) || ['classic'];
-                window.selectedSkin = localStorage.getItem('selectedSkin') || 'classic';
-                updateUIElements();
-            }
-        };
-        initAuth();
-
+        // Auth Logic
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 window.currentUserId = user.uid;
                 loadUserData();
+            } else {
+                // 如果沒有使用者，才嘗試匿名登入 (避免覆蓋現有 Admin Session)
+                signInAnonymously(auth).then(() => {
+                    // console.log("Game: Signed in anonymously");
+                }).catch(console.error);
             }
         });
 
