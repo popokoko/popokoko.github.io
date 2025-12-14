@@ -1,23 +1,60 @@
 <!DOCTYPE html>
 <html lang="zh-Hant" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PEACELOVE HUES | Creator Hub - 服飾系列</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@700;800&family=Poppins:wght@700;800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@700;800&family=Poppins:wght@700;800&family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet">
     <style>
-        :root { --color-core-start: #00c6ff; --color-core-end: #0072ff; --color-hues-start: #ffafbd; --color-hues-end: #c94b4b; }
-        .font-heading { font-family: 'Montserrat', 'Poppins', sans-serif; }
-        .font-body { font-family: 'Inter', 'Roboto', sans-serif; }
-        .text-gradient-core { background: linear-gradient(to right, var(--color-core-start), var(--color-core-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .text-gradient-hues { background: linear-gradient(to right, var(--color-hues-start), var(--color-hues-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .bg-gradient-core { background: linear-gradient(135deg, var(--color-core-start), var(--color-core-end)); }
-        .bg-gradient-hues { background: linear-gradient(135deg, var(--color-hues-start), var(--color-hues-end)); }
-        .img-hover-zoom { transition: transform 0.5s ease; }
-        .group:hover .img-hover-zoom { transform: scale(1.05); }
+        :root {
+            --color-core-start: #00c6ff;
+            --color-core-end: #0072ff;
+            --color-hues-start: #ffafbd;
+            --color-hues-end: #c94b4b;
+        }
+
+        .font-heading {
+            font-family: 'Montserrat', 'Poppins', sans-serif;
+        }
+
+        .font-body {
+            font-family: 'Inter', 'Roboto', sans-serif;
+        }
+
+        .text-gradient-core {
+            background: linear-gradient(to right, var(--color-core-start), var(--color-core-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-hues {
+            background: linear-gradient(to right, var(--color-hues-start), var(--color-hues-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bg-gradient-core {
+            background: linear-gradient(135deg, var(--color-core-start), var(--color-core-end));
+        }
+
+        .bg-gradient-hues {
+            background: linear-gradient(135deg, var(--color-hues-start), var(--color-hues-end));
+        }
+
+        .img-hover-zoom {
+            transition: transform 0.5s ease;
+        }
+
+        .group:hover .img-hover-zoom {
+            transform: scale(1.05);
+        }
     </style>
 </head>
+
 <body class="font-body bg-white text-gray-800">
 
     <!-- 導覽列 (與首頁一致) -->
@@ -29,21 +66,27 @@
                 <a href="index.html#core" class="hover:text-gradient-core transition-colors">P.L. CORE</a>
                 <a href="index.html#hues" class="hover:text-gradient-hues transition-colors">P.L. HUES</a>
                 <a href="index.html#insights" class="hover:text-gradient-hues transition-colors">靈感誌</a>
-                <a href="index.html#contact" class="bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">聯絡我們</a>
+                <a href="index.html#contact"
+                    class="bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">聯絡我們</a>
             </div>
             <div class="md:hidden">
                 <button id="menu-btn" class="text-gray-700 focus:outline-none">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-8 6h8"></path></svg>
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-8 6h8"></path>
+                    </svg>
                 </button>
             </div>
         </nav>
-        <div id="mobile-menu" class="hidden md:hidden flex-col items-center space-y-4 py-6 text-center font-medium bg-white border-t">
+        <div id="mobile-menu"
+            class="hidden md:hidden flex-col items-center space-y-4 py-6 text-center font-medium bg-white border-t">
             <a href="index.html#home" class="block w-full py-2 hover:bg-gray-100 rounded-lg">首頁</a>
             <a href="index.html#about" class="block w-full py-2 hover:bg-gray-100 rounded-lg">關於我們</a>
             <a href="index.html#core" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. CORE</a>
             <a href="index.html#hues" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. HUES</a>
             <a href="index.html#insights" class="block w-full py-2 hover:bg-gray-100 rounded-lg">靈感誌</a>
-            <a href="index.html#contact" class="block w-full bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg">聯絡我們</a>
+            <a href="index.html#contact"
+                class="block w-full bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg">聯絡我們</a>
         </div>
     </header>
 
@@ -51,14 +94,19 @@
         <!-- Hero -->
         <section class="relative h-[70vh] flex items-center justify-center overflow-hidden">
             <div class="absolute inset-0 z-0">
-                <img src="https://placehold.co/1920x1080/FFEFF2/C94B4B?text=Fashion+Collection&font=montserrat" alt="Fashion Background" class="w-full h-full object-cover opacity-80">
+                <img src="https://placehold.co/1920x1080/FFEFF2/C94B4B?text=Fashion+Collection&font=montserrat"
+                    alt="Fashion Background" class="w-full h-full object-cover opacity-80">
                 <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
             </div>
             <div class="container mx-auto px-6 relative z-10 text-center">
-                <span class="inline-block py-1 px-3 rounded-full bg-pink-100 text-pink-600 text-sm font-bold tracking-wider mb-4 border border-pink-200">2025 SS COLLECTION</span>
-                <h1 class="font-heading text-5xl md:text-7xl font-extrabold mb-6 text-gray-900 tracking-tight">Wear Your <span class="text-gradient-hues">Passion</span>.</h1>
+                <span
+                    class="inline-block py-1 px-3 rounded-full bg-pink-100 text-pink-600 text-sm font-bold tracking-wider mb-4 border border-pink-200">2025
+                    SS COLLECTION</span>
+                <h1 class="font-heading text-5xl md:text-7xl font-extrabold mb-6 text-gray-900 tracking-tight">Wear Your
+                    <span class="text-gradient-hues">Passion</span>.</h1>
                 <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-10">由全球頂尖創作者共同設計。每一件服飾，都講述著一個關於勇氣、愛與和平的故事。</p>
-                <a href="#collections" class="inline-block px-10 py-4 rounded-full bg-gradient-hues text-white font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all">瀏覽系列</a>
+                <a href="#collections"
+                    class="inline-block px-10 py-4 rounded-full bg-gradient-hues text-white font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all">瀏覽系列</a>
             </div>
         </section>
 
@@ -66,10 +114,18 @@
         <section class="py-12 border-b border-gray-100">
             <div class="container mx-auto px-6">
                 <div class="flex flex-wrap justify-center gap-4 md:gap-8">
-                    <a href="creator_hub_apparel.html" class="px-6 py-2 rounded-full bg-black text-white font-bold shadow-md transform hover:scale-105 transition-all">全部 (All)</a>
-                    <a href="creator_hub_apparel_street.html" class="px-6 py-2 rounded-full bg-gray-100 text-gray-600 hover:bg-pink-50 hover:text-pink-600 transition-colors font-medium">街頭潮流 (Street)</a>
-                    <a href="creator_hub_apparel_minimal.html" class="px-6 py-2 rounded-full bg-gray-100 text-gray-600 hover:bg-pink-50 hover:text-pink-600 transition-colors font-medium">極簡主義 (Minimal)</a>
-                    <a href="creator_hub_apparel_limited.html" class="px-6 py-2 rounded-full bg-gray-100 text-gray-600 hover:bg-pink-50 hover:text-pink-600 transition-colors font-medium">聯名限定 (Limited)</a>
+                    <a href="creator_hub_apparel.html"
+                        class="px-6 py-2 rounded-full bg-black text-white font-bold shadow-md transform hover:scale-105 transition-all">全部
+                        (All)</a>
+                    <a href="creator_hub_apparel_street.html"
+                        class="px-6 py-2 rounded-full bg-gray-100 text-gray-600 hover:bg-pink-50 hover:text-pink-600 transition-colors font-medium">街頭潮流
+                        (Street)</a>
+                    <a href="creator_hub_apparel_minimal.html"
+                        class="px-6 py-2 rounded-full bg-gray-100 text-gray-600 hover:bg-pink-50 hover:text-pink-600 transition-colors font-medium">極簡主義
+                        (Minimal)</a>
+                    <a href="creator_hub_apparel_limited.html"
+                        class="px-6 py-2 rounded-full bg-gray-100 text-gray-600 hover:bg-pink-50 hover:text-pink-600 transition-colors font-medium">聯名限定
+                        (Limited)</a>
                 </div>
             </div>
         </section>
@@ -107,14 +163,7 @@
         import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // 請務必替換為您正確的 Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyB5omg8yaumVDlvd8pGxub0EyX8SW2KifE", 
-            authDomain: "peacelove-27b0d.firebaseapp.com",
-            projectId: "peacelove-27b0d",
-            storageBucket: "peacelove-27b0d.firebasestorage.app",
-            messagingSenderId: "888936275412",
-            appId: "1:888936275412:web:a0852a693d01cc1884ca41"
-        };
+        import { firebaseConfig } from "./config.js";
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -131,7 +180,7 @@
             onSnapshot(q, (snapshot) => {
                 // 清空載入提示或舊內容
                 productGrid.innerHTML = '';
-                
+
                 if (snapshot.empty) {
                     productGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-12">目前沒有產品。</div>';
                     return;
@@ -139,7 +188,7 @@
 
                 let products = [];
                 snapshot.forEach((doc) => { products.push(doc.data()); });
-                
+
                 products.sort((a, b) => {
                     const timeA = a.timestamp ? a.timestamp.seconds : 0;
                     const timeB = b.timestamp ? b.timestamp.seconds : 0;
@@ -170,8 +219,9 @@
                 });
             }, (error) => { if (error.code !== 'permission-denied') console.error(error); });
         }
-        
+
         signInAnonymously(auth).then(startProductListener).catch(console.error);
     </script>
 </body>
+
 </html>
