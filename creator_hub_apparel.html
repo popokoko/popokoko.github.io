@@ -103,7 +103,8 @@
                     class="inline-block py-1 px-3 rounded-full bg-pink-100 text-pink-600 text-sm font-bold tracking-wider mb-4 border border-pink-200">2025
                     SS COLLECTION</span>
                 <h1 class="font-heading text-5xl md:text-7xl font-extrabold mb-6 text-gray-900 tracking-tight">Wear Your
-                    <span class="text-gradient-hues">Passion</span>.</h1>
+                    <span class="text-gradient-hues">Passion</span>.
+                </h1>
                 <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-10">由全球頂尖創作者共同設計。每一件服飾，都講述著一個關於勇氣、愛與和平的故事。</p>
                 <a href="#collections"
                     class="inline-block px-10 py-4 rounded-full bg-gradient-hues text-white font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all">瀏覽系列</a>
@@ -220,7 +221,20 @@
             }, (error) => { if (error.code !== 'permission-denied') console.error(error); });
         }
 
-        signInAnonymously(auth).then(startProductListener).catch(console.error);
+        // 監聽 Auth 狀態，避免強制登入導致踢除管理員
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // 已登入 (沿用身分)
+                startProductListener();
+            } else {
+                // 無身分才匿名登入
+                signInAnonymously(auth)
+                    .then(startProductListener)
+                    .catch(console.error);
+            }
+        });
     </script>
 </body>
 
