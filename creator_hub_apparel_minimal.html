@@ -1,50 +1,68 @@
 <!DOCTYPE html>
 <html lang="zh-Hant" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PEACELOVE HUES | 極簡主義</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+        rel="stylesheet">
     <style>
-        .font-serif { font-family: 'Playfair Display', serif; }
-        .font-body { font-family: 'Inter', sans-serif; }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .font-body {
+            font-family: 'Inter', sans-serif;
+        }
     </style>
 </head>
+
 <body class="font-body bg-stone-50 text-stone-800">
     <header class="bg-stone-50 sticky top-0 z-50">
         <nav class="container mx-auto flex items-center justify-between h-24 px-6 border-b border-stone-200">
-            <a href="creator_hub_apparel.html" class="text-stone-500 hover:text-stone-900 transition-colors tracking-wide text-sm uppercase">&larr; Back to Hub</a>
-            <div class="font-serif text-2xl italic">Minimal Collection</div><div class="w-12"></div>
+            <a href="creator_hub_apparel.html"
+                class="text-stone-500 hover:text-stone-900 transition-colors tracking-wide text-sm uppercase">&larr;
+                Back to Hub</a>
+            <div class="font-serif text-2xl italic">Minimal Collection</div>
+            <div class="w-12"></div>
         </nav>
     </header>
 
     <section class="py-32 bg-white">
         <div class="container mx-auto px-6 text-center">
             <h1 class="font-serif text-5xl md:text-6xl mb-6 text-stone-900">Less is More.</h1>
-            <p class="text-lg text-stone-500 max-w-lg mx-auto font-light leading-relaxed">捨去繁複，回歸本質。專注於剪裁、材質與舒適度，打造永不過時的經典單品。</p>
+            <p class="text-lg text-stone-500 max-w-lg mx-auto font-light leading-relaxed">
+                捨去繁複，回歸本質。專注於剪裁、材質與舒適度，打造永不過時的經典單品。</p>
         </div>
     </section>
 
     <section class="pb-12 bg-white">
         <div class="container mx-auto px-6 flex justify-center gap-6 text-sm tracking-widest">
             <a href="creator_hub_apparel.html" class="text-stone-400 hover:text-stone-900 transition-colors">ALL</a>
-            <a href="creator_hub_apparel_street.html" class="text-stone-400 hover:text-stone-900 transition-colors">STREET</a>
+            <a href="creator_hub_apparel_street.html"
+                class="text-stone-400 hover:text-stone-900 transition-colors">STREET</a>
             <a href="creator_hub_apparel_minimal.html" class="text-stone-900 border-b border-stone-900 pb-1">MINIMAL</a>
-            <a href="creator_hub_apparel_limited.html" class="text-stone-400 hover:text-stone-900 transition-colors">LIMITED</a>
+            <a href="creator_hub_apparel_limited.html"
+                class="text-stone-400 hover:text-stone-900 transition-colors">LIMITED</a>
         </div>
     </section>
 
     <section class="py-20 bg-stone-50">
         <div class="container mx-auto px-6">
             <div id="product-grid" class="grid md:grid-cols-3 gap-x-12 gap-y-16">
-                 <div class="col-span-full text-center text-stone-400 py-12 font-serif italic">Loading collection...</div>
+                <div class="col-span-full text-center text-stone-400 py-12 font-serif italic">Loading collection...
+                </div>
             </div>
         </div>
     </section>
 
     <footer class="bg-gray-800 text-gray-300 py-10 border-t border-gray-700 mt-auto">
-        <div class="container mx-auto px-6 text-center"><p class="text-sm text-gray-500">&copy; 2025 PEACELOVE Inc.</p></div>
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-sm text-gray-500">&copy; 2025 PEACELOVE Inc.</p>
+        </div>
     </footer>
 
     <script type="module">
@@ -52,7 +70,7 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyB5omg8yaumVDlvd8pGxub0EyX8SW2KifE", authDomain: "peacelove-27b0d.firebaseapp.com", projectId: "peacelove-27b0d", storageBucket: "peacelove-27b0d.firebasestorage.app", messagingSenderId: "888936275412", appId: "1:888936275412:web:a0852a693d01cc1884ca41" };
+        import { firebaseConfig } from "./config.js";
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -79,7 +97,7 @@
                     const card = document.createElement('div');
                     card.className = `group ${cursorClass} dynamic-product`;
                     if (p.link) card.setAttribute('onclick', `window.open('${p.link}', '_blank')`);
-                    
+
                     card.innerHTML = `
                         <div class="aspect-[4/5] overflow-hidden bg-gray-200 mb-6 relative">
                             <img src="${p.image || 'https://placehold.co/800x1000/e5e5e5/999?text=No+Image'}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
@@ -94,4 +112,5 @@
         signInAnonymously(auth).then(startProductListener);
     </script>
 </body>
+
 </html>
