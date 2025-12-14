@@ -137,17 +137,12 @@
         }
 
         .heart-icon {
-            width: 20px;
-            height: 20px;
-            color: var(--color-hues-end);
-            /* HUES 顏色 */
             position: absolute;
-            /* 絕對定位 */
+            color: var(--color-hues-end);
             filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3));
-            /* 立體感 */
         }
 
-        /* 愛心掉落動畫 */
+        /* 動畫 */
         @keyframes dropIn {
             0% {
                 opacity: 0;
@@ -162,6 +157,69 @@
             100% {
                 opacity: 1;
                 transform: translateY(0) rotate(0deg);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .heart-small {
+            width: 20px;
+            height: 20px;
+        }
+
+        .heart-medium {
+            width: 40px;
+            height: 40px;
+            color: #ff69b4;
+            z-index: 2;
+        }
+
+        .heart-large {
+            width: 80px;
+            height: 80px;
+            color: #ff1493;
+            z-index: 3;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.4));
+        }
+
+        .heart-huge {
+            width: 120px;
+            height: 120px;
+            color: #db7093;
+            z-index: 4;
+            filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.5));
+        }
+
+        /* 動畫 */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
             }
         }
     </style>
@@ -707,17 +765,13 @@
             db = getFirestore(app);
             auth = getAuth(app);
 
-            // 監聽登入狀態，而不是直接強制登入
+            // 監聽登入狀態
             onAuthStateChanged(auth, (user) => {
                 if (user) {
-                    // 已經有使用者 (可能是管理員或是之前的匿名使用者)
-                    // console.log("已偵測到使用者:", user.uid);
                     setupCounter();
                 } else {
-                    // 沒有使用者才進行匿名登入
                     signInAnonymously(auth)
                         .then(() => {
-                            // console.log("Firebase 匿名登入成功");
                             setupCounter();
                         })
                         .catch((error) => {
@@ -737,7 +791,7 @@
         const countText = document.getElementById('visitor-count-text');
 
         let visitorCountDocRef;
-        let currentHeartCount = 0; // 追蹤目前顯示的愛心數量
+        // let currentHeartCount = 0; // 不再需要全域追蹤，改用 DOM 檢查
 
         // 2. 設置計數器
         function setupCounter() {
@@ -745,16 +799,8 @@
                 console.error("Firestore 未準備就緒");
                 return;
             }
-
-            // 修正：使用您自己專案中的簡單路徑
-            // 舊路徑 (Canvas 專用): doc(db, 'artifacts', appId, 'public', 'data', 'site_stats', 'visitor_count');
-            // 新路徑 (您自己的專案):
-            visitorCountDocRef = doc(db, 'site_stats', 'visitor_count'); // 簡化路徑
-
-            // 設置即時監聽器
+            visitorCountDocRef = doc(db, 'site_stats', 'visitor_count');
             setupVisitorListener();
-
-            // 檢查是否為新訪客 (僅在 session 期間)
             incrementVisitCount();
         }
 
@@ -765,26 +811,17 @@
                 if (docSnap.exists()) {
                     count = docSnap.data().count;
                 }
-                // console.log("即時總數:", count);
                 updateHeartBottle(count);
             }, (error) => {
                 console.error("Firestore 監聽失敗:", error);
             });
         }
 
-        // 4. 增加訪問次數 (如果需要)
+        // 4. 增加訪問次數
         async function incrementVisitCount() {
-            // 使用 sessionStorage 確保只在
-            if (sessionStorage.getItem('peacelove_has_visited')) {
-                // console.log("本此瀏覽已計數");
-                return;
-            }
-
-            // console.log("新訪客，計數 +1");
+            if (sessionStorage.getItem('peacelove_has_visited')) return;
             sessionStorage.setItem('peacelove_has_visited', 'true');
-
             try {
-                // 使用 setDoc + merge + increment 確保文檔不存在時也能安全建立
                 await setDoc(visitorCountDocRef, {
                     count: increment(1)
                 }, { merge: true });
@@ -793,70 +830,80 @@
             }
         }
 
-        // 5. 更新 UI (自然堆疊版本)
+        // 5. 更新 UI (CSS 動畫 + 動態尺寸 + 差異更新版本)
         function updateHeartBottle(count) {
-            if (countText) {
-                countText.textContent = count;
-            }
-
+            if (countText) countText.textContent = count;
             if (!heartWrapper) return;
 
-            const heartsToAdd = count - currentHeartCount;
-            if (heartsToAdd <= 0) return; // 沒有新愛心
+            // 重新計算應該顯示的愛心組合
+            let remaining = count;
 
-            if (currentHeartCount === 0) {
-                heartWrapper.innerHTML = ''; // 清空可能存在的錯誤訊息
-            }
+            const targets = {
+                'heart-huge': Math.floor(remaining / 1000),
+                'heart-large': Math.floor((remaining % 1000) / 100),
+                'heart-medium': Math.floor((remaining % 100) / 20),
+                'heart-small': remaining % 20
+            };
 
-            // console.log(`新增 ${heartsToAdd} 顆愛心`);
-
-            // 水瓶寬度 250px - 左右 padding 10px*2 = 230px
-            // 愛心寬度 20px
-            // 可用寬度 = 230 - 20 = 210px (for left positioning)
-            const usableWidth = 210;
-            // 視覺上每行約 11 顆 (230 / 20)
-            const heartsPerVisualRow = 11;
-
-            for (let i = 0; i < heartsToAdd; i++) {
-                // 計算這顆新愛心是第幾顆
-                const effectiveHeartIndex = currentHeartCount + i;
-
+            // 輔助函式：建立愛心元素
+            const createHeart = (sizeClass, sizePx) => {
                 const heartEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                heartEl.setAttribute('class', 'heart-icon');
+                heartEl.setAttribute('class', `heart-icon ${sizeClass}`);
                 heartEl.setAttribute('viewBox', '0 0 20 20');
                 heartEl.setAttribute('fill', 'currentColor');
                 heartEl.innerHTML = '<path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />';
 
-                // --- 自然堆疊計算 ---
-                const row = Math.floor(effectiveHeartIndex / heartsPerVisualRow);
+                // --- 位置計算 ---
+                // 水瓶寬度 250px, padding 20px -> 內部約 210px
+                const usableWidth = 210 - sizePx;
+                const randomLeft = Math.random() * Math.max(0, usableWidth);
 
-                // 基礎 bottom: 每個 row 堆疊 18px (略小於 20px 造成重疊)
-                // 隨機 Y: 增加 0-5px 的隨機高度
-                const randomBottom = (row * 18) + (Math.random() * 5);
+                // 隨機 Y (堆疊效果)
+                const randomBottom = (Math.random() * 50);
 
-                // 隨機 X: 在可用寬度內隨機
-                const randomLeft = Math.random() * usableWidth;
-
-                // 修正：隨機旋轉: -45 to +45 度 (原為 -15 to +15)
-                const randomRotation = (Math.random() - 0.5) * 90;
+                // 隨機旋轉
+                const randomRotation = (Math.random() - 0.5) * 60;
 
                 heartEl.style.left = `${randomLeft}px`;
                 heartEl.style.bottom = `${randomBottom}px`;
                 heartEl.style.transform = `rotate(${randomRotation}deg)`;
-                // --- 計算結束 ---
 
-                // 設置動畫
-                heartEl.style.opacity = '0'; // 動畫初始狀態
-                // 動畫延遲，讓它們一顆一顆掉
-                heartEl.style.animation = `dropIn 0.5s ease-out ${i * 0.1}s forwards`; // 延遲 0.1s
+                // 動畫 (使用 CSS dropIn)
+                heartEl.style.opacity = '0';
+                heartEl.style.animation = `dropIn 0.5s ease-out forwards`;
+                if (sizeClass === 'heart-huge') {
+                    heartEl.style.animation += ", pulse 2s infinite ease-in-out 1s";
+                }
 
-                heartWrapper.appendChild(heartEl);
-            }
+                return heartEl;
+            };
 
-            // For loop 結束後才更新
-            currentHeartCount = count; // 直接同步到最新總數
+            // 核心邏輯：只對差異部分進行 DOM 操作
+            const syncHearts = (sizeClass, targetCount, sizePx) => {
+                const existing = heartWrapper.getElementsByClassName(sizeClass);
+                const currentCount = existing.length;
+                const diff = targetCount - currentCount;
+
+                if (diff > 0) {
+                    for (let i = 0; i < diff; i++) {
+                        const heart = createHeart(sizeClass, sizePx);
+                        heart.style.animationDelay = `${Math.random() * 0.5}s`;
+                        heartWrapper.appendChild(heart);
+                    }
+                } else if (diff < 0) {
+                    for (let i = 0; i < Math.abs(diff); i++) {
+                        if (existing[0]) existing[0].remove();
+                    }
+                }
+            };
+
+            syncHearts('heart-huge', targets['heart-huge'], 120);
+            syncHearts('heart-large', targets['heart-large'], 80);
+            syncHearts('heart-medium', targets['heart-medium'], 40);
+            syncHearts('heart-small', targets['heart-small'], 20);
         }
     </script>
+
 </body>
 
 </html>
