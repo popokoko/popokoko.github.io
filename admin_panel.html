@@ -549,15 +549,20 @@
 
         // 1. 監聽登入狀態
         onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // 已登入
+            if (user && !user.isAnonymous) {
+                // 已登入且非匿名 (真正的管理者)
                 loginSection.classList.add('hidden');
                 adminSection.classList.remove('hidden');
                 loadProducts();
             } else {
-                // 未登入
+                // 未登入 或 匿名登入 (視為未授權)
                 loginSection.classList.remove('hidden');
                 adminSection.classList.add('hidden');
+
+                // 如果是匿名登入，可以在背景安靜登出，避免干擾
+                if (user && user.isAnonymous) {
+                    signOut(auth).catch(err => console.log("清除匿名狀態", err));
+                }
             }
         });
 
