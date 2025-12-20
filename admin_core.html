@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEACELOVE | P.L. CORE 後台管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Montserrat:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --core-blue: #0072ff;
+            --core-blue-light: #00c6ff;
+            --bg-dark: #0f172a;
+            --card-glass: rgba(255, 255, 255, 0.05);
+            --border-glass: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .font-heading {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .glass-card {
+            background: var(--card-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .tech-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .tech-input:focus {
+            outline: none;
+            border-color: var(--core-blue-light);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 2px rgba(0, 198, 255, 0.2);
+        }
+
+        .btn-core {
+            background: linear-gradient(135deg, var(--core-blue-light), var(--core-blue));
+            color: white;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-core:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 114, 255, 0.4);
+        }
+
+        .btn-core:active {
+            transform: translateY(0);
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 198, 255, 0.5);
+        }
+
+        #login-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 登入區塊 -->
+    <div id="login-section" class="p-4">
+        <div class="glass-card p-10 w-full max-w-md text-center">
+            <h1 class="font-heading text-3xl font-black mb-6 glow-text">CORE ADMIN</h1>
+            <p class="text-blue-300 mb-8 opacity-70">授權進入 P.L. CORE 控制中心</p>
+            <form id="login-form" class="space-y-6">
+                <input type="email" id="admin-email" placeholder="管理員信箱" required class="tech-input w-full">
+                <input type="password" id="admin-password" placeholder="存取密鑰" required class="tech-input w-full">
+                <button type="submit" class="btn-core w-full">啟動驗證</button>
+                <div id="login-error" class="text-red-400 text-sm hidden"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 管理區塊 -->
+    <div id="admin-section" class="container mx-auto p-6 hidden">
+        <header class="flex justify-between items-center mb-12">
+            <div>
+                <h1 class="font-heading text-4xl font-black glow-text">P.L. CORE</h1>
+                <p class="text-blue-400">模組內容編輯系統</p>
+            </div>
+            <button id="logout-btn" class="text-gray-400 hover:text-white transition-colors">安全登出</button>
+        </header>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Module 1: Info & Cyber Security -->
+            <div class="glass-card p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                    <h2 class="font-heading text-xl font-bold">資安分析</h2>
+                </div>
+                <form class="module-form space-y-4" data-module="security">
+                    <div>
+                        <label class="text-xs text-blue-300 block mb-1">標題</label>
+                        <input type="text" name="title" class="tech-input w-full" placeholder="模組標題">
+                    </div>
+                    <div>
+                        <label class="text-xs text-blue-300 block mb-1">描述</label>
+                        <textarea name="description" rows="3" class="tech-input w-full" placeholder="詳細內容描述"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-xs text-blue-300 block mb-1">連結 URL</label>
+                        <input type="text" name="link" class="tech-input w-full"
+                            placeholder="product_core_security.html">
+                    </div>
+                    <button type="submit" class="btn-core w-full mt-4">更新模組</button>
+                </form>
+            </div>
+
+            <!-- Module 2: Collaborative Solutions -->
+            <div class="glass-card p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-cyan-500 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.102 1.101m-2.25 2.25l-5.656 5.656" />
+                        </svg>
+                    </div>
+                    <h2 class="font-heading text-xl font-bold">協同解決</h2>
+                </div>
+                <form class="module-form space-y-4" data-module="collaborative">
+                    <div>
+                        <label class="text-xs text-blue-300 block mb-1">標題</label>
+                        <input type="text" name="title" class="tech-input w-full" placeholder="模組標題">
+                    </div>
+                    <div>
+                        <label class="text-xs text-blue-300 block mb-1">描述</label>
+                        <textarea name="description" rows="3" class="tech-input w-full" placeholder="詳細內容描述"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-xs text-blue-300 block mb-1">連結 URL</label>
+                        <input type="text" name="link" class="tech-input w-full"
+                            placeholder="product_core_collaborative.html">
+                    </div>
+                    <button type="submit" class="btn-core w-full mt-4">更新模組</button>
+                </form>
+            </div>
+
+            <!-- Module 3: AI Applications -->
+            <div class="glass-card p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M3 4h18v12a2 2 0 01-2 2H5a2 2 0 01-2-2V4z" />
+                        </svg>
+                    </div>
+                    <h2 class="font-heading text-xl font-bold">AI 應用</h2>
+                </div>
+                <form class="module-form space-y-4" data-module="ai">
+                    <div>
+                        <label class="text-xs text-blue-300 block mb-1">標題</label>
+                        <input type="text" name="title" class="tech-input w-full" placeholder="模組標題">
+                    </div>
+                    <div>
+                        <label class="text-xs text-blue-300 block mb-1">描述</label>
+                        <textarea name="description" rows="3" class="tech-input w-full" placeholder="詳細內容描述"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-xs text-blue-300 block mb-1">連結 URL</label>
+                        <input type="text" name="link" class="tech-input w-full" placeholder="product_core_ai.html">
+                    </div>
+                    <button type="submit" class="btn-core w-full mt-4">更新模組</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { firebaseConfig } from "./config.js";
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const loginSection = document.getElementById('login-section');
+        const adminSection = document.getElementById('admin-section');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        // Check Auth State
+        onAuthStateChanged(auth, (user) => {
+            if (user && !user.isAnonymous) {
+                loginSection.classList.add('hidden');
+                adminSection.classList.remove('hidden');
+                initModules();
+            } else {
+                loginSection.classList.remove('hidden');
+                adminSection.classList.add('hidden');
+            }
+        });
+
+        // Login
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+            loginError.classList.add('hidden');
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                loginError.textContent = "驗證失敗，請檢查信箱或密鑰。";
+                loginError.classList.remove('hidden');
+            }
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', () => signOut(auth));
+
+        // Modules Management
+        async function initModules() {
+            const modules = ['security', 'collaborative', 'ai'];
+            modules.forEach(mId => {
+                const docRef = doc(db, 'artifacts', 'peacelove', 'public', 'core_modules', mId);
+                onSnapshot(docRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        const form = document.querySelector(`form[data-module="${mId}"]`);
+                        form.title.value = data.title || '';
+                        form.description.value = data.description || '';
+                        form.link.value = data.link || '';
+                    }
+                });
+            });
+        }
+
+        // Handle Form Submits
+        document.querySelectorAll('.module-form').forEach(form => {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const mId = form.dataset.module;
+                const docRef = doc(db, 'artifacts', 'peacelove', 'public', 'core_modules', mId);
+
+                try {
+                    await setDoc(docRef, {
+                        title: form.title.value,
+                        description: form.description.value,
+                        link: form.link.value,
+                        updatedAt: new Date()
+                    }, { merge: true });
+                    alert(`✅ ${mId.toUpperCase()} 模組更新成功！`);
+                } catch (error) {
+                    alert('發生錯誤：' + error.message);
+                }
+            });
+        });
+
+        // 禁止所有圖片的右鍵選單與拖拽
+        (function () {
+            const style = document.createElement('style');
+            style.innerHTML = 'img { -webkit-user-drag: none; user-drag: none; user-select: none; }';
+            document.head.appendChild(style);
+            document.addEventListener('contextmenu', function (e) { if (e.target.tagName === 'IMG') e.preventDefault(); }, false);
+            document.addEventListener('dragstart', function (e) { if (e.target.tagName === 'IMG') e.preventDefault(); }, false);
+        })();
+    </script>
+</body>
+
+</html>
