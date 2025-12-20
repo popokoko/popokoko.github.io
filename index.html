@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth theme-christmas">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEACELOVE | Innovate. Collaborate. Inspire.</title>
+
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 載入 Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@700;800&family=Poppins:wght@700;800&family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* 自定義漸變和字體 */
+        :root {
+            --color-core-start: #00c6ff;
+            /* 科技藍 */
+            --color-core-end: #0072ff;
+            /* 科技深藍/綠 (調整為更和諧的漸變) */
+            --color-hues-start: #ffafbd;
+            /* 柔和粉 */
+            --color-hues-end: #c94b4b;
+            /* 柔和紫/紅 (調整為更和諧的漸變) */
+        }
+
+        /* 聖誕節主題變數 (Premium Christmas) */
+        :root.theme-christmas {
+            --color-core-start: #0F5132;
+            /* Pine Green */
+            --color-core-end: #198754;
+            /* Christmas Green */
+            --color-hues-start: #D90429;
+            /* Crimson Red */
+            --color-hues-end: #EF233C;
+            /* Bright Red */
+        }
+
+        /* 聖誕特別樣式調整 */
+        .theme-christmas body {
+            background-color: #FAFAFA;
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .font-heading {
+            font-family: 'Montserrat', 'Poppins', sans-serif;
+        }
+
+        .font-body {
+            font-family: 'Inter', 'Roboto', sans-serif;
+        }
+
+        /* 漸變文字 */
+        .text-gradient-core {
+            background: linear-gradient(to right, var(--color-core-start), var(--color-core-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-hues {
+            background: linear-gradient(to right, var(--color-hues-start), var(--color-hues-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 漸變背景 */
+        .bg-gradient-core {
+            background: linear-gradient(135deg, var(--color-core-start), var(--color-core-end));
+        }
+
+        .bg-gradient-hues {
+            background: linear-gradient(135deg, var(--color-hues-start), var(--color-hues-end));
+        }
+
+        /* 漸變邊框 (用於靈感誌) */
+        .border-gradient-core {
+            border: 2px solid;
+            border-image-slice: 1;
+            border-image-source: linear-gradient(to right, var(--color-core-start), var(--color-core-end));
+        }
+
+        .border-gradient-hues {
+            border: 2px solid;
+            border-image-slice: 1;
+            border-image-source: linear-gradient(to right, var(--color-hues-start), var(--color-hues-end));
+        }
+
+        /* Logo 緩慢循環動畫 */
+        @keyframes slowPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.9;
+                transform: scale(1.02);
+            }
+        }
+
+        .animate-slowPulse {
+            animation: slowPulse 6s ease-in-out infinite;
+        }
+
+        /* 心形曲線分隔 (使用 SVG) */
+        .heart-divider {
+            width: 100%;
+            height: 100px;
+            fill: #f9fafb;
+            /* 填滿顏色以匹配 bg-gray-50 */
+            stroke: #e5e7eb;
+            /* 邊框顏色 */
+            stroke-width: 1;
+        }
+
+        /* 確保捲動時的錨點偏移 (避免被固定的 header 擋住) */
+        section[id] {
+            scroll-margin-top: 80px;
+        }
+
+        /* --- 訪客計數器樣式 (自然堆疊) --- */
+        #bottle-container {
+            position: relative;
+            width: 250px;
+            height: 350px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 4px solid var(--color-core-start);
+            border-radius: 20px 20px 40px 40px;
+            /* 水瓶形狀 */
+            border-top: 10px solid var(--color-core-end);
+            /* 水瓶頸 */
+            background: rgba(249, 250, 251, 0.7);
+            /* 半透明背景 */
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            /* 隱藏溢出的愛心 */
+        }
+
+        #hearts-wrapper {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .heart-icon {
+            position: absolute;
+            color: var(--color-hues-end);
+            filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        /* 動畫 */
+        @keyframes dropIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-200px) rotate(0deg);
+            }
+
+            60% {
+                opacity: 1;
+                transform: translateY(10px) rotate(0deg);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .heart-small {
+            width: 20px;
+            height: 20px;
+        }
+
+        .heart-medium {
+            width: 40px;
+            height: 40px;
+            color: #ff69b4;
+            z-index: 2;
+        }
+
+        .heart-large {
+            width: 80px;
+            height: 80px;
+            color: #ff1493;
+            z-index: 3;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.4));
+        }
+
+        .heart-huge {
+            width: 120px;
+            height: 120px;
+            color: #db7093;
+            z-index: 4;
+            filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.5));
+        }
+
+        /* 動畫 */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+    </style>
+</head>
+
+<body class="font-body bg-white text-gray-800">
+
+    <!-- I. 頂部導覽列 -->
+    <header class="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 rounded-b-lg mx-auto max-w-7xl px-4">
+        <nav class="container mx-auto flex items-center justify-end h-20">
+            <div class="hidden md:flex items-center space-x-6 lg:space-x-8 font-medium">
+                <a href="#home" class="hover:text-gradient-core transition-colors">首頁</a>
+                <a href="#about" class="hover:text-gradient-core transition-colors">關於我們</a>
+                <a href="#core" class="hover:text-gradient-core transition-colors">P.L. CORE</a>
+                <a href="#hues" class="hover:text-gradient-hues transition-colors">P.L. HUES</a>
+                <a href="#insights" class="hover:text-gradient-hues transition-colors">靈感誌</a>
+                <a href="#contact"
+                    class="bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">聯絡我們</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-gray-700 focus:outline-none">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-8 6h8"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden flex-col items-center space-y-4 py-6 text-center font-medium">
+            <a href="#home" class="block w-full py-2 hover:bg-gray-100 rounded-lg">首頁</a>
+            <a href="#about" class="block w-full py-2 hover:bg-gray-100 rounded-lg">關於我們</a>
+            <a href="#core" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. CORE</a>
+            <a href="#hues" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. HUES</a>
+            <a href="#insights" class="block w-full py-2 hover:bg-gray-100 rounded-lg">靈感誌</a>
+            <a href="#contact"
+                class="block w-full bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg">聯絡我們</a>
+        </div>
+    </header>
+
+    <!-- II. 主要內容 -->
+    <main>
+
+        <!-- 1. 首頁 (Home) -->
+        <section id="home"
+            class="relative overflow-hidden min-h-screen flex items-center justify-center py-20 bg-white">
+            <div
+                class="absolute -top-1-4 -left-1-4 w-1-2 h-1-2 bg-gradient-core rounded-full opacity-30 blur-3xl animate-pulse">
+            </div>
+            <div class="absolute -bottom-1-4 -right-1-4 w-1-2 h-1-2 bg-gradient-hues rounded-full opacity-30 blur-3xl animate-pulse"
+                style="animation-delay: 3s;"></div>
+
+            <div class="container mx-auto px-6 text-center z-10">
+                <div class="flex justify-center mb-10">
+                    <img src="./us.png" alt="PEACELOVE 核心標誌" class="h-64 md:h-80 lg:h-96 w-auto animate-slowPulse"
+                        onerror="this.src='https://placehold.co/400x160/f0f0f0/333?text=PEACELOVE+Logo&font=montserrat'; this.onerror=null;">
+                </div>
+                <h1 class="font-heading text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6">
+                    <span class="text-gradient-core">PEACE</span><span class="text-gray-800">LOVE</span>.
+                </h1>
+                <p class="font-heading text-2xl md:text-4xl text-gray-600">
+                    Innovate. Collaborate. Inspire.
+                </p>
+                <p class="mt-8 text-lg max-w-2xl mx-auto text-gray-700">
+                    我們相信，真正的創新來自於熱情與安全的完美平衡。
+                </p>
+                <div class="mt-12 flex flex-col md:flex-row justify-center items-center gap-6">
+                    <a href="#core"
+                        class="w-full md:w-auto px-8 py-4 rounded-full bg-gradient-core text-white font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all">
+                        探索 P.L. CORE (科技)
+                    </a>
+                    <a href="#hues"
+                        class="w-full md:w-auto px-8 py-4 rounded-full bg-gradient-hues text-white font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all">
+                        探索 P.L. HUES (時尚)
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 關於我們 (About Us) -->
+        <section id="about" class="py-24 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">關於 PEACELOVE</h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                        「我們相信，真正的創新來自於熱情與安全的完美平衡。」
+                    </p>
+                </div>
+
+                <!-- 訪客計數器 -->
+                <div class="mt-16 mb-20 max-w-lg mx-auto text-center">
+                    <h3 class="font-heading text-3xl font-bold mb-8 text-center">我們的愛</h3>
+                    <p class="text-gray-600 mb-8 max-w-md mx-auto">感謝每一位訪客的蒞臨，您的支持是我們創新的動力！</p>
+                    <div id="bottle-container">
+                        <div id="hearts-wrapper"></div>
+                    </div>
+                    <p class="mt-6 text-2xl font-bold">
+                        <span id="visitor-count-text" class="text-gradient-hues text-3xl">0</span> 顆心 (位訪客)
+                    </p>
+                </div>
+
+                <!-- 使命宣言 -->
+                <div class="bg-white p-10 md:p-16 rounded-3xl shadow-lg mb-20 max-w-5xl mx-auto">
+                    <h3 class="font-heading text-3xl font-bold mb-6 text-center">我們的使命</h3>
+                    <div class="grid md:grid-cols-3 gap-8 text-center">
+                        <div class="p-6 bg-gray-50 rounded-2xl">
+                            <h4 class="font-heading text-2xl font-bold text-gradient-core mb-3">Innovate (創新)</h4>
+                            <p class="text-gray-700">以前瞻科技 (CORE) 打造安全基礎，以無限創意 (HUES) 引領時尚未來。</p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-2xl">
+                            <h4 class="font-heading text-2xl font-bold text-gray-700 mb-3">Collaborate (協作)</h4>
+                            <p class="text-gray-700">連結科技與時尚社群，建立一個透明、共創、互信的生態系統。</p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-2xl">
+                            <h4 class="font-heading text-2xl font-bold text-gradient-hues mb-3">Inspire (啟發)</h4>
+                            <p class="text-gray-700">啟發每個人探索真實的自我，無論是透過數據安全還是色彩表達。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 雙核心架構 -->
+                <h3 class="font-heading text-3xl font-bold mb-12 text-center">雙核心架構</h3>
+                <div class="grid lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
+                    <div
+                        class="bg-gradient-core text-white p-10 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                        <h4 class="font-heading text-4xl font-extrabold mb-4">P.L. CORE</h4>
+                        <p class="text-xl font-medium mb-6">科技驅動信任</p>
+                        <p class="text-lg">
+                            代表 PEACE (和平、安全)。我們提供頂尖的數據安全溯源技術，為產業建立堅不可摧的信任基礎。
+                        </p>
+                        <a href="#core"
+                            class="inline-block mt-8 bg-white text-blue-700 font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                            深入了解 CORE 產品
+                        </a>
+                    </div>
+                    <div
+                        class="bg-gradient-hues text-white p-10 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                        <h4 class="font-heading text-4xl font-extrabold mb-4">P.L. HUES</h4>
+                        <p class="text-xl font-medium mb-6">熱情點燃美麗</p>
+                        <p class="text-lg">
+                            代表 LOVE (熱情、時尚)。我們運用 AI 與社群力量，提供個人化的時尚推薦與共創平台，釋放每個人的獨特魅力。
+                        </p>
+                        <a href="#hues"
+                            class="inline-block mt-8 bg-white text-pink-700 font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                            探索 HUES 服務
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. P.L. CORE (產品) -->
+        <section id="core" class="py-24 bg-white relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-core opacity-10 blur-3xl"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-16 max-w-3xl mx-auto">
+                    <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">
+                        P.L. <span class="text-gradient-core">CORE</span>
+                    </h2>
+                    <p class="text-lg text-gray-600">
+                        以科技守護安全，以數據建立透明。專業、安全、可信賴的解決方案。
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <a href="product_core_security.html"
+                        class="block bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                        <div
+                            class="w-16 h-16 bg-gradient-core rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">Information and Cyber Security (資安分析解決方案)</h3>
+                        <p class="text-gray-600">提供數據安全，隱私保護與企業核心資產解決方案。</p>
+                    </a>
+
+                    <!-- 產品卡 2 (更新連結至新頁面) -->
+                    <a href="product_core_collaborative.html"
+                        class="block bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                        <div
+                            class="w-16 h-16 bg-gradient-core rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.102 1.101m-2.25 2.25l-5.656 5.656" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">協同解決問題</h3>
+                        <p class="text-gray-600">基於不同問題、不同的需求，提供不同的系統，由數據至分析，符合完全透明且不可篡改的完整性、可用性。</p>
+                    </a>
+
+                    <!-- 產品卡 3 (更新為連結：AI 應用) -->
+                    <a href="product_core_ai.html"
+                        class="block bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                        <div
+                            class="w-16 h-16 bg-gradient-core rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M3 4h18v12a2 2 0 01-2 2H5a2 2 0 01-2-2V4z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">AI應用 (AI知識庫、AI客服....等)</h3>
+                        <p class="text-gray-600">企業本地AI應用，協助企業在保護資料、降低延遲、控制成本與維持合規性等多個層面獲得實質競爭優勢。</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. P.L. HUES (產品) -->
+        <section id="hues" class="py-24 bg-gray-50 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-hues opacity-10 blur-3xl"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-16 max-w-3xl mx-auto">
+                    <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">
+                        P.L. <span class="text-gradient-hues">HUES</span>
+                    </h2>
+                    <p class="text-lg text-gray-600">
+                        以熱情點燃美麗，以創意定義自我。個人化、社群共創的時尚平台。
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- 產品卡 1 (更新為連結：Chroma AI) -->
+                    <a href="product_hues_chroma.html"
+                        class="block bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                        <div
+                            class="w-16 h-16 bg-gradient-hues rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">Chroma AI (色彩推薦)</h3>
+                        <p class="text-gray-600">基於 AI 深度學習的個人化色彩分析與產品推薦，找到最適合您的命定彩妝。</p>
+                    </a>
+
+                    <!-- 產品卡 2 (更新為連結：Affinity Series) -->
+                    <a href="product_hues_affinity.html"
+                        class="block bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                        <div
+                            class="w-16 h-16 bg-gradient-hues rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <!-- 修正：更換為正確的 Sparkles 圖示 -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">Affinity Series (限量彩妝)</h3>
+                        <p class="text-gray-600">與頂尖創作者聯名的限量彩妝系列，每件產品都蘊含獨特的故事與創意。</p>
+                    </a>
+
+                    <!-- 產品卡 3 (連結至服飾分頁 - 保持不變) -->
+                    <a href="creator_hub_apparel.html"
+                        class="block bg-white p-8 rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                        <div
+                            class="w-16 h-16 bg-gradient-hues rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">Creator Hub (服飾系列)</h3>
+                        <p class="text-gray-600">專屬創作者的聯名服飾平台，探索街頭潮流與極簡美學的完美結合。</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 靈感誌 (Insights) -->
+        <section id="insights" class="py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">靈感誌 (Insights)</h2>
+                    <p class="text-lg text-gray-600">
+                        平衡 CORE (科技) 與 HUES (時尚) 的最新動態與深度文章。
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Article 1 -->
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                        <div class="relative overflow-hidden h-56">
+                            <img src="https://placehold.co/600x400/0072FF/FFFFFF?text=CORE+Tech&font=montserrat"
+                                alt="科技文章"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <span
+                                class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-3 self-start">P.L.
+                                CORE</span>
+                            <h3 class="font-heading text-xl font-bold mb-3 flex-grow">SOC 如何讓數據看的見？</h3>
+                            <p class="text-gray-600 mb-4">深入探討SOC如何預知即將發生的風險。</p>
+                            <a href="#" class="font-bold text-gradient-core self-start">閱讀更多 &rarr;</a>
+                        </div>
+                        <div class="border-t-4 border-gradient-core"></div>
+                    </div>
+                    <!-- Article 2 -->
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                        <div class="relative overflow-hidden h-56">
+                            <img src="https://placehold.co/600x400/C94B4B/FFFFFF?text=HUES+Beauty&font=montserrat"
+                                alt="時尚文章"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <span
+                                class="inline-block bg-pink-100 text-pink-800 text-xs font-semibold px-3 py-1 rounded-full mb-3 self-start">P.L.
+                                HUES</span>
+                            <h3 class="font-heading text-xl font-bold mb-3 flex-grow">Chroma AI：找到您 2025 年的命定色彩</h3>
+                            <p class="text-gray-600 mb-4">AI 如何比您更懂您的膚色與風格？</p>
+                            <a href="#" class="font-bold text-gradient-hues self-start">閱讀更多 &rarr;</a>
+                        </div>
+                        <div class="border-t-4 border-gradient-hues"></div>
+                    </div>
+                    <!-- Article 3 -->
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                        <div class="relative overflow-hidden h-56">
+                            <img src="https://placehold.co/600x400/909090/FFFFFF?text=Brand+Story&font=montserrat"
+                                alt="品牌故事"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <span
+                                class="inline-block bg-gray-100 text-gray-800 text-xs font-semibold px-3 py-1 rounded-full mb-3 self-start">品牌故事</span>
+                            <h3 class="font-heading text-xl font-bold mb-3 flex-grow">安全與熱情的平衡：PEACELOVE 的創始理念</h3>
+                            <p class="text-gray-600 mb-4">專訪創辦人，談論科技與時尚的火花。</p>
+                            <a href="#" class="font-bold text-gray-600 hover:text-black self-start">閱讀更多 &rarr;</a>
+                        </div>
+                        <div class="border-t-4 border-gray-300"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. 聯絡我們 (Contact) -->
+        <section id="contact" class="py-24 bg-gray-50 relative">
+            <!-- 心形曲線分隔 (SVG) -->
+            <div class="absolute top-0 left-0 w-full" style="transform: translateY(-99px);">
+                <svg class="heart-divider" viewBox="0 0 1440 100" preserveAspectRatio="none">
+                    <path d="M0 100 C 360 0, 1080 0, 1440 100 L 1440 100 L 0 100 Z" />
+                </svg>
+            </div>
+
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">聯絡我們</h2>
+                    <p class="text-lg text-gray-600">
+                        選擇您的洽談類型，我們將有專人盡速與您聯繫。
+                    </p>
+                </div>
+
+                <!-- 雙軌道聯絡表單 -->
+                <div class="max-w-6xl mx-auto bg-white p-10 md:p-16 rounded-3xl shadow-2xl">
+                    <div class="grid lg:grid-cols-2 gap-16">
+
+                        <!-- CORE 表單 -->
+                        <div class="p-8 rounded-2xl bg-gradient-core text-white">
+                            <h3 class="font-heading text-3xl font-bold mb-6">CORE 企業洽談</h3>
+                            <p class="mb-8">
+                                適用於企業安全與數據方案諮詢。
+                            </p>
+                            <form
+                                action="mailto:bohui2944@gmail.com?subject=PEACELOVE%20CORE%20%E4%BC%81%E6%A5%AD%E6%B4%BD%E8%AB%87"
+                                method="POST" enctype="text/plain" class="space-y-6">
+                                <div>
+                                    <label for="core-name" class="block text-sm font-medium mb-2">公司/組織名稱</label>
+                                    <input type="text" id="core-name" name="公司/組織名稱"
+                                        class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none"
+                                        placeholder="請輸入您的公司名稱">
+                                </div>
+                                <div>
+                                    <label for="core-email" class="block text-sm font-medium mb-2">聯絡信箱</label>
+                                    <input type="email" id="core-email" name="聯絡信箱"
+                                        class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none"
+                                        placeholder="example@company.com">
+                                </div>
+                                <div>
+                                    <label for="core-message" class="block text-sm font-medium mb-2">洽詢內容</label>
+                                    <textarea id="core-message" name="洽詢內容" rows="4"
+                                        class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none"
+                                        placeholder="請簡述您的需求..."></textarea>
+                                </div>
+                                <button type="submit"
+                                    class="w-full bg-white text-blue-700 font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                                    提交 CORE 諮詢
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- HUES 表單 -->
+                        <div class="p-8 rounded-2xl bg-gradient-hues text-white">
+                            <h3 class="font-heading text-3xl font-bold mb-6">HUES 合作/客服</h3>
+                            <p class="mb-8">
+                                適用於 Chroma AI、Affinity Series、創作者合作或一般客服問題。
+                            </p>
+                            <form
+                                action="mailto:bohui2944@gmail.com?subject=PEACELOVE%20HUES%20%E5%90%88%E4%BD%9C/%E5%AE%A2%E6%9C%8D"
+                                method="POST" enctype="text/plain" class="space-y-6">
+                                <div>
+                                    <label for="hues-name" class="block text-sm font-medium mb-2">您的姓名/暱稱</label>
+                                    <input type="text" id="hues-name" name="姓名/暱稱"
+                                        class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none"
+                                        placeholder="請輸入您的姓名">
+                                </div>
+                                <div>
+                                    <label for="hues-email" class="block text-sm font-medium mb-2">聯絡信箱</label>
+                                    <input type="email" id="hues-email" name="聯絡信箱"
+                                        class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none"
+                                        placeholder="example@mail.com">
+                                </div>
+                                <div>
+                                    <label for="hues-message" class="block text-sm font-medium mb-2">您的訊息</label>
+                                    <textarea id="hues-message" name="您的訊息" rows="4"
+                                        class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none"
+                                        placeholder="請告訴我們您的想法..."></textarea>
+                                </div>
+                                <button type="submit"
+                                    class="w-full bg-white text-pink-700 font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                                    提交 HUES 訊息
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- III. 頁尾 -->
+    <footer class="bg-gray-800 text-gray-300 py-16">
+        <div class="container mx-auto px-6 text-center">
+
+            <p class="font-heading text-2xl font-bold text-white mb-4">
+                Innovate. Collaborate. Inspire.
+            </p>
+
+            <!-- 社群媒體連結 -->
+            <div class="flex justify-center space-x-6 my-8">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors" title="Instagram">
+                    <!-- Instagram Icon -->
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.069-4.85.069s-3.584-.011-4.85-.069c-3.252-.149-4.771-1.664-4.919-4.919-.058-1.265-.069-1.644-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919C8.416 2.175 8.796 2.163 12 2.163zM12 0C8.741 0 8.333.014 7.053.072 2.69 1.106 1.106 2.69 1.072 7.053.014 8.333 0 8.741 0 12s.014 3.667.072 4.947c.149 3.225 1.664 4.771 4.919 4.919C8.333 23.986 8.741 24 12 24s3.667-.014 4.947-.072c3.225-.149 4.771-1.664 4.919-4.919C23.986 15.667 24 15.259 24 12s-.014-3.667-.072-4.947c-.149-3.225-1.664-4.771-4.919-4.919C15.667.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z">
+                        </path>
+                    </svg>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors" title="X/Facebook (使用 X Icon)">
+                    <!-- X Icon -->
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.93L18.901 1.153zm-3.68 19.5h2.15l-12.3-17.1H2.7l12.52 17.1z">
+                        </path>
+                    </svg>
+                </a>
+            </div>
+
+            <p class="text-sm text-gray-500">
+                &copy; 2025 PEACELOVE Inc. All Rights Reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Line 小助手 (左下角) -->
+    <div class="fixed bottom-4 left-4 z-50 flex flex-col items-start group">
+        <!-- QR Code 彈出層 (預設隱藏，懸停顯示) -->
+        <div
+            class="mb-4 p-3 bg-white rounded-xl shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto border border-gray-100">
+            <div class="text-center mb-2 text-sm font-bold text-gray-700">
+                掃描加入 PEACE LOVE Line AI 助理
+            </div>
+            <!-- 使用您上傳的 QR Code 圖片 -->
+            <img src="./PLAILINE.png" alt="Line QR Code" class="w-32 h-32 object-contain mx-auto"
+                onerror="this.src='https://placehold.co/128x128/06C755/FFFFFF?text=QR+Code&font=roboto';">
+        </div>
+
+        <!-- Line 圖標按鈕 -->
+        <button
+            class="bg-[#06C755] text-white p-3 rounded-full shadow-lg hover:shadow-green-500/50 hover:scale-110 transition-all duration-300 flex items-center justify-center w-14 h-14 cursor-pointer">
+            <!-- Line SVG Icon -->
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M12 .5C5.6 .5 .5 5.1 .5 10.7c0 5 4.2 9.3 9.9 10.1v5.1c0 .3 .2 .6 .5 .6 .1 0 .2 0 .3 -.1l5.8-3.9c4.5-.7 7.5-4.3 7.5-8.3C24.5 5.1 18.9 .5 12 .5z" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- 浮動廣告 (含懸停提示) -->
+    <div class="fixed bottom-4 right-4 z-50 flex flex-col items-end group">
+        <!-- 提示文字 -->
+        <div
+            class="mb-2 px-3 py-2 bg-gray-800/90 backdrop-blur-sm text-white text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 pointer-events-none whitespace-nowrap">
+            zeabur 是一個強大的PaaS (Platform as a Service) 平台
+        </div>
+
+        <!-- 徽章連結 -->
+        <a href="https://zeabur.com/referral?referralCode=popokoko&utm_source=popokoko" target="_blank"
+            class="shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-transform duration-300 block">
+            <img src="https://zeabur.com/deployed-on-zeabur-dark.svg" alt="Deployed on Zeabur" class="h-10 w-auto">
+        </a>
+    </div>
+
+    <script>
+        // 行動裝置選單開關
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+        });
+
+        // 點擊行動裝置選單連結時自動關閉選單
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+            });
+        });
+
+        /* --- 聖誕節主題控制與特效 --- */
+        (function () {
+            const html = document.documentElement;
+
+            // 創建切換按鈕
+            const themeToggleBtn = document.createElement('button');
+            themeToggleBtn.innerHTML = '🎅';
+            themeToggleBtn.className = 'fixed top-24 right-4 z-50 bg-white/90 backdrop-blur text-2xl p-3 rounded-full shadow-xl border-4 border-red-500 hover:scale-110 hover:shadow-2xl transition-all duration-300 group';
+            themeToggleBtn.title = '切換節日氣氛';
+            themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(217, 4, 41, 0.39)';
+
+            // 按鈕提示工具
+            const tooltip = document.createElement('span');
+            tooltip.className = 'absolute right-full top-1/2 -translate-y-1/2 mr-3 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none';
+            tooltip.innerText = '切換風格';
+            themeToggleBtn.appendChild(tooltip);
+
+            themeToggleBtn.onclick = toggleTheme;
+            document.body.appendChild(themeToggleBtn);
+
+            // 雪花動畫樣式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fall {
+                    0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+                    10% { opacity: 1; }
+                    100% { transform: translateY(100vh) translateX(20px) rotate(360deg); opacity: 0.7; }
+                }
+                .snowflake {
+                    position: fixed;
+                    top: -10px;
+                    z-index: 10; /* Put behind header/modals but in front of bg */
+                    user-select: none;
+                    pointer-events: none;
+                    color: #dbeafe;
+                    text-shadow: 0 0 5px rgba(255,255,255,0.8);
+                }
+            `;
+            document.head.appendChild(style);
+
+            let snowInterval;
+
+            function startSnow() {
+                if (snowInterval) return;
+                // 立即產生一些雪花
+                for (let i = 0; i < 10; i++) createSnowflake();
+                snowInterval = setInterval(createSnowflake, 400);
+            }
+
+            function stopSnow() {
+                clearInterval(snowInterval);
+                snowInterval = null;
+                document.querySelectorAll('.snowflake').forEach(el => {
+                    el.style.opacity = '0';
+                    setTimeout(() => el.remove(), 1000);
+                });
+            }
+
+            function createSnowflake() {
+                const snow = document.createElement('div');
+                snow.classList.add('snowflake');
+                const flowers = ['❄', '❅', '❆', '•'];
+                snow.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+
+                const size = Math.random() * 20 + 10;
+                snow.style.fontSize = size + 'px';
+
+                // 隨機位置與動畫參數
+                snow.style.left = Math.random() * 100 + 'vw';
+                const duration = Math.random() * 5 + 8; // 8-13秒飄落
+                snow.style.animation = `fall ${duration}s linear forwards`;
+
+                document.body.appendChild(snow);
+
+                setTimeout(() => {
+                    if (snow.parentNode) snow.remove();
+                }, duration * 1000);
+            }
+
+            function toggleTheme() {
+                const isChristmas = html.classList.toggle('theme-christmas');
+                if (isChristmas) {
+                    themeToggleBtn.innerHTML = '🎅';
+                    themeToggleBtn.appendChild(tooltip); // Re-append tooltip
+                    themeToggleBtn.style.borderColor = '#EF233C';
+                    themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(217, 4, 41, 0.39)';
+                    startSnow();
+                } else {
+                    themeToggleBtn.innerHTML = '✨';
+                    themeToggleBtn.appendChild(tooltip); // Re-append tooltip
+                    themeToggleBtn.style.borderColor = '#00c6ff';
+                    themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(0, 198, 255, 0.39)';
+                    stopSnow();
+                }
+            }
+
+            // 初始化檢查 (因 HTML 已預設 class)
+            if (html.classList.contains('theme-christmas')) {
+                startSnow();
+            }
+        })();
+    </script>
+
+    <!-- 
+      修正：Firebase 訪客計數器模組 (適用於 GitHub Pages)
+    -->
+    <script type="module">
+        // 匯入 Firebase 模組
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, setDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // 匯入集中管理的設定
+        import { firebaseConfig } from "./config.js";
+
+        // 初始化 Firebase
+        let app, db, auth;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            // 監聽登入狀態
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    setupCounter();
+                } else {
+                    signInAnonymously(auth)
+                        .then(() => {
+                            setupCounter();
+                        })
+                        .catch((error) => {
+                            console.error("Firebase 匿名登入失敗:", error);
+                            if (error.code === 'auth/configuration-not-found') {
+                                document.getElementById('bottle-container').innerHTML = "<p class='text-gray-500 p-4 text-sm'>錯誤：計數器認證失敗。<br>(請啟用匿名登入)</p>";
+                            }
+                        });
+                }
+            });
+        } catch (e) {
+            console.error("Firebase 初始化失敗:", e);
+        }
+
+        // DOM 元素
+        const heartWrapper = document.getElementById('hearts-wrapper');
+        const countText = document.getElementById('visitor-count-text');
+
+        let visitorCountDocRef;
+        // let currentHeartCount = 0; // 不再需要全域追蹤，改用 DOM 檢查
+
+        // 2. 設置計數器
+        function setupCounter() {
+            if (!db) {
+                console.error("Firestore 未準備就緒");
+                return;
+            }
+            visitorCountDocRef = doc(db, 'site_stats', 'visitor_count');
+            setupVisitorListener();
+            incrementVisitCount();
+        }
+
+        // 3. 設置即時監聽器
+        function setupVisitorListener() {
+            onSnapshot(visitorCountDocRef, (docSnap) => {
+                let count = 0;
+                if (docSnap.exists()) {
+                    count = docSnap.data().count;
+                }
+                updateHeartBottle(count);
+            }, (error) => {
+                console.error("Firestore 監聽失敗:", error);
+            });
+        }
+
+        // 4. 增加訪問次數
+        async function incrementVisitCount() {
+            if (sessionStorage.getItem('peacelove_has_visited')) return;
+            sessionStorage.setItem('peacelove_has_visited', 'true');
+            try {
+                await setDoc(visitorCountDocRef, {
+                    count: increment(1)
+                }, { merge: true });
+            } catch (e) {
+                console.error("Firestore 更新計數失敗:", e);
+            }
+        }
+
+        // 5. 更新 UI (CSS 動畫 + 動態尺寸 + 差異更新版本)
+        function updateHeartBottle(count) {
+            if (countText) countText.textContent = count;
+            if (!heartWrapper) return;
+
+            // 重新計算應該顯示的愛心組合
+            let remaining = count;
+
+            const targets = {
+                'heart-huge': Math.floor(remaining / 1000),
+                'heart-large': Math.floor((remaining % 1000) / 100),
+                'heart-medium': Math.floor((remaining % 100) / 20),
+                'heart-small': remaining % 20
+            };
+
+            // 輔助函式：建立愛心元素
+            const createHeart = (sizeClass, sizePx) => {
+                const heartEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                heartEl.setAttribute('class', `heart-icon ${sizeClass}`);
+                heartEl.setAttribute('viewBox', '0 0 20 20');
+                heartEl.setAttribute('fill', 'currentColor');
+                heartEl.innerHTML = '<path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />';
+
+                // --- 位置計算 ---
+                // 水瓶寬度 250px, padding 20px -> 內部約 210px
+                const usableWidth = 210 - sizePx;
+                const randomLeft = Math.random() * Math.max(0, usableWidth);
+
+                // 隨機 Y (堆疊效果)
+                const randomBottom = (Math.random() * 50);
+
+                // 隨機旋轉
+                const randomRotation = (Math.random() - 0.5) * 60;
+
+                heartEl.style.left = `${randomLeft}px`;
+                heartEl.style.bottom = `${randomBottom}px`;
+                heartEl.style.transform = `rotate(${randomRotation}deg)`;
+
+                // 動畫 (使用 CSS dropIn)
+                heartEl.style.opacity = '0';
+                heartEl.style.animation = `dropIn 0.5s ease-out forwards`;
+                if (sizeClass === 'heart-huge') {
+                    heartEl.style.animation += ", pulse 2s infinite ease-in-out 1s";
+                }
+
+                return heartEl;
+            };
+
+            // 核心邏輯：只對差異部分進行 DOM 操作
+            const syncHearts = (sizeClass, targetCount, sizePx) => {
+                const existing = heartWrapper.getElementsByClassName(sizeClass);
+                const currentCount = existing.length;
+                const diff = targetCount - currentCount;
+
+                if (diff > 0) {
+                    for (let i = 0; i < diff; i++) {
+                        const heart = createHeart(sizeClass, sizePx);
+                        heart.style.animationDelay = `${Math.random() * 0.5}s`;
+                        heartWrapper.appendChild(heart);
+                    }
+                } else if (diff < 0) {
+                    for (let i = 0; i < Math.abs(diff); i++) {
+                        if (existing[0]) existing[0].remove();
+                    }
+                }
+            };
+
+            syncHearts('heart-huge', targets['heart-huge'], 120);
+            syncHearts('heart-large', targets['heart-large'], 80);
+            syncHearts('heart-medium', targets['heart-medium'], 40);
+            syncHearts('heart-small', targets['heart-small'], 20);
+        }
+    </script>
+
+</body>
+
+</html>
