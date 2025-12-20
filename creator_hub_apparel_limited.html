@@ -124,6 +124,15 @@
             if (user) { startProductListener(); }
             else { signInAnonymously(auth).then(startProductListener); }
         });
+
+        // 禁止所有圖片的右鍵選單與拖拽
+        (function () {
+            const style = document.createElement('style');
+            style.innerHTML = 'img { -webkit-user-drag: none; user-drag: none; user-select: none; }';
+            document.head.appendChild(style);
+            document.addEventListener('contextmenu', function (e) { if (e.target.tagName === 'IMG') e.preventDefault(); }, false);
+            document.addEventListener('dragstart', function (e) { if (e.target.tagName === 'IMG') e.preventDefault(); }, false);
+        })();
     </script>
 </body>
 
