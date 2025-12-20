@@ -329,6 +329,16 @@
             background-color: #d7ccc8;
             border-radius: 50%;
         }
+
+        /* 禁止圖片被拖拽或右鍵 */
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+            user-select: none;
+        }
     </style>
 </head>
 
@@ -845,6 +855,18 @@
         document.addEventListener('touchmove', onDrag, { passive: false });
         document.addEventListener('touchend', endDrag);
 
+        // 禁止所有圖片的右鍵選單與拖拽
+        document.addEventListener('contextmenu', function (e) {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+            }
+        }, false);
+
+        document.addEventListener('dragstart', function (e) {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+            }
+        }, false);
     </script>
 </body>
 
