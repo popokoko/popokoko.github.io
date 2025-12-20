@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@700;800&family=Poppins:wght@700;800&family=Roboto:wght@400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@700;800&family=Poppins:wght@700;800&family=Roboto:wght@400;700&family=Mountains+of+Christmas:wght@400;700&display=swap"
         rel="stylesheet">
 
     <style>
@@ -54,6 +54,20 @@
 
         .font-body {
             font-family: 'Inter', 'Roboto', sans-serif;
+        }
+
+        .font-christmas {
+            font-family: 'Mountains of Christmas', cursive;
+        }
+
+        /* 預設隱藏聖誕祝福 */
+        .christmas-text {
+            display: none;
+        }
+
+        /* 聖誕主題下顯示 */
+        .theme-christmas .christmas-text {
+            display: block;
         }
 
         /* 漸變文字 */
@@ -291,9 +305,17 @@
                 style="animation-delay: 3s;"></div>
 
             <div class="container mx-auto px-6 text-center z-10">
-                <div class="flex justify-center mb-10">
+                <div class="flex flex-col items-center justify-center mb-10">
                     <img src="./us.png" alt="PEACELOVE 核心標誌" class="h-64 md:h-80 lg:h-96 w-auto animate-slowPulse"
                         onerror="this.src='https://placehold.co/400x160/f0f0f0/333?text=PEACELOVE+Logo&font=montserrat'; this.onerror=null;">
+
+                    <!-- 聖誕祝福文字 -->
+                    <div class="christmas-text mt-6">
+                        <span
+                            class="font-christmas text-4xl md:text-6xl text-[#D90429] drop-shadow-md tracking-wider transform -rotate-2 inline-block hover:rotate-2 transition-transform duration-300">
+                            🎄 Merry Christmas! ⛄
+                        </span>
+                    </div>
                 </div>
                 <h1 class="font-heading text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6">
                     <span class="text-gradient-core">PEACE</span><span class="text-gray-800">LOVE</span>.
