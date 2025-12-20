@@ -29,22 +29,24 @@
             /* 柔和紫/紅 (調整為更和諧的漸變) */
         }
 
-        /* 聖誕節主題變數 (Premium Christmas) */
+        /* 聖誕節主題變數 (Premium Christmas - Warm Pink Theme) */
         :root.theme-christmas {
-            --color-core-start: #0F5132;
-            /* Pine Green */
-            --color-core-end: #198754;
-            /* Christmas Green */
-            --color-hues-start: #D90429;
-            /* Crimson Red */
-            --color-hues-end: #EF233C;
-            /* Bright Red */
+            --color-core-start: #FF7096;
+            /* Vibrant Warm Pink */
+            --color-core-end: #FF5C8A;
+            /* Deeper Warm Pink */
+            --color-hues-start: #FFA3BA;
+            /* Light Warm Pink */
+            --color-hues-end: #FFB3C1;
+            /* Softest Pink */
         }
 
         /* 聖誕特別樣式調整 */
         .theme-christmas body {
-            background-color: #FAFAFA;
-            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-color: #FFF9FA;
+            /* Extremely light pinkish white */
+            background-image: radial-gradient(#FFDDE1 1px, transparent 1px);
+            /* Soft pink dots */
             background-size: 20px 20px;
         }
 
@@ -75,12 +77,14 @@
         .text-gradient-core {
             background: linear-gradient(to right, var(--color-core-start), var(--color-core-end));
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .text-gradient-hues {
             background: linear-gradient(to right, var(--color-hues-start), var(--color-hues-end));
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -313,7 +317,7 @@
                     <!-- 聖誕祝福文字 -->
                     <div class="christmas-text mt-6">
                         <span
-                            class="font-christmas text-4xl md:text-6xl text-[#D90429] drop-shadow-md tracking-wider transform -rotate-2 inline-block hover:rotate-2 transition-transform duration-300">
+                            class="font-christmas text-4xl md:text-6xl text-[#FF7096] drop-shadow-md tracking-wider transform -rotate-2 inline-block hover:rotate-2 transition-transform duration-300">
                             🎄 Merry Christmas! ⛄
                         </span>
                     </div>
@@ -794,9 +798,9 @@
             // 創建切換按鈕
             const themeToggleBtn = document.createElement('button');
             themeToggleBtn.innerHTML = '🎅';
-            themeToggleBtn.className = 'fixed top-24 right-4 z-50 bg-white/90 backdrop-blur text-2xl p-3 rounded-full shadow-xl border-4 border-red-500 hover:scale-110 hover:shadow-2xl transition-all duration-300 group';
+            themeToggleBtn.className = 'fixed top-24 right-4 z-50 bg-white/90 backdrop-blur text-2xl p-3 rounded-full shadow-xl border-4 border-[#FF7096] hover:scale-110 hover:shadow-2xl transition-all duration-300 group';
             themeToggleBtn.title = '切換節日氣氛';
-            themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(217, 4, 41, 0.39)';
+            themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(255, 112, 150, 0.39)';
 
             // 按鈕提示工具
             const tooltip = document.createElement('span');
@@ -871,8 +875,8 @@
                 if (isChristmas) {
                     themeToggleBtn.innerHTML = '🎅';
                     themeToggleBtn.appendChild(tooltip); // Re-append tooltip
-                    themeToggleBtn.style.borderColor = '#EF233C';
-                    themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(217, 4, 41, 0.39)';
+                    themeToggleBtn.style.borderColor = '#FF7096';
+                    themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(255, 112, 150, 0.39)';
                     startSnow();
                 } else {
                     themeToggleBtn.innerHTML = '✨';
@@ -1012,9 +1016,9 @@
 
                     // 若覺得線條太細或填充不對，我們可以稍微調整。這裡假設填充 currentColor.
                     // 為了更有節日感，若是聖誕節模式，我們可以強制設定顏色
-                    if (sizeClass === 'heart-medium') heartEl.style.color = '#D90429'; // Red
-                    if (sizeClass === 'heart-large') heartEl.style.color = '#198754';  // Green
-                    if (sizeClass === 'heart-huge') heartEl.style.color = '#FFD700';   // Gold
+                    if (sizeClass === 'heart-medium') heartEl.style.color = '#FF7096'; // Warm Pink
+                    if (sizeClass === 'heart-large') heartEl.style.color = '#FF97B7';  // Lighter Pink
+                    if (sizeClass === 'heart-huge') heartEl.style.color = '#FFB3C1';   // Blush Pink
                 } else {
                     // 愛心 (Heart) SVG Path
                     heartEl.innerHTML = '<path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />';
