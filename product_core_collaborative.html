@@ -165,31 +165,9 @@
         const mobileMenu = document.getElementById('mobile-menu');
         menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
 
-        // 全站資產保護機制 (Advanced Asset Protection)
-        (function () {
-            // CSS 防護：禁止選取文字 (部分 Input/Textarea 除外)、禁止拖曳
-            const style = document.createElement('style');
-            style.innerHTML = `
-                body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-                input, textarea, [contenteditable="true"] { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
-                img { -webkit-user-drag: none; -khtml-user-drag: none; -moz-user-drag: none; -o-user-drag: none; user-drag: none; }
-            `;
-            document.head.appendChild(style);
-
-            // 1. 全域禁止右鍵選單 (防止 Save As / View Source)
-            document.addEventListener('contextmenu', function (e) { e.preventDefault(); }, false);
-
-            // 2. 禁止圖片拖曳
-            document.addEventListener('dragstart', function (e) { if (e.target.tagName === 'IMG') e.preventDefault(); }, false);
-
-            // 3. 鍵盤快捷鍵攔截 (Ctrl/Cmd + S, P, C, U)
-            document.addEventListener('keydown', function (e) {
-                if ((e.ctrlKey || e.metaKey) && (['s', 'S', 'p', 'P', 'c', 'C', 'u', 'U'].includes(e.key))) {
-                    e.preventDefault();
-                }
-            }, false);
-        })();
+        // 引入統一資安防護腳本 (Asset Protection & URL Masking)
     </script>
+    <script src="js/guard.js"></script>
 </body>
 
 </html>
