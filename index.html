@@ -1285,71 +1285,123 @@
     <script>
         // Use an IIFE to avoid polluting global scope
         (function () {
-            const tvElement = document.getElementById('draggable-tv');
-            if (!tvElement) return;
+            const tv = document.getElementById('draggable-tv');
+            if (!tv) return;
 
             let isDragging = false;
-            let currentX;
-            let currentY;
-            let initialX;
-            let initialY;
-            let xOffset = 0;
-            let yOffset = 0;
+            let isFloating = false; // flag to check if element has popped out of flow
+            let shiftX, shiftY;
+            let startX, startY; // to detect drag threshold
 
-            tvElement.addEventListener("mousedown", dragStart);
-            document.addEventListener("mouseup", dragEnd);
-            document.addEventListener("mousemove", drag);
+            // Events
+            tv.addEventListener('mousedown', onMouseDown);
+            tv.addEventListener('touchstart', onTouchStart, { passive: false });
 
-            tvElement.addEventListener("touchstart", dragStart);
-            document.addEventListener("touchend", dragEnd);
-            document.addEventListener("touchmove", drag);
+            // Prevent default dragstart on images inside to avoid browser native drag
+            tv.querySelectorAll('img').forEach(img => {
+                img.addEventListener('dragstart', (e) => e.preventDefault());
+            });
 
-            function dragStart(e) {
-                if (e.type === "touchstart") {
-                    initialX = e.touches[0].clientX - xOffset;
-                    initialY = e.touches[0].clientY - yOffset;
-                } else {
-                    initialX = e.clientX - xOffset;
-                    initialY = e.clientY - yOffset;
-                }
-
-                // Check if the target is the TV element or inside it
-                if (tvElement.contains(e.target)) {
-                    isDragging = true;
-                    // Change cursor style (might need !important or specific selector if Tailwind overrides)
-                    tvElement.style.cursor = 'grabbing';
-                }
+            function onMouseDown(e) {
+                // Only left click
+                if (e.button !== 0) return;
+                startDrag(e.clientX, e.clientY, e);
             }
 
-            function dragEnd(e) {
-                initialX = currentX;
-                initialY = currentY;
-
-                isDragging = false;
-                tvElement.style.cursor = 'move';
+            function onTouchStart(e) {
+                const touch = e.touches[0];
+                startDrag(touch.clientX, touch.clientY, e);
             }
 
-            function drag(e) {
-                if (isDragging) {
-                    e.preventDefault();
+            function startDrag(clientX, clientY, e) {
+                isDragging = true;
+                startX = clientX;
+                startY = clientY;
 
-                    if (e.type === "touchmove") {
-                        currentX = e.touches[0].clientX - initialX;
-                        currentY = e.touches[0].clientY - initialY;
-                    } else {
-                        currentX = e.clientX - initialX;
-                        currentY = e.clientY - initialY;
+                // Calculate offset from the element's top-left corner
+                const rect = tv.getBoundingClientRect();
+                shiftX = clientX - rect.left;
+                shiftY = clientY - rect.top;
+
+                // Attach global listeners
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+                document.addEventListener('touchmove', onTouchMove, { passive: false });
+                document.addEventListener('touchend', onTouchEnd);
+            }
+
+            function onMouseMove(e) {
+                if (!isDragging) return;
+                e.preventDefault(); // Prevent selection
+                moveAt(e.clientX, e.clientY);
+            }
+
+            function onTouchMove(e) {
+                if (!isDragging) return;
+                // prevent scrolling while dragging if we are floating
+                if (isFloating) e.preventDefault();
+                const touch = e.touches[0];
+                moveAt(touch.clientX, touch.clientY);
+            }
+
+            function moveAt(clientX, clientY) {
+                // Check threshold (5px) before detaching to allow simple clicks
+                if (!isFloating) {
+                    if (Math.abs(clientX - startX) > 5 || Math.abs(clientY - startY) > 5) {
+                        enableFloating();
                     }
+                }
 
-                    xOffset = currentX;
-                    yOffset = currentY;
+                if (isFloating) {
+                    // Update position specific to page coordinates (supporting scroll)
+                    const newLeft = clientX - shiftX + window.scrollX;
+                    const newTop = clientY - shiftY + window.scrollY;
 
-                    setTranslate(currentX, currentY, tvElement);
+                    tv.style.left = newLeft + 'px';
+                    tv.style.top = newTop + 'px';
                 }
             }
 
-            function setTranslate(xPos, yPos, el) {
-                el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+            function enableFloating() {
+                isFloating = true;
+                const rect = tv.getBoundingClientRect();
+
+                // 1. Lock dimensions to prevent resizing when reparented
+                tv.style.width = rect.width + 'px';
+                // Height is usually auto, but locking it prevents jumps if content shifts
+                tv.style.height = rect.height + 'px';
+
+                // 2. Set styles for absolute positioning
+                tv.style.position = 'absolute';
+                tv.style.zIndex = '9999';
+                tv.style.margin = '0';
+
+                // 3. Initial placement at current spot
+                tv.style.left = (rect.left + window.scrollX) + 'px';
+                tv.style.top = (rect.top + window.scrollY) + 'px';
+
+                // 4. Change cursor
+                tv.style.cursor = 'grabbing';
+
+                // 5. Move to body to escape parent overflow:hidden and let grid collapse
+                document.body.appendChild(tv);
+            }
+
+            function onMouseUp() { stopDrag(); }
+            function onTouchEnd() { stopDrag(); }
+
+            function stopDrag() {
+                isDragging = false;
+                if (isFloating) {
+                    tv.style.cursor = 'move';
+                } else {
+                    // If we released before threshold, nothing visually happens (it stays in flow)
+                }
+
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+                document.removeEventListener('touchmove', onTouchMove);
+                document.removeEventListener('touchend', onTouchEnd);
             }
         })();
     </script>
