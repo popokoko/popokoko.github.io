@@ -387,11 +387,11 @@
                 style="animation-delay: 3s;"></div>
 
             <div class="container mx-auto px-6 text-center z-10">
-                <div class="flex flex-col items-center justify-center mb-10">
+                <div class="flex flex-col items-center justify-center mb-4">
                     <!-- TV Element playing Maomao Logo -->
 
 
-                    <img src="./us.png" alt="PEACELOVE 核心標誌" class="h-64 md:h-80 lg:h-96 w-auto animate-slowPulse"
+                    <img src="./us.png" alt="PEACELOVE 核心標誌" class="h-48 md:h-72 lg:h-80 w-auto animate-slowPulse"
                         onerror="this.src='https://placehold.co/400x160/f0f0f0/333?text=PEACELOVE+Logo&font=montserrat'; this.onerror=null;">
 
                     <!-- 聖誕祝福文字 -->
@@ -411,8 +411,17 @@
 
                 <!-- Draggable TV Element -->
                 <div id="draggable-tv"
-                    class="tv-set my-8 mx-auto relative group z-20 max-w-[300px] md:max-w-[400px] cursor-move select-none"
+                    class="tv-set my-4 mx-auto relative group z-20 max-w-[280px] md:max-w-[350px] cursor-move select-none"
                     style="touch-action: none;">
+
+                    <!-- Drag Hint (New UX Feature) -->
+                    <div
+                        class="absolute -right-12 top-0 transform rotate-12 animate-bounce opacity-80 pointer-events-none hidden md:block group-hover:opacity-100 transition-opacity">
+                        <span
+                            class="bg-white text-gray-800 text-xs font-bold px-2 py-1 rounded-lg shadow-md border border-gray-200">
+                            ✋ Drag Me!
+                        </span>
+                    </div>
                     <!-- Antenna -->
                     <div
                         class="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-12 z-0 opacity-80 pointer-events-none flex justify-center items-end">
