@@ -36,13 +36,13 @@ const processBtn = document.getElementById('processBtn'); // Acts as Reset
 async function init() {
     try {
         await Promise.all([
-            loadMask('assets/mask_48.png', 'small'),
-            loadMask('assets/mask_96.png', 'large')
+            loadMask('asssets/mask_48.png', 'small'),
+            loadMask('asssets/mask_96.png', 'large')
         ]);
         console.log('Masks loaded successfully');
     } catch (e) {
         console.error('Failed to load masks:', e);
-        alert('Failed to load watermark assets. Please check the console.');
+        alert('Failed to load watermark asssets. Please check the console.');
     }
 }
 
