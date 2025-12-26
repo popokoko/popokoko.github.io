@@ -41,14 +41,80 @@
             /* Softest Pink */
         }
 
-        /* 聖誕特別樣式調整 */
-        .theme-christmas body {
-            background-color: #FFF9FA;
-            /* Extremely light pinkish white */
-            background-image: radial-gradient(#FFDDE1 1px, transparent 1px);
-            /* Soft pink dots */
-            background-size: 20px 20px;
+        /* 新年主題變數 (Premium New Year 2026 - Cloud Dancer Style) */
+        :root.theme-newyear {
+            --color-core-start: #B8C6DB;
+            /* Cloud Blue/Silver */
+            --color-core-end: #A3B1C6;
+            /* Deeper Cloud */
+            --color-hues-start: #D4AF37;
+            /* Champagne Gold */
+            --color-hues-end: #C5A028;
+            /* Rich Gold */
         }
+
+        /* 新年特別樣式調整 (Cloud Dancer Background) */
+        .theme-newyear body {
+            background-color: #F0EEE9;
+            /* PANTONE 11-4201 TCX Cloud Dancer (Approx) */
+            background-image:
+                linear-gradient(white 2px, transparent 2px),
+                linear-gradient(90deg, white 2px, transparent 2px);
+            background-size: 50px 50px;
+            background-position: -2px -2px;
+            color: #334155;
+            /* Slate 700 - Soft Dark Text */
+        }
+
+        /* 導覽列修復 (Cloud Dancer Theme - Light & Airy) */
+        .theme-newyear header {
+            background-color: rgba(240, 238, 233, 0.9) !important;
+            /* Cloud Dancer with transparency */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-newyear #mobile-menu {
+            background-color: #F0EEE9 !important;
+            /* Cloud Dancer solid */
+        }
+
+        /* 新年主題下文字顏色調整 (Dark Text for Light Bg) */
+        .theme-newyear .text-gray-800 {
+            color: #1E293B !important;
+            /* Slate 800 */
+        }
+
+        .theme-newyear .text-gray-600,
+        .theme-newyear .text-gray-700 {
+            color: #475569 !important;
+            /* Slate 600 */
+        }
+
+        .theme-newyear .bg-white {
+            background-color: #FFFFFF !important;
+            /* Pure White Cards to pop against Cloud Dancer bg */
+        }
+
+        .theme-newyear .bg-gray-50 {
+            background-color: #F8FAFC !important;
+            /* Slate 50 */
+        }
+
+        /* Override header links to be dark/gold on hover */
+        .theme-newyear nav a {
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .theme-newyear nav a:hover {
+            color: #D4AF37;
+            /* Gold Hover */
+            background: -webkit-linear-gradient(0deg, #D4AF37, #C5A028);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
 
         .font-heading {
             font-family: 'Montserrat', 'Poppins', sans-serif;
@@ -70,6 +136,16 @@
 
         /* 聖誕主題下顯示 */
         .theme-christmas .christmas-text {
+            display: block;
+        }
+
+        /* 預設隱藏新年祝福 */
+        .newyear-text {
+            display: none;
+        }
+
+        /* 新年主題下顯示 */
+        .theme-newyear .newyear-text {
             display: block;
         }
 
@@ -337,6 +413,32 @@
             pointer-events: none;
             filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.15));
         }
+
+        /* New Year Theme TV Overrides (Cloud White Style) */
+        .theme-newyear .tv-housing {
+            background-color: #FFFFFF !important;
+            border-color: #E2E8F0 !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .theme-newyear .tv-housing-inner {
+            background-color: #000 !important;
+            box-shadow: 0 0 0 4px #D4AF37 !important;
+            /* Gold Inner Rim */
+        }
+
+        .theme-newyear .tv-speaker-bar {
+            background-color: #D4AF37 !important;
+        }
+
+        .theme-newyear .tv-antenna-rod {
+            background: #CBD5E1 !important;
+            /* Silver Antenna */
+        }
+
+        .theme-newyear .tv-stand-base {
+            background-color: #E2E8F0 !important;
+        }
     </style>
 </head>
 
@@ -400,6 +502,15 @@
                             class="font-christmas text-4xl md:text-6xl text-[#FF7096] drop-shadow-md tracking-wider transform -rotate-2 inline-block hover:rotate-2 transition-transform duration-300">
                             🎄 Merry Christmas! ⛄
                         </span>
+                    </div>
+
+                    <!-- 新年祝福文字 (Cloud Dancer - Elegant & Minimal) -->
+                    <div class="newyear-text mt-6">
+                        <span
+                            class="font-heading text-4xl md:text-6xl text-[#D4AF37] drop-shadow-sm font-light tracking-[0.2em] inline-block animate-pulse">
+                            2026 CLOUD DANCER
+                        </span>
+                        <div class="text-gray-500 text-sm tracking-widest mt-2 uppercase">Innovate with Elegance</div>
                     </div>
                 </div>
                 <h1 class="font-heading text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6">
@@ -957,106 +1068,162 @@
             });
         });
 
-        /* --- 聖誕節主題控制與特效 --- */
+        /* --- 主題控制與特效 (Christmas / New Year / Original) --- */
         (function () {
             const html = document.documentElement;
 
-            // 創建切換按鈕
+            // 1. 定義主題狀態與順序
+            // 模式: 0 (Original), 1 (Christmas), 2 (New Year)
+            // 預設偵測
+            let currentMode = 0;
+            if (html.classList.contains('theme-christmas')) currentMode = 1;
+            else if (html.classList.contains('theme-newyear')) currentMode = 2;
+
+            // 2. 創建切換按鈕
             const themeToggleBtn = document.createElement('button');
-            themeToggleBtn.innerHTML = '🎅';
-            themeToggleBtn.className = 'fixed top-24 right-4 z-50 bg-white/90 backdrop-blur text-2xl p-3 rounded-full shadow-xl border-4 border-[#FF7096] hover:scale-110 hover:shadow-2xl transition-all duration-300 group';
-            themeToggleBtn.title = '切換節日氣氛';
-            themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(255, 112, 150, 0.39)';
+            themeToggleBtn.className = 'fixed top-24 right-4 z-50 bg-white/90 backdrop-blur text-2xl p-3 rounded-full shadow-xl border-4 hover:scale-110 hover:shadow-2xl transition-all duration-300 group';
+            themeToggleBtn.style.transition = "all 0.5s ease"; // for color changes
 
             // 按鈕提示工具
             const tooltip = document.createElement('span');
             tooltip.className = 'absolute right-full top-1/2 -translate-y-1/2 mr-3 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none';
-            tooltip.innerText = '切換風格';
             themeToggleBtn.appendChild(tooltip);
 
-            themeToggleBtn.onclick = toggleTheme;
+            themeToggleBtn.onclick = cycleTheme;
             document.body.appendChild(themeToggleBtn);
 
-            // 雪花動畫樣式
+            // 3. 特效樣式注入 (雪花 & 煙火/彩帶)
             const style = document.createElement('style');
             style.textContent = `
+                /* 雪花飄落 */
                 @keyframes fall {
                     0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
                     10% { opacity: 1; }
                     100% { transform: translateY(100vh) translateX(20px) rotate(360deg); opacity: 0.7; }
                 }
                 .snowflake {
-                    position: fixed;
-                    top: -10px;
-                    z-index: 10; /* Put behind header/modals but in front of bg */
-                    user-select: none;
-                    pointer-events: none;
-                    color: #dbeafe;
-                    text-shadow: 0 0 5px rgba(255,255,255,0.8);
+                    position: fixed; top: -10px; z-index: 9999; user-select: none; pointer-events: none;
+                    color: #dbeafe; text-shadow: 0 0 5px rgba(255,255,255,0.8);
+                }
+
+                /* 彩帶/煙火飄落 */
+                @keyframes fall-fast {
+                    0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+                    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+                }
+                .confetti {
+                    position: fixed; top: -10px; z-index: 9999; width: 8px; height: 15px;
+                    user-select: none; pointer-events: none;
                 }
             `;
             document.head.appendChild(style);
 
-            let snowInterval;
+            let effectInterval;
 
-            function startSnow() {
-                if (snowInterval) return;
-                // 立即產生一些雪花
-                for (let i = 0; i < 10; i++) createSnowflake();
-                snowInterval = setInterval(createSnowflake, 400);
+            // --- 特效函式 ---
+            function clearEffects() {
+                if (effectInterval) clearInterval(effectInterval);
+                effectInterval = null;
+                document.querySelectorAll('.snowflake, .confetti, .red-envelope').forEach(el => el.remove());
             }
 
-            function stopSnow() {
-                clearInterval(snowInterval);
-                snowInterval = null;
-                document.querySelectorAll('.snowflake').forEach(el => {
-                    el.style.opacity = '0';
-                    setTimeout(() => el.remove(), 1000);
-                });
+            function startSnow() {
+                clearEffects();
+                for (let i = 0; i < 15; i++) createSnowflake(); // init bunch
+                effectInterval = setInterval(createSnowflake, 300);
             }
 
             function createSnowflake() {
                 const snow = document.createElement('div');
                 snow.classList.add('snowflake');
-                const flowers = ['❄', '❅', '❆', '•'];
-                snow.textContent = flowers[Math.floor(Math.random() * flowers.length)];
-
-                const size = Math.random() * 20 + 10;
-                snow.style.fontSize = size + 'px';
-
-                // 隨機位置與動畫參數
+                snow.textContent = ['❄', '❅', '❆', '•'][Math.floor(Math.random() * 4)];
                 snow.style.left = Math.random() * 100 + 'vw';
-                const duration = Math.random() * 5 + 8; // 8-13秒飄落
+                snow.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                const duration = Math.random() * 5 + 8;
                 snow.style.animation = `fall ${duration}s linear forwards`;
-
                 document.body.appendChild(snow);
-
-                setTimeout(() => {
-                    if (snow.parentNode) snow.remove();
-                }, duration * 1000);
+                setTimeout(() => snow.remove(), duration * 1000);
             }
 
-            function toggleTheme() {
-                const isChristmas = html.classList.toggle('theme-christmas');
-                if (isChristmas) {
+            function startRedEnvelopes() {
+                clearEffects();
+                for (let i = 0; i < 10; i++) createRedEnvelope();
+                effectInterval = setInterval(createRedEnvelope, 600);
+            }
+
+            function createRedEnvelope() {
+                const el = document.createElement('div');
+                el.classList.add('red-envelope');
+                el.textContent = '🧧';
+                el.style.position = 'fixed';
+                el.style.top = '-50px';
+                el.style.zIndex = '9999';
+                el.style.fontSize = (Math.random() * 20 + 24) + 'px'; // 24-44px
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.userSelect = 'none';
+                el.style.pointerEvents = 'none';
+                el.style.filter = 'drop-shadow(2px 4px 6px rgba(0,0,0,0.15))';
+
+                const duration = Math.random() * 5 + 5; // 5-10s fall
+                // Use existing 'fall' keyframes (rotates 360deg)
+                el.style.animation = `fall ${duration}s linear forwards`;
+
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), duration * 1000);
+            }
+
+            // --- 切換邏輯 ---
+            function cycleTheme() {
+                // 順序: Christmas (1) -> New Year (2) -> Original (0) -> Christmas (1)
+                // 從目前狀態切換到下一個
+                if (currentMode === 1) currentMode = 2;      // Xmas -> NY
+                else if (currentMode === 2) currentMode = 0; // NY -> Org
+                else currentMode = 1;                        // Org -> Xmas
+
+                updateUI();
+            }
+
+            function updateUI() {
+                // 清除所有主題 Class
+                html.classList.remove('theme-christmas', 'theme-newyear');
+
+                // 根據 Mode 應用樣式
+                if (currentMode === 1) {
+                    // Christmas
+                    html.classList.add('theme-christmas');
                     themeToggleBtn.innerHTML = '🎅';
-                    themeToggleBtn.appendChild(tooltip); // Re-append tooltip
                     themeToggleBtn.style.borderColor = '#FF7096';
                     themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(255, 112, 150, 0.39)';
+                    tooltip.innerText = 'Go to New Year 2026';
                     startSnow();
+                } else if (currentMode === 2) {
+                    // New Year (Cloud Dancer)
+                    html.classList.add('theme-newyear');
+                    themeToggleBtn.innerHTML = '☁️'; // Cloud icon
+                    themeToggleBtn.style.color = '#333';
+                    themeToggleBtn.style.borderColor = '#F0EEE9';
+                    themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(0, 0, 0, 0.1)';
+                    themeToggleBtn.style.background = '#FFF';
+                    tooltip.innerText = 'Go to Original';
+                    startRedEnvelopes();
                 } else {
+                    // Original
                     themeToggleBtn.innerHTML = '✨';
-                    themeToggleBtn.appendChild(tooltip); // Re-append tooltip
+                    themeToggleBtn.style.color = 'inherit';
+                    themeToggleBtn.style.background = 'rgba(255,255,255,0.9)';
                     themeToggleBtn.style.borderColor = '#00c6ff';
                     themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(0, 198, 255, 0.39)';
-                    stopSnow();
+                    tooltip.innerText = 'Go to Christmas';
+                    clearEffects();
                 }
+
+                // 確保 Tooltip 仍然存在
+                if (!themeToggleBtn.contains(tooltip)) themeToggleBtn.appendChild(tooltip);
             }
 
-            // 初始化檢查 (因 HTML 已預設 class)
-            if (html.classList.contains('theme-christmas')) {
-                startSnow();
-            }
+            // --- 初始化 ---
+            updateUI();
+
         })();
     </script>
 
@@ -1183,61 +1350,66 @@
                 'heart-small': remaining % 20
             };
 
-            // 輔助函式：建立愛心元素 (或聖誕襪)
+            // 輔助函式：建立愛心元素 (或聖誕襪、紅包)
             const createHeart = (sizeClass, sizePx) => {
-                const heartEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-
-                // 檢查是否為聖誕節主題
+                // 檢查主題
                 const isChristmas = document.documentElement.classList.contains('theme-christmas');
+                const isNewYear = document.documentElement.classList.contains('theme-newyear');
 
+                // 新年主題：使用 Emoji 紅包 (非 SVG)
+                if (isNewYear) {
+                    const envelopeEl = document.createElement('div');
+                    envelopeEl.classList.add('heart-icon', sizeClass);
+                    envelopeEl.textContent = '🧧';
+                    envelopeEl.style.position = 'absolute';
+                    envelopeEl.style.display = 'flex';
+                    envelopeEl.style.alignItems = 'center';
+                    envelopeEl.style.justifyContent = 'center';
+                    envelopeEl.style.fontSize = `${sizePx}px`; //emoji size
+                    envelopeEl.style.lineHeight = '1';
+
+                    applyPosition(envelopeEl, sizePx, sizeClass);
+                    return envelopeEl;
+                }
+
+                // 其他主題：使用 SVG
+                const heartEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 heartEl.setAttribute('class', `heart-icon ${sizeClass}`);
-                heartEl.setAttribute('viewBox', '0 0 20 20'); // Icons need similar viewbox or adjust
+                heartEl.setAttribute('viewBox', '0 0 20 20');
                 heartEl.setAttribute('fill', 'currentColor');
 
                 if (isChristmas) {
-                    // 聖誕襪 (Stocking) SVG Path (簡化版)
-                    // 原本是 scale(1) 視窗 0 0 20 20。這裡繪製一個簡單襪子。
-                    // 使用 path data. 
-                    heartEl.innerHTML = '<path d="M14.5 3c-1.5 0-2.5 1-3 2c-0.5-1-1.5-2-3-2c-2 0-3.5 1.5-3.5 3.5c0 3 4.5 7.5 6.5 9.5c2-2 6.5-6.5 6.5-9.5c0-2-1.5-3.5-3.5-3.5z" style="display:none;" />' +
-                        '<path d="M6 1C6 1 4 1 4 3V8C4 8 2 8 2 11C2 14 5 15 7 14L10 11V3C10 1 8 1 6 1Z" transform="translate(4, 2) scale(0.8)" />';
-                    // 上面的 path 有點複雜，重新畫一個簡單的襪子形狀符合 0 0 20 20
-                    // Stocking Path
+                    // 聖誕襪 SVG
                     heartEl.innerHTML = '<path d="M6 2C5 2 4 3 4 4V10C4 10 3 10 2 11C1 12 1 14 3 15C5 16 8 15 9 13L11 11V4C11 3 10 2 9 2H6M6 0H9C10 0 11 0.5 11 1.5V3H4V1.5C4 0.5 5 0 6 0Z" transform="translate(4,2)"/>';
-
-                    // 若覺得線條太細或填充不對，我們可以稍微調整。這裡假設填充 currentColor.
-                    // 為了更有節日感，若是聖誕節模式，我們可以強制設定顏色
-                    if (sizeClass === 'heart-medium') heartEl.style.color = '#FF7096'; // Warm Pink
-                    if (sizeClass === 'heart-large') heartEl.style.color = '#FF97B7';  // Lighter Pink
-                    if (sizeClass === 'heart-huge') heartEl.style.color = '#FFB3C1';   // Blush Pink
+                    if (sizeClass === 'heart-medium') heartEl.style.color = '#FF7096';
+                    if (sizeClass === 'heart-large') heartEl.style.color = '#FF97B7';
+                    if (sizeClass === 'heart-huge') heartEl.style.color = '#FFB3C1';
                 } else {
-                    // 愛心 (Heart) SVG Path
+                    // 原始愛心 SVG
                     heartEl.innerHTML = '<path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />';
                 }
 
+                applyPosition(heartEl, sizePx, sizeClass);
+                return heartEl;
+            };
 
-                // --- 位置計算 ---
+            // 輔助函式：套用位置與動畫 (抽取共用邏輯)
+            const applyPosition = (el, sizePx, sizeClass) => {
                 // 水瓶寬度 250px, padding 20px -> 內部約 210px
                 const usableWidth = 210 - sizePx;
                 const randomLeft = Math.random() * Math.max(0, usableWidth);
-
-                // 隨機 Y (堆疊效果)
                 const randomBottom = (Math.random() * 50);
-
-                // 隨機旋轉
                 const randomRotation = (Math.random() - 0.5) * 60;
 
-                heartEl.style.left = `${randomLeft}px`;
-                heartEl.style.bottom = `${randomBottom}px`;
-                heartEl.style.transform = `rotate(${randomRotation}deg)`;
+                el.style.left = `${randomLeft}px`;
+                el.style.bottom = `${randomBottom}px`;
+                el.style.transform = `rotate(${randomRotation}deg)`;
 
-                // 動畫 (使用 CSS dropIn)
-                heartEl.style.opacity = '0';
-                heartEl.style.animation = `dropIn 0.5s ease-out forwards`;
+                el.style.opacity = '0';
+                el.style.animation = `dropIn 0.5s ease-out forwards`;
                 if (sizeClass === 'heart-huge') {
-                    heartEl.style.animation += ", pulse 2s infinite ease-in-out 1s";
+                    el.style.animation += ", pulse 2s infinite ease-in-out 1s";
                 }
-
-                return heartEl;
             };
 
             // 核心邏輯：只對差異部分進行 DOM 操作
