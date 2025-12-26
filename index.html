@@ -1478,7 +1478,7 @@
                 const distance = targetDate - now;
 
                 if (distance < 0) {
-                    timerEl.innerHTML = "HAPPY NEW YEAR!";
+                    timerEl.innerHTML = "🎉 新年快樂！ 🎉";
                     return;
                 }
 
@@ -1487,7 +1487,7 @@
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                timerEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                timerEl.innerHTML = `進入2026還有 ${days}天 ${hours}時 ${minutes}分 ${seconds}秒`;
             }
 
             setInterval(updateTimer, 1000);
