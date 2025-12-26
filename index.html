@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant" class="scroll-smooth theme-christmas">
+<html lang="zh-Hant" class="scroll-smooth theme-newyear">
 
 <head>
     <meta charset="UTF-8">
@@ -506,6 +506,11 @@
 
                     <!-- 新年祝福文字 (Cloud Dancer - Elegant & Minimal) -->
                     <div class="newyear-text mt-6">
+                        <!-- Countdown Timer -->
+                        <div id="countdown-timer"
+                            class="font-heading text-xl md:text-2xl text-gray-500 mb-2 tracking-widest font-bold">
+                            <!-- JS will populate this -->
+                        </div>
                         <span
                             class="font-heading text-4xl md:text-6xl text-[#D4AF37] drop-shadow-sm font-light tracking-[0.2em] inline-block animate-pulse">
                             2026 CLOUD DANCER
@@ -1460,6 +1465,34 @@
         });
         // 禁止所有圖片的右鍵選單與拖拽
         // 引入統一資安防護腳本 (Asset Protection & URL Masking)
+
+        /* --- 2026 Countdown Timer Logic --- */
+        (function () {
+            const timerEl = document.getElementById('countdown-timer');
+            if (!timerEl) return;
+
+            const targetDate = new Date('2026-01-01T00:00:00').getTime();
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance < 0) {
+                    timerEl.innerHTML = "HAPPY NEW YEAR!";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                timerEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }
+
+            setInterval(updateTimer, 1000);
+            updateTimer(); // Initial call
+        })();
     </script>
     <script src="js/guard.js"></script>
 
