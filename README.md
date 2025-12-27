@@ -1,1 +1,1 @@
-PEACELOVE Ltd.
+PEACELOVE Studio
