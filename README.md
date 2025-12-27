@@ -1,1 +1,1 @@
-PEACELOVE Co., Ltd.
+PEACELOVE Ltd.
