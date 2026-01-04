@@ -427,6 +427,7 @@
                                 <option value="street">🧢 街頭潮流 (Street)</option>
                                 <option value="minimal">🌿 極簡主義 (Minimal)</option>
                                 <option value="limited">✨ 聯名限定 (Limited)</option>
+                                <option value="accessories">🎒 精選配件 (Accessories)</option>
                             </select>
                         </div>
 
@@ -720,6 +721,7 @@
                     if (p.category === 'street') { catColor = "bg-[#212121] text-[#f5f5f5]"; catIcon = "🧢"; }
                     if (p.category === 'minimal') { catColor = "bg-[#d7ccc8] text-[#5d4037]"; catIcon = "🌿"; }
                     if (p.category === 'limited') { catColor = "bg-[#fff9c4] text-[#fbc02d]"; catIcon = "✨"; }
+                    if (p.category === 'accessories') { catColor = "bg-[#e1bee7] text-[#8e24aa]"; catIcon = "🎒"; }
 
                     const safeName = (p.name || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
                     const safeDesc = (p.description || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
