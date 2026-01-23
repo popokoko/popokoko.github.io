@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth theme-newyear">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEACELOVE | Innovate. Collaborate. Inspire.</title>
+
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 載入 Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@700;800&family=Poppins:wght@700;800&family=Roboto:wght@400;700&family=Mountains+of+Christmas:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* 自定義漸變和字體 */
+        :root {
+            --color-core-start: #00c6ff;
+            /* 科技藍 */
+            --color-core-end: #0072ff;
+            /* 科技深藍/綠 (調整為更和諧的漸變) */
+            --color-hues-start: #ffafbd;
+            /* 柔和粉 */
+            --color-hues-end: #c94b4b;
+            /* 柔和紫/紅 (調整為更和諧的漸變) */
+        }
+
+        /* 聖誕節主題變數 (Premium Christmas - Warm Pink Theme) */
+        :root.theme-christmas {
+            --color-core-start: #FF7096;
+            /* Vibrant Warm Pink */
+            --color-core-end: #FF5C8A;
+            /* Deeper Warm Pink */
+            --color-hues-start: #FFA3BA;
+            /* Light Warm Pink */
+            --color-hues-end: #FFB3C1;
+            /* Softest Pink */
+        }
+
+        /* 新年主題變數 (Premium New Year 2026 - Cloud Dancer Style) */
+        :root.theme-newyear {
+            --color-core-start: #B8C6DB;
+            /* Cloud Blue/Silver */
+            --color-core-end: #A3B1C6;
+            /* Deeper Cloud */
+            --color-hues-start: #D4AF37;
+            /* Champagne Gold */
+            --color-hues-end: #C5A028;
+            /* Rich Gold */
+        }
+
+        /* 新年特別樣式調整 (Cloud Dancer Background) */
+        .theme-newyear body {
+            background-color: #F0EEE9;
+            /* PANTONE 11-4201 TCX Cloud Dancer (Approx) */
+            background-image:
+                linear-gradient(white 2px, transparent 2px),
+                linear-gradient(90deg, white 2px, transparent 2px);
+            background-size: 50px 50px;
+            background-position: -2px -2px;
+            color: #334155;
+            /* Slate 700 - Soft Dark Text */
+        }
+
+        /* 導覽列修復 (Cloud Dancer Theme - Light & Airy) */
+        .theme-newyear header {
+            background-color: rgba(240, 238, 233, 0.9) !important;
+            /* Cloud Dancer with transparency */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-newyear #mobile-menu {
+            background-color: #F0EEE9 !important;
+            /* Cloud Dancer solid */
+        }
+
+        /* 新年主題下文字顏色調整 (Dark Text for Light Bg) */
+        .theme-newyear .text-gray-800 {
+            color: #1E293B !important;
+            /* Slate 800 */
+        }
+
+        .theme-newyear .text-gray-600,
+        .theme-newyear .text-gray-700 {
+            color: #475569 !important;
+            /* Slate 600 */
+        }
+
+        .theme-newyear .bg-white {
+            background-color: #FFFFFF !important;
+            /* Pure White Cards to pop against Cloud Dancer bg */
+        }
+
+        .theme-newyear .bg-gray-50 {
+            background-color: #F8FAFC !important;
+            /* Slate 50 */
+        }
+
+        /* Override header links to be dark/gold on hover */
+        .theme-newyear nav a {
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .theme-newyear nav a:hover {
+            color: #D4AF37;
+            /* Gold Hover */
+            background: -webkit-linear-gradient(0deg, #D4AF37, #C5A028);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        .font-heading {
+            font-family: 'Montserrat', 'Poppins', sans-serif;
+        }
+
+        .font-body {
+            font-family: 'Inter', 'Roboto', sans-serif;
+        }
+
+        .font-christmas {
+            font-family: 'Mountains of Christmas', cursive;
+        }
+
+        /* 預設隱藏聖誕祝福 */
+        /* 預設隱藏聖誕祝福 */
+        .christmas-text {
+            display: none;
+        }
+
+        /* 聖誕主題下顯示 */
+        .theme-christmas .christmas-text {
+            display: block;
+        }
+
+        /* 預設隱藏新年祝福 */
+        .newyear-text {
+            display: none;
+        }
+
+        /* 新年主題下顯示 */
+        .theme-newyear .newyear-text {
+            display: block;
+        }
+
+        /* 漸變文字 */
+        .text-gradient-core {
+            background: linear-gradient(to right, var(--color-core-start), var(--color-core-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-hues {
+            background: linear-gradient(to right, var(--color-hues-start), var(--color-hues-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 漸變背景 */
+        .bg-gradient-core {
+            background: linear-gradient(135deg, var(--color-core-start), var(--color-core-end));
+        }
+
+        .bg-gradient-hues {
+            background: linear-gradient(135deg, var(--color-hues-start), var(--color-hues-end));
+        }
+
+        /* 漸變邊框 (用於靈感誌) */
+        .border-gradient-core {
+            border: 2px solid;
+            border-image-slice: 1;
+            border-image-source: linear-gradient(to right, var(--color-core-start), var(--color-core-end));
+        }
+
+        .border-gradient-hues {
+            border: 2px solid;
+            border-image-slice: 1;
+            border-image-source: linear-gradient(to right, var(--color-hues-start), var(--color-hues-end));
+        }
+
+        /* Logo 緩慢循環動畫 */
+        @keyframes slowPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.9;
+                transform: scale(1.02);
+            }
+        }
+
+        .animate-slowPulse {
+            animation: slowPulse 6s ease-in-out infinite;
+        }
+
+        /* 心形曲線分隔 (使用 SVG) */
+        .heart-divider {
+            width: 100%;
+            height: 100px;
+            fill: #f9fafb;
+            /* 填滿顏色以匹配 bg-gray-50 */
+            stroke: #e5e7eb;
+            /* 邊框顏色 */
+            stroke-width: 1;
+        }
+
+        /* 確保捲動時的錨點偏移 (避免被固定的 header 擋住) */
+        section[id] {
+            scroll-margin-top: 80px;
+        }
+
+        /* --- 訪客計數器樣式 (自然堆疊) --- */
+        #bottle-container {
+            position: relative;
+            width: 250px;
+            height: 350px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 4px solid var(--color-core-start);
+            border-radius: 20px 20px 40px 40px;
+            /* 水瓶形狀 */
+            border-top: 10px solid var(--color-core-end);
+            /* 水瓶頸 */
+            background: rgba(249, 250, 251, 0.7);
+            /* 半透明背景 */
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            /* 隱藏溢出的愛心 */
+        }
+
+        #hearts-wrapper {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .heart-icon {
+            position: absolute;
+            color: var(--color-hues-end);
+            filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        /* 動畫 */
+        @keyframes dropIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-200px) rotate(0deg);
+            }
+
+            60% {
+                opacity: 1;
+                transform: translateY(10px) rotate(0deg);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .heart-small {
+            width: 20px;
+            height: 20px;
+        }
+
+        .heart-medium {
+            width: 40px;
+            height: 40px;
+            color: #ff69b4;
+            z-index: 2;
+        }
+
+        .heart-large {
+            width: 80px;
+            height: 80px;
+            color: #ff1493;
+            z-index: 3;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.4));
+        }
+
+        .heart-huge {
+            width: 120px;
+            height: 120px;
+            color: #db7093;
+            z-index: 4;
+            filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.5));
+        }
+
+        /* 動畫 */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* 禁止圖片被拖拽或右鍵 */
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+            user-select: none;
+        }
+
+        /* --- TV Theme Styles --- */
+        /* Default (Retro Dark) - styles are handled by inline Tailwind classes in HTML */
+
+        /* Christmas Theme Overrides */
+        /* Christmas Theme Overrides */
+        /* Christmas Theme Overrides */
+        .theme-christmas .tv-antenna-rod {
+            width: 8px !important;
+            /* Thicker for candy cane look */
+            background: repeating-linear-gradient(45deg,
+                    #ffffff,
+                    #ffffff 5px,
+                    #BC4749 5px,
+                    #BC4749 10px) !important;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
+            border: 1px solid #a03537 !important;
+            border-radius: 4px !important;
+        }
+
+        .theme-christmas .tv-housing {
+            background-color: #BC4749 !important;
+            /* Muted Vintage Red - Less eye-catching */
+            border-color: #386641 !important;
+            /* Deep Vintage Green */
+            box-shadow: 0 20px 25px -5px rgba(188, 71, 73, 0.4), 0 8px 10px -6px rgba(188, 71, 73, 0.2) !important;
+        }
+
+        .theme-christmas .tv-housing-inner {
+            background-color: #1a1a1a !important;
+            /* Screen area remains dark */
+            box-shadow: 0 0 0 4px #FFD700 !important;
+            /* Gold ring simulation */
+        }
+
+        .theme-christmas .tv-speaker-bar {
+            background-color: #FFD700 !important;
+            /* Gold accents */
+        }
+
+        .theme-christmas .tv-stand-base {
+            background-color: #386641 !important;
+            /* Deep Green stand */
+        }
+
+        .theme-christmas .tv-logo-text {
+            color: #FFD700 !important;
+            text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Enhanced Snow Cap Effect - Drippier and Larger */
+        .theme-christmas .tv-housing::before {
+            content: '';
+            position: absolute;
+            top: -18px;
+            /* Move up to sit on top */
+            left: -6px;
+            right: -6px;
+            height: 40px;
+            /* Taller to show drips */
+            /* Custom SVG with deeper curves for "dripping snow" look */
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cpath d='M0 15 Q 10 10 15 15 T 30 25 T 45 10 T 60 25 T 75 12 T 90 20 T 100 15 V 0 H 0 Z' fill='%23ffffff'/%3E%3C/svg%3E");
+            background-size: 100% 100%;
+            z-index: 20;
+            pointer-events: none;
+            filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.15));
+        }
+
+        /* New Year Theme TV Overrides (Cloud White Style) */
+        .theme-newyear .tv-housing {
+            background-color: #FFFFFF !important;
+            border-color: #E2E8F0 !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .theme-newyear .tv-housing-inner {
+            background-color: #000 !important;
+            box-shadow: 0 0 0 4px #D4AF37 !important;
+            /* Gold Inner Rim */
+        }
+
+        .theme-newyear .tv-speaker-bar {
+            background-color: #D4AF37 !important;
+        }
+
+        .theme-newyear .tv-antenna-rod {
+            background: #CBD5E1 !important;
+            /* Silver Antenna */
+        }
+
+        .theme-newyear .tv-stand-base {
+            background-color: #E2E8F0 !important;
+        }
+    </style>
+</head>
+
+<body class="font-body bg-white text-gray-800">
+
+    <!-- I. 頂部導覽列 -->
+    <header class="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 rounded-b-lg mx-auto max-w-7xl px-4">
+        <nav class="container mx-auto flex items-center justify-end h-20">
+            <div class="hidden md:flex items-center space-x-6 lg:space-x-8 font-medium">
+                <a href="#home" class="hover:text-gradient-core transition-colors">首頁</a>
+                <a href="#about" class="hover:text-gradient-core transition-colors">關於我們</a>
+                <a href="#core" class="hover:text-gradient-core transition-colors">P.L. CORE</a>
+                <a href="#hues" class="hover:text-gradient-hues transition-colors">P.L. HUES</a>
+                <a href="#insights" class="hover:text-gradient-hues transition-colors">靈感誌</a>
+                <!--
+                    <a href="peacelove_v2/index.html"
+                    class="text-xs font-bold text-gray-500 border border-gray-300 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors">前往
+                    V2 新版 &rarr;</a>
+                -->
+                <a href="#contact"
+                    class="bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">聯絡我們</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-gray-700 focus:outline-none">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-8 6h8"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden flex-col items-center space-y-4 py-6 text-center font-medium">
+
+            <a href="#home" class="block w-full py-2 hover:bg-gray-100 rounded-lg">首頁</a>
+            <a href="#about" class="block w-full py-2 hover:bg-gray-100 rounded-lg">關於我們</a>
+            <a href="#core" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. CORE</a>
+            <a href="#hues" class="block w-full py-2 hover:bg-gray-100 rounded-lg">P.L. HUES</a>
+            <a href="#insights" class="block w-full py-2 hover:bg-gray-100 rounded-lg">靈感誌</a>
+            <a href="#contact"
+                class="block w-full bg-gradient-core text-white px-5 py-2 rounded-full shadow-lg">聯絡我們</a>
+        </div>
+    </header>
+
+    <!-- II. 主要內容 -->
+    <main>
+
+        <!-- 1. 首頁 (Home) -->
+        <section id="home"
+            class="relative overflow-hidden min-h-screen flex items-center justify-center pt-20 pb-0 bg-white">
+            <div
+                class="absolute -top-1-4 -left-1-4 w-1-2 h-1-2 bg-gradient-core rounded-full opacity-30 blur-3xl animate-pulse">
+            </div>
+            <div class="absolute -bottom-1-4 -right-1-4 w-1-2 h-1-2 bg-gradient-hues rounded-full opacity-30 blur-3xl animate-pulse"
+                style="animation-delay: 3s;"></div>
+
+            <div class="container mx-auto px-6 text-center z-10">
+                <div class="flex flex-col items-center justify-center mb-4">
+                    <!-- TV Element playing Maomao Logo -->
+
+
+                    <img src="./us.png" alt="PEACELOVE 核心標誌" class="h-48 md:h-72 lg:h-80 w-auto animate-slowPulse"
+                        onerror="this.src='https://placehold.co/400x160/f0f0f0/333?text=PEACELOVE+Logo&font=montserrat'; this.onerror=null;">
+
+                    <!-- 聖誕祝福文字 -->
+                    <div class="christmas-text mt-6">
+                        <span
+                            class="font-christmas text-4xl md:text-6xl text-[#FF7096] drop-shadow-md tracking-wider transform -rotate-2 inline-block hover:rotate-2 transition-transform duration-300">
+                            🎄 Merry Christmas! ⛄
+                        </span>
+                    </div>
+
+                    <!-- 新年祝福文字 (Cloud Dancer - Elegant & Minimal) -->
+                    <div class="newyear-text mt-6">
+                        <!-- Countdown Timer -->
+                        <div id="countdown-timer"
+                            class="font-heading text-xl md:text-2xl text-gray-500 mb-2 tracking-widest font-bold">
+                            <!-- JS will populate this -->
+                        </div>
+                        <span
+                            class="font-heading text-4xl md:text-6xl text-[#D4AF37] drop-shadow-sm font-light tracking-[0.2em] inline-block animate-pulse">
+                            2026 CLOUD DANCER
+                        </span>
+                        <div class="text-gray-500 text-sm tracking-widest mt-2 uppercase">Innovate with Elegance</div>
+                    </div>
+                </div>
+                <h1 class="font-heading text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6">
+                    <span class="text-gradient-core">PEACE</span><span class="text-gray-800">LOVE</span>.
+                </h1>
+                <p class="font-heading text-2xl md:text-4xl text-gray-600">
+                    Innovate. Collaborate. Inspire.
+                </p>
+
+                <!-- Draggable TV Element -->
+                <div id="draggable-tv"
+                    class="tv-set my-4 mx-auto relative group z-20 max-w-[280px] md:max-w-[350px] cursor-move select-none"
+                    style="touch-action: none;">
+
+                    <!-- Drag Hint (New UX Feature) -->
+                    <div
+                        class="absolute left-full top-0 ml-4 transform rotate-12 animate-bounce opacity-80 pointer-events-none hidden md:block group-hover:opacity-100 transition-opacity z-30">
+                        <span
+                            class="bg-white text-gray-800 text-xs font-bold px-2 py-1 rounded-lg shadow-md border border-gray-200 whitespace-nowrap">
+                            ✋ 電視可移動喔!
+                        </span>
+                    </div>
+                    <!-- Antenna -->
+                    <div
+                        class="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-12 z-0 opacity-80 pointer-events-none flex justify-center items-end">
+                        <div
+                            class="tv-antenna-rod w-0.5 h-12 bg-gray-400 rotate-[-35deg] origin-bottom rounded-full shadow-sm transition-colors duration-500">
+                        </div>
+                        <div
+                            class="tv-antenna-rod w-0.5 h-12 bg-gray-400 rotate-[35deg] origin-bottom rounded-full shadow-sm transition-colors duration-500">
+                        </div>
+                    </div>
+
+                    <!-- TV Body -->
+                    <div
+                        class="tv-housing relative bg-[#2a2a2a] rounded-[2rem] p-4 shadow-2xl border-[6px] border-[#3a3a3a] w-full transform transition-all duration-500 hover:scale-[1.02]">
+                        <!-- Screen Bezel -->
+                        <div
+                            class="tv-housing-inner bg-black rounded-xl overflow-hidden relative shadow-inner ring-4 ring-[#1a1a1a] transition-colors duration-500">
+                            <!-- The Video -->
+                            <video autoplay loop muted playsinline
+                                class="w-full h-auto object-cover opacity-95 group-hover:opacity-100 transition-opacity block bg-black pointer-events-none">
+                                <source src="https://popokoko.github.io/videoo/maomao_logo.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <!-- Screen Glare -->
+                            <div
+                                class="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-transparent pointer-events-none z-10">
+                            </div>
+                            <!-- Scanlines overlay -->
+                            <div
+                                class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none">
+                            </div>
+                        </div>
+
+                        <!-- TV Controls / Branding -->
+                        <div class="mt-4 flex justify-between items-center px-4">
+                            <div class="flex items-center gap-3">
+                                <!-- Power Light -->
+                                <div
+                                    class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)] animate-pulse">
+                                </div>
+                                <!-- Speaker Grille -->
+                                <div class="flex gap-0.5">
+                                    <div
+                                        class="tv-speaker-bar w-1 h-3 bg-gray-800 rounded-full transition-colors duration-500">
+                                    </div>
+                                    <div
+                                        class="tv-speaker-bar w-1 h-3 bg-gray-800 rounded-full transition-colors duration-500">
+                                    </div>
+                                    <div
+                                        class="tv-speaker-bar w-1 h-3 bg-gray-800 rounded-full transition-colors duration-500">
+                                    </div>
+                                    <div
+                                        class="tv-speaker-bar w-1 h-3 bg-gray-800 rounded-full transition-colors duration-500">
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="tv-logo-text text-[10px] font-mono text-gray-500 font-bold tracking-[0.2em] uppercase transition-colors duration-500">
+                                PEACE TV</div>
+                        </div>
+                    </div>
+
+                    <!-- Stand -->
+                    <div
+                        class="tv-stand-base w-1/3 h-4 bg-[#3a3a3a] mx-auto rounded-b-xl shadow-lg -mt-1 relative z-[-1] transition-colors duration-500">
+                    </div>
+                    <div
+                        class="w-1/2 h-1 bg-black/20 mx-auto rounded-full blur-sm mt-1 absolute left-1/2 -translate-x-1/2">
+                    </div>
+                </div>
+                <p class="mt-8 text-lg max-w-2xl mx-auto text-gray-700">
+                    我們相信，真正的創新來自於熱情與安全的完美平衡。
+                </p>
+                <div class="mt-12 flex flex-col md:flex-row justify-center items-center gap-6">
+                    <a href="#core"
+                        class="w-full md:w-auto px-8 py-4 rounded-full bg-gradient-core text-white font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all">
+                        探索 P.L. CORE (科技)
+                    </a>
+                    <a href="#hues"
+                        class="w-full md:w-auto px-8 py-4 rounded-full bg-gradient-hues text-white font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all">
+                        探索 P.L. HUES (時尚)
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 關於我們 (About Us) -->
+        <section id="about" class="pt-12 pb-24 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">關於 PEACELOVE</h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                        「我們相信，真正的創新來自於熱情與安全的完美平衡。」
+                    </p>
+                </div>
+
+                <!-- 訪客計數器 -->
+                <div class="mt-16 mb-20 max-w-lg mx-auto text-center">
+                    <h3 class="font-heading text-3xl font-bold mb-8 text-center">我們的愛</h3>
+                    <p class="text-gray-600 mb-8 max-w-md mx-auto">感謝每一位訪客的蒞臨，您的支持是我們創新的動力！</p>
+                    <div id="bottle-container">
+                        <div id="hearts-wrapper"></div>
+                    </div>
+                    <p class="mt-6 text-2xl font-bold">
+                        <span id="visitor-count-text" class="text-gradient-hues text-3xl">0</span> 顆心 (位訪客)
+                    </p>
+                </div>
+
+                <!-- 使命宣言 -->
+                <div class="bg-white p-10 md:p-16 rounded-3xl shadow-lg mb-20 max-w-5xl mx-auto">
+                    <h3 class="font-heading text-3xl font-bold mb-6 text-center">我們的使命</h3>
+                    <div class="grid md:grid-cols-3 gap-8 text-center">
+                        <div class="p-6 bg-gray-50 rounded-2xl">
+                            <h4 class="font-heading text-2xl font-bold text-gradient-core mb-3">Innovate (創新)</h4>
+                            <p class="text-gray-700">以前瞻科技 (CORE) 打造安全基礎，以無限創意 (HUES) 引領時尚未來。</p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-2xl">
+                            <h4 class="font-heading text-2xl font-bold text-gray-700 mb-3">Collaborate (協作)</h4>
+                            <p class="text-gray-700">連結科技與時尚社群，建立一個透明、共創、互信的生態系統。</p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-2xl">
+                            <h4 class="font-heading text-2xl font-bold text-gradient-hues mb-3">Inspire (啟發)</h4>
+                            <p class="text-gray-700">啟發每個人探索真實的自我，無論是透過數據安全還是色彩表達。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 雙核心架構 -->
+                <h3 class="font-heading text-3xl font-bold mb-12 text-center">雙核心架構</h3>
+                <div class="grid lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
+                    <div
+                        class="bg-gradient-core text-white p-10 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                        <h4 class="font-heading text-4xl font-extrabold mb-4">P.L. CORE</h4>
+                        <p class="text-xl font-medium mb-6">科技驅動信任</p>
+                        <p class="text-lg">
+                            代表 PEACE (和平、安全)。我們提供頂尖的數據安全溯源技術，為產業建立堅不可摧的信任基礎。
+                        </p>
+                        <a href="#core"
+                            class="inline-block mt-8 bg-white text-blue-700 font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                            深入了解 CORE 產品
+                        </a>
+                    </div>
+                    <div
+                        class="bg-gradient-hues text-white p-10 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                        <h4 class="font-heading text-4xl font-extrabold mb-4">P.L. HUES</h4>
+                        <p class="text-xl font-medium mb-6">熱情點燃美麗</p>
+                        <p class="text-lg">
+                            代表 LOVE (熱情、時尚)。我們運用 AI 與社群力量，提供個人化的時尚推薦與共創平台，釋放每個人的獨特魅力。
+                        </p>
+                        <a href="#hues"
+                            class="inline-block mt-8 bg-white text-pink-700 font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                            探索 HUES 服務
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. P.L. CORE (產品) -->
+        <section id="core" class="py-24 bg-white relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-core opacity-10 blur-3xl"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-16 max-w-3xl mx-auto">
+                    <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">
+                        P.L. <span class="text-gradient-core">CORE</span>
+                    </h2>
+                    <p class="text-lg text-gray-600">
+                        以科技守護安全，以數據建立透明。專業、安全、可信賴的解決方案。
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <a href="product_core_security.html" id="core-security-link"
+                        class="block bg-white p-8 rounded-3xl shadow-lg border border-gray-100 transform hover:scale-105 hover:shadow-2xl transition-all duration-300">
+                        <div
+                            class="w-16 h-16 bg-gradient-core rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                        </div>
+                        <h3 id="core-security-title" class="font-heading text-2xl font-bold mb-3">Information and Cyber
+                            Security (資安分析解決方案)</h3>
+                        <p id="core-security-desc" class="text-gray-600">提供數據安全，隱私保護與企業核心資產解決方案。</p>
+                    </a>
+
+                    <!-- 產品卡 2 (更新連結至新頁面) -->
+                    <a href="product_core_collaborative.html" id="core-collaborative-link"
+                        class="block bg-white p-8 rounded-3xl shadow-lg border border-gray-100 transform hover:scale-105 hover:shadow-2xl transition-all duration-300">
+                        <div
+                            class="w-16 h-16 bg-gradient-core rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.102 1.101m-2.25 2.25l-5.656 5.656" />
+                            </svg>
+                        </div>
+                        <h3 id="core-collaborative-title" class="font-heading text-2xl font-bold mb-3">協同解決問題</h3>
+                        <p id="core-collaborative-desc" class="text-gray-600">
+                            基於不同問題、不同的需求，提供不同的系統，由數據至分析，符合完全透明且不可篡改的完整性、可用性。</p>
+                    </a>
+
+                    <!-- 產品卡 3 (更新為連結：AI 應用) -->
+                    <a href="product_core_ai.html" id="core-ai-link"
+                        class="block bg-white p-8 rounded-3xl shadow-lg border border-gray-100 transform hover:scale-105 hover:shadow-2xl transition-all duration-300">
+                        <div
+                            class="w-16 h-16 bg-gradient-core rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M3 4h18v12a2 2 0 01-2 2H5a2 2 0 01-2-2V4z" />
+                            </svg>
+                        </div>
+                        <h3 id="core-ai-title" class="font-heading text-2xl font-bold mb-3">AI應用 (AI知識庫、AI客服....等)</h3>
+                        <p id="core-ai-desc" class="text-gray-600">企業本地AI應用，協助企業在保護資料、降低延遲、控制成本與維持合規性等多個層面獲得實質競爭優勢。</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. P.L. HUES (產品) -->
+        <section id="hues" class="py-24 bg-gray-50 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-hues opacity-10 blur-3xl"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-16 max-w-3xl mx-auto">
+                    <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">
+                        P.L. <span class="text-gradient-hues">HUES</span>
+                    </h2>
+                    <p class="text-lg text-gray-600">
+                        以熱情點燃美麗，以創意定義自我。個人化、社群共創的時尚平台。
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- 產品卡 1 (更新為連結：Chroma AI) -->
+                    <a href="product_hues_chroma.html"
+                        class="block bg-white p-8 rounded-3xl shadow-lg border border-gray-100 transform hover:scale-105 hover:shadow-2xl transition-all duration-300">
+                        <div
+                            class="w-16 h-16 bg-gradient-hues rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">Chroma AI (色彩推薦)</h3>
+                        <p class="text-gray-600">基於 AI 深度學習的個人化色彩分析與產品推薦，找到最適合您的命定彩妝。</p>
+                    </a>
+
+                    <!-- 產品卡 2 (更新為連結：Affinity Series) -->
+                    <a href="product_hues_affinity.html"
+                        class="block bg-white p-8 rounded-3xl shadow-lg border border-gray-100 transform hover:scale-105 hover:shadow-2xl transition-all duration-300">
+                        <div
+                            class="w-16 h-16 bg-gradient-hues rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <!-- 修正：更換為正確的 Sparkles 圖示 -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">Affinity Series (限量彩妝)</h3>
+                        <p class="text-gray-600">與頂尖創作者聯名的限量彩妝系列，每件產品都蘊含獨特的故事與創意。</p>
+                    </a>
+
+                    <!-- 產品卡 3 (連結至服飾分頁 - 保持不變) -->
+                    <a href="creator_hub_apparel.html"
+                        class="block bg-white p-8 rounded-3xl shadow-lg border border-gray-100 transform hover:scale-105 hover:shadow-2xl transition-all duration-300">
+                        <div
+                            class="w-16 h-16 bg-gradient-hues rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-3">Creator Hub (服飾系列)</h3>
+                        <p class="text-gray-600">專屬創作者的聯名服飾平台，探索街頭潮流與極簡美學的完美結合。</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 靈感誌 (Insights) -->
+        <section id="insights" class="py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <section id="insights" class="py-24 bg-white">
+                    <div class="container mx-auto px-6">
+                        <!-- 2026 Future Theme Header -->
+                        <div class="text-center mb-16">
+                            <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">
+                                靈感誌 2026
+                                <span
+                                    class="block text-xl md:text-2xl font-light mt-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-pink-500">
+                                    The Senses of Future
+                                </span>
+                            </h2>
+                            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                                探索五感未來：當 <span class="text-blue-500 font-bold">Silent Zone (靜謐)</span> 遇見
+                                <span class="text-pink-500 font-bold">Digital Skin (肌理)</span>，讓我們在資訊洪流中找回真實的脈動。
+                            </p>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                            <!-- Article 1: Silent Zone (Old CORE) -->
+                            <div
+                                class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group hover:shadow-2xl transition-shadow duration-300">
+                                <div class="relative overflow-hidden h-56">
+                                    <div
+                                        class="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors z-10">
+                                    </div>
+                                    <img src="https://placehold.co/600x400/0f172a/00c6ff?text=Silent+Zone&font=montserrat"
+                                        alt="靜謐特區"
+                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow relative">
+                                    <!-- Category Badge -->
+                                    <span
+                                        class="inline-block bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1 rounded-full mb-3 self-start border border-slate-200 uppercase tracking-widest">
+                                        Silent Zone • 靜謐特區
+                                    </span>
+                                    <h3
+                                        class="font-heading text-xl font-bold mb-3 flex-grow text-slate-800 group-hover:text-blue-600 transition-colors">
+                                        數據洪流中的隱形斗篷
+                                    </h3>
+                                    <p class="text-gray-500 mb-4 text-sm leading-relaxed">
+                                        當隱私成為 2026 最昂貴的奢侈品，ShieldOS 如何為企業架構一座數位時代的「靜音室」？阻絕雜訊，只留信任。
+                                    </p>
+                                    <a href="#"
+                                        class="font-bold text-sm text-blue-500 hover:text-blue-700 self-start flex items-center gap-1 group/link">
+                                        進入靜謐領域 <span
+                                            class="group-hover/link:translate-x-1 transition-transform">&rarr;</span>
+                                    </a>
+                                </div>
+                                <div class="h-1 w-full bg-gradient-to-r from-slate-200 to-blue-400"></div>
+                            </div>
+
+                            <!-- Article 2: Digital Skin (Old HUES) -->
+                            <div
+                                class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group hover:shadow-2xl transition-shadow duration-300">
+                                <div class="relative overflow-hidden h-56">
+                                    <div
+                                        class="absolute inset-0 bg-pink-500/10 group-hover:bg-transparent transition-colors z-10">
+                                    </div>
+                                    <img src="https://placehold.co/600x400/FFB7C5/c94b4b?text=Digital+Skin&font=montserrat"
+                                        alt="數位肌理"
+                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow relative">
+                                    <!-- Category Badge -->
+                                    <span
+                                        class="inline-block bg-pink-50 text-pink-500 text-xs font-bold px-3 py-1 rounded-full mb-3 self-start border border-pink-100 uppercase tracking-widest">
+                                        Digital Skin • 數位肌理
+                                    </span>
+                                    <h3
+                                        class="font-heading text-xl font-bold mb-3 flex-grow text-slate-800 group-hover:text-pink-500 transition-colors">
+                                        觸得到的演算法
+                                    </h3>
+                                    <p class="text-gray-500 mb-4 text-sm leading-relaxed">
+                                        虛擬布料的觸感是什麼？探討 2026 情感運算趨勢：當 AI 開始編織感覺，時尚將不再只是視覺的饗宴。
+                                    </p>
+                                    <a href="#"
+                                        class="font-bold text-sm text-pink-500 hover:text-pink-700 self-start flex items-center gap-1 group/link">
+                                        感知肌理 <span
+                                            class="group-hover/link:translate-x-1 transition-transform">&rarr;</span>
+                                    </a>
+                                </div>
+                                <div class="h-1 w-full bg-gradient-to-r from-pink-300 to-red-400"></div>
+                            </div>
+
+                            <!-- Article 3: Empathic Pulse (New Brand Story) -->
+                            <div
+                                class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group hover:shadow-2xl transition-shadow duration-300">
+                                <div class="relative overflow-hidden h-56">
+                                    <div
+                                        class="absolute inset-0 bg-purple-500/10 group-hover:bg-transparent transition-colors z-10">
+                                    </div>
+                                    <img src="https://placehold.co/600x400/e9d5ff/6b21a8?text=Empathic+Pulse&font=montserrat"
+                                        alt="共感頻率"
+                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow relative">
+                                    <!-- Category Badge -->
+                                    <span
+                                        class="inline-block bg-purple-50 text-purple-600 text-xs font-bold px-3 py-1 rounded-full mb-3 self-start border border-purple-100 uppercase tracking-widest">
+                                        Empathic Pulse • 共感頻率
+                                    </span>
+                                    <h3
+                                        class="font-heading text-xl font-bold mb-3 flex-grow text-slate-800 group-hover:text-purple-600 transition-colors">
+                                        在代碼中聽見心跳
+                                    </h3>
+                                    <p class="text-gray-500 mb-4 text-sm leading-relaxed">
+                                        專訪創辦人：在這個萬物互聯的時代，我們如何讓冰冷的零與一，傳遞出 PEACELOVE 最真實的溫度？
+                                    </p>
+                                    <a href="#"
+                                        class="font-bold text-sm text-purple-600 hover:text-purple-800 self-start flex items-center gap-1 group/link">
+                                        連結頻率 <span
+                                            class="group-hover/link:translate-x-1 transition-transform">&rarr;</span>
+                                    </a>
+                                </div>
+                                <div class="h-1 w-full bg-gradient-to-r from-purple-300 to-indigo-500"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. 聯絡我們 (Contact) -->
+                <section id="contact" class="py-24 bg-gray-50 relative">
+                    <!-- 心形曲線分隔 (SVG) -->
+                    <div class="absolute top-0 left-0 w-full" style="transform: translateY(-99px);">
+                        <svg class="heart-divider" viewBox="0 0 1440 100" preserveAspectRatio="none">
+                            <path d="M0 100 C 360 0, 1080 0, 1440 100 L 1440 100 L 0 100 Z" />
+                        </svg>
+                    </div>
+
+                    <div class="container mx-auto px-6">
+                        <div class="text-center mb-16">
+                            <h2 class="font-heading text-4xl md:text-5xl font-extrabold mb-4">聯絡我們</h2>
+                            <p class="text-lg text-gray-600">
+                                選擇您的洽談類型，我們將有專人盡速與您聯繫。
+                            </p>
+                        </div>
+
+                        <!-- 雙軌道聯絡表單 -->
+                        <div class="max-w-6xl mx-auto bg-white p-10 md:p-16 rounded-3xl shadow-2xl">
+                            <div class="grid lg:grid-cols-2 gap-16">
+
+                                <!-- CORE 表單 -->
+                                <div class="p-8 rounded-2xl bg-gradient-core text-white">
+                                    <h3 class="font-heading text-3xl font-bold mb-6">CORE 企業洽談</h3>
+                                    <p class="mb-8">
+                                        適用於企業安全與數據方案諮詢。
+                                    </p>
+                                    <form
+                                        action="mailto:bofy.wang@peacelove.ai?subject=PEACELOVE%20CORE%20%E4%BC%81%E6%A5%AD%E6%B4%BD%E8%AB%87"
+                                        method="POST" enctype="text/plain" class="space-y-6">
+                                        <div>
+                                            <label for="core-name"
+                                                class="block text-sm font-medium mb-2">公司/組織名稱</label>
+                                            <input type="text" id="core-name" name="公司/組織名稱"
+                                                class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none"
+                                                placeholder="請輸入您的公司名稱">
+                                        </div>
+                                        <div>
+                                            <label for="core-email" class="block text-sm font-medium mb-2">聯絡信箱</label>
+                                            <input type="email" id="core-email" name="聯絡信箱"
+                                                class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none"
+                                                placeholder="example@company.com">
+                                        </div>
+                                        <div>
+                                            <label for="core-message"
+                                                class="block text-sm font-medium mb-2">洽詢內容</label>
+                                            <textarea id="core-message" name="洽詢內容" rows="4"
+                                                class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none"
+                                                placeholder="請簡述您的需求..."></textarea>
+                                        </div>
+                                        <button type="submit"
+                                            class="w-full bg-white text-blue-700 font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                                            提交 CORE 諮詢
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- HUES 表單 -->
+                                <div class="p-8 rounded-2xl bg-gradient-hues text-white">
+                                    <h3 class="font-heading text-3xl font-bold mb-6">HUES 合作/客服</h3>
+                                    <p class="mb-8">
+                                        適用於 Chroma AI、Affinity Series、創作者合作或一般客服問題。
+                                    </p>
+                                    <form
+                                        action="mailto:bofy.wang@peacelove.ai?subject=PEACELOVE%20HUES%20%E5%90%88%E4%BD%9C/%E5%AE%A2%E6%9C%8D"
+                                        method="POST" enctype="text/plain" class="space-y-6">
+                                        <div>
+                                            <label for="hues-name"
+                                                class="block text-sm font-medium mb-2">您的姓名/暱稱</label>
+                                            <input type="text" id="hues-name" name="姓名/暱稱"
+                                                class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none"
+                                                placeholder="請輸入您的姓名">
+                                        </div>
+                                        <div>
+                                            <label for="hues-email" class="block text-sm font-medium mb-2">聯絡信箱</label>
+                                            <input type="email" id="hues-email" name="聯絡信箱"
+                                                class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none"
+                                                placeholder="example@mail.com">
+                                        </div>
+                                        <div>
+                                            <label for="hues-message"
+                                                class="block text-sm font-medium mb-2">您的訊息</label>
+                                            <textarea id="hues-message" name="您的訊息" rows="4"
+                                                class="w-full px-4 py-3 rounded-lg text-gray-900 shadow-sm focus:ring-2 focus:ring-white focus:outline-none"
+                                                placeholder="請告訴我們您的想法..."></textarea>
+                                        </div>
+                                        <button type="submit"
+                                            class="w-full bg-white text-pink-700 font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                                            提交 HUES 訊息
+                                        </button>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </section>
+    </main>
+
+    <!-- III. 頁尾 -->
+    <footer class="bg-gray-800 text-gray-300 py-16">
+        <div class="container mx-auto px-6 text-center">
+
+            <p class="font-heading text-2xl font-bold text-white mb-4">
+                Innovate. Collaborate. Inspire.
+            </p>
+
+            <!-- 社群媒體連結 -->
+            <div class="flex justify-center space-x-6 my-8">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors" title="Instagram">
+                    <!-- Instagram Icon -->
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.069-4.85.069s-3.584-.011-4.85-.069c-3.252-.149-4.771-1.664-4.919-4.919-.058-1.265-.069-1.644-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919C8.416 2.175 8.796 2.163 12 2.163zM12 0C8.741 0 8.333.014 7.053.072 2.69 1.106 1.106 2.69 1.072 7.053.014 8.333 0 8.741 0 12s.014 3.667.072 4.947c.149 3.225 1.664 4.771 4.919 4.919C8.333 23.986 8.741 24 12 24s3.667-.014 4.947-.072c3.225-.149 4.771-1.664 4.919-4.919C23.986 15.667 24 15.259 24 12s-.014-3.667-.072-4.947c-.149-3.225-1.664-4.771-4.919-4.919C15.667.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z">
+                        </path>
+                    </svg>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors" title="X/Facebook (使用 X Icon)">
+                    <!-- X Icon -->
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.47l8.6-9.83L0 1.154h7.594l5.243 6.93L18.901 1.153zm-3.68 19.5h2.15l-12.3-17.1H2.7l12.52 17.1z">
+                        </path>
+                    </svg>
+                </a>
+            </div>
+
+            <p class="text-sm text-gray-500">
+                &copy; 2025 PEACELOVE Inc. All Rights Reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Line 小助手 (左下角) -->
+    <div class="fixed bottom-4 left-4 z-50 flex flex-col items-start group">
+        <!-- QR Code 彈出層 (預設隱藏，懸停顯示) -->
+        <div
+            class="mb-4 p-3 bg-white rounded-xl shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto border border-gray-100">
+            <div class="text-center mb-2 text-sm font-bold text-gray-700">
+                掃描加入 PEACE LOVE Line AI 助理
+            </div>
+            <!-- 使用您上傳的 QR Code 圖片 -->
+            <img src="./PLAILINE.png" alt="Line QR Code" class="w-32 h-32 object-contain mx-auto"
+                onerror="this.src='https://placehold.co/128x128/06C755/FFFFFF?text=QR+Code&font=roboto';">
+        </div>
+
+        <!-- Line 圖標按鈕 -->
+        <button
+            class="bg-[#06C755] text-white p-3 rounded-full shadow-lg hover:shadow-green-500/50 hover:scale-110 transition-all duration-300 flex items-center justify-center w-14 h-14 cursor-pointer">
+            <!-- Line SVG Icon -->
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M12 .5C5.6 .5 .5 5.1 .5 10.7c0 5 4.2 9.3 9.9 10.1v5.1c0 .3 .2 .6 .5 .6 .1 0 .2 0 .3 -.1l5.8-3.9c4.5-.7 7.5-4.3 7.5-8.3C24.5 5.1 18.9 .5 12 .5z" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- 浮動廣告 (含懸停提示) -->
+    <div class="fixed bottom-4 right-4 z-50 flex flex-col items-end group">
+        <!-- 提示文字 -->
+        <div
+            class="mb-2 px-3 py-2 bg-gray-800/90 backdrop-blur-sm text-white text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 pointer-events-none whitespace-nowrap">
+            zeabur 是一個強大的PaaS (Platform as a Service) 平台
+        </div>
+
+        <!-- 徽章連結 -->
+        <a href="https://zeabur.com/referral?referralCode=popokoko&utm_source=popokoko" target="_blank"
+            class="shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-transform duration-300 block">
+            <img src="https://zeabur.com/deployed-on-zeabur-dark.svg" alt="Deployed on Zeabur" class="h-10 w-auto">
+        </a>
+    </div>
+
+    <script>
+        // 行動裝置選單開關
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+        });
+
+        // 點擊行動裝置選單連結時自動關閉選單
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+            });
+        });
+
+        /* --- 主題控制與特效 (Christmas / New Year / Original) --- */
+        (function () {
+            const html = document.documentElement;
+
+            // 1. 定義主題狀態與順序
+            // 模式: 0 (Original), 1 (Christmas), 2 (New Year)
+            // 預設偵測
+            let currentMode = 0;
+            if (html.classList.contains('theme-christmas')) currentMode = 1;
+            else if (html.classList.contains('theme-newyear')) currentMode = 2;
+
+            // 2. 創建切換按鈕
+            const themeToggleBtn = document.createElement('button');
+            themeToggleBtn.className = 'fixed top-24 right-4 z-50 bg-white/90 backdrop-blur text-2xl p-3 rounded-full shadow-xl border-4 hover:scale-110 hover:shadow-2xl transition-all duration-300 group';
+            themeToggleBtn.style.transition = "all 0.5s ease"; // for color changes
+
+            // 按鈕提示工具
+            const tooltip = document.createElement('span');
+            tooltip.className = 'absolute right-full top-1/2 -translate-y-1/2 mr-3 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none';
+            themeToggleBtn.appendChild(tooltip);
+
+            themeToggleBtn.onclick = cycleTheme;
+            document.body.appendChild(themeToggleBtn);
+
+            // 3. 特效樣式注入 (雪花 & 煙火/彩帶)
+            const style = document.createElement('style');
+            style.textContent = `
+                /* 雪花飄落 */
+                @keyframes fall {
+                    0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+                    10% { opacity: 1; }
+                    100% { transform: translateY(100vh) translateX(20px) rotate(360deg); opacity: 0.7; }
+                }
+                .snowflake {
+                    position: fixed; top: -10px; z-index: 9999; user-select: none; pointer-events: none;
+                    color: #dbeafe; text-shadow: 0 0 5px rgba(255,255,255,0.8);
+                }
+
+                /* 彩帶/煙火飄落 */
+                @keyframes fall-fast {
+                    0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+                    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+                }
+                .confetti {
+                    position: fixed; top: -10px; z-index: 9999; width: 8px; height: 15px;
+                    user-select: none; pointer-events: none;
+                }
+            `;
+            document.head.appendChild(style);
+
+            let effectInterval;
+
+            // --- 特效函式 ---
+            function clearEffects() {
+                if (effectInterval) clearInterval(effectInterval);
+                effectInterval = null;
+                document.querySelectorAll('.snowflake, .confetti, .red-envelope').forEach(el => el.remove());
+            }
+
+            function startSnow() {
+                clearEffects();
+                for (let i = 0; i < 15; i++) createSnowflake(); // init bunch
+                effectInterval = setInterval(createSnowflake, 300);
+            }
+
+            function createSnowflake() {
+                const snow = document.createElement('div');
+                snow.classList.add('snowflake');
+                snow.textContent = ['❄', '❅', '❆', '•'][Math.floor(Math.random() * 4)];
+                snow.style.left = Math.random() * 100 + 'vw';
+                snow.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                const duration = Math.random() * 5 + 8;
+                snow.style.animation = `fall ${duration}s linear forwards`;
+                document.body.appendChild(snow);
+                setTimeout(() => snow.remove(), duration * 1000);
+            }
+
+            function startRedEnvelopes() {
+                clearEffects();
+                for (let i = 0; i < 10; i++) createRedEnvelope();
+                effectInterval = setInterval(createRedEnvelope, 600);
+            }
+
+            function createRedEnvelope() {
+                const el = document.createElement('div');
+                el.classList.add('red-envelope');
+
+                // 使用 SVG 替換 Emoji，確保【福】字在所有瀏覽器均可顯示
+                el.innerHTML = `
+                    <svg viewBox="0 0 40 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="overflow: visible;">
+                        <g>
+                            <!-- 紅包主體 -->
+                            <rect x="0" y="0" width="40" height="50" rx="4" fill="#E63946" stroke="#991B1B" stroke-width="1"/>
+                            <!-- 封口 -->
+                            <path d="M0 0 C 0 0 10 20 20 20 C 30 20 40 0 40 0" fill="#D62828" stroke="#991B1B" stroke-width="1"/>
+                            <!-- 金色菱形背景 -->
+                            <rect x="10" y="20" width="20" height="20" transform="rotate(45 20 30)" fill="#FFD700" stroke="#F59E0B" stroke-width="0.5"/>
+                            <!-- 福字 -->
+                            <text x="20" y="36" font-family="'Kaiti', 'STKaiti', 'DFKai-SB', serif" font-size="16" fill="#B91C1C" text-anchor="middle" font-weight="bold" style="user-select: none;">福</text>
+                        </g>
+                    </svg>
+                `;
+
+                el.style.position = 'fixed';
+                el.style.top = '-60px';
+                el.style.zIndex = '9999';
+
+                // 調整尺寸，div 包裹 SVG
+                const size = Math.random() * 30 + 30; // 30-60px
+                el.style.width = `${size}px`;
+                el.style.height = `${size * 1.25}px`; // 保持 4:5 比例
+
+                el.style.left = Math.random() * 95 + 'vw';
+                el.style.userSelect = 'none';
+                el.style.pointerEvents = 'none';
+                // 使用 CSS filter 代替 SVG filter
+                el.style.filter = 'drop-shadow(2px 4px 4px rgba(0,0,0,0.2))';
+
+                const duration = Math.random() * 5 + 5;
+                el.style.animation = `fall ${duration}s linear forwards`;
+
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), duration * 1000);
+            }
+
+            // --- 切換邏輯 ---
+            function cycleTheme() {
+                // 順序: Christmas (1) -> New Year (2) -> Original (0) -> Christmas (1)
+                // 從目前狀態切換到下一個
+                if (currentMode === 1) currentMode = 2;      // Xmas -> NY
+                else if (currentMode === 2) currentMode = 0; // NY -> Org
+                else currentMode = 1;                        // Org -> Xmas
+
+                updateUI();
+            }
+
+            function updateUI() {
+                // 清除所有主題 Class
+                html.classList.remove('theme-christmas', 'theme-newyear');
+
+                // 根據 Mode 應用樣式
+                if (currentMode === 1) {
+                    // Christmas
+                    html.classList.add('theme-christmas');
+                    themeToggleBtn.innerHTML = '🎅';
+                    themeToggleBtn.style.borderColor = '#FF7096';
+                    themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(255, 112, 150, 0.39)';
+                    tooltip.innerText = 'Go to New Year 2026';
+                    startSnow();
+                } else if (currentMode === 2) {
+                    // New Year (Cloud Dancer)
+                    html.classList.add('theme-newyear');
+                    themeToggleBtn.innerHTML = '☁️'; // Cloud icon
+                    themeToggleBtn.style.color = '#333';
+                    themeToggleBtn.style.borderColor = '#F0EEE9';
+                    themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(0, 0, 0, 0.1)';
+                    themeToggleBtn.style.background = '#FFF';
+                    tooltip.innerText = 'Go to Original';
+                    startRedEnvelopes();
+                } else {
+                    // Original
+                    themeToggleBtn.innerHTML = '✨';
+                    themeToggleBtn.style.color = 'inherit';
+                    themeToggleBtn.style.background = 'rgba(255,255,255,0.9)';
+                    themeToggleBtn.style.borderColor = '#00c6ff';
+                    themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(0, 198, 255, 0.39)';
+                    tooltip.innerText = 'Go to Christmas';
+                    clearEffects();
+                }
+
+                // 確保 Tooltip 仍然存在
+                if (!themeToggleBtn.contains(tooltip)) themeToggleBtn.appendChild(tooltip);
+            }
+
+            // --- 初始化 ---
+            updateUI();
+
+        })();
+    </script>
+
+    <!-- 
+      修正：Firebase 訪客計數器模組 (適用於 GitHub Pages)
+    -->
+    <script type="module">
+        // 匯入 Firebase 模組
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, setDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // 匯入集中管理的設定
+        import { firebaseConfig } from "./config.js";
+
+        // 初始化 Firebase
+        let app, db, auth;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            // 監聽登入狀態
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    setupCounter();
+                    setupCoreModulesListener(); // 加上 CORE 模組監聽
+                } else {
+                    signInAnonymously(auth)
+                        .then(() => {
+                            setupCounter();
+                            setupCoreModulesListener(); // 加上 CORE 模組監聽
+                        })
+                        .catch((error) => {
+                            console.error("Firebase 匿名登入失敗:", error);
+                            if (error.code === 'auth/configuration-not-found') {
+                                document.getElementById('bottle-container').innerHTML = "<p class='text-gray-500 p-4 text-sm'>錯誤：計數器認證失敗。<br>(請啟用匿名登入)</p>";
+                            }
+                        });
+                }
+            });
+        } catch (e) {
+            console.error("Firebase 初始化失敗:", e);
+        }
+
+        // 新增：監聽 CORE 模組資料
+        function setupCoreModulesListener() {
+            const modules = ['security', 'collaborative', 'ai'];
+            modules.forEach(mId => {
+                const docRef = doc(db, 'artifacts', 'peacelove', 'public', 'core_modules', mId);
+                onSnapshot(docRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        const titleEl = document.getElementById(`core-${mId}-title`);
+                        const descEl = document.getElementById(`core-${mId}-desc`);
+                        const linkEl = document.getElementById(`core-${mId}-link`);
+
+                        if (titleEl && data.title) titleEl.textContent = data.title;
+                        if (descEl && data.description) descEl.textContent = data.description;
+                        if (linkEl && data.link) linkEl.href = data.link;
+                    }
+                }, (err) => {
+                    console.warn(`CORE 模組 ${mId} 讀取失敗（可能尚未設定內容）:`, err);
+                });
+            });
+        }
+
+        // DOM 元素
+        const heartWrapper = document.getElementById('hearts-wrapper');
+        const countText = document.getElementById('visitor-count-text');
+
+        let visitorCountDocRef;
+        // let currentHeartCount = 0; // 不再需要全域追蹤，改用 DOM 檢查
+
+        // 2. 設置計數器
+        function setupCounter() {
+            if (!db) {
+                console.error("Firestore 未準備就緒");
+                return;
+            }
+            visitorCountDocRef = doc(db, 'site_stats', 'visitor_count');
+            setupVisitorListener();
+            incrementVisitCount();
+        }
+
+        // 3. 設置即時監聽器
+        function setupVisitorListener() {
+            onSnapshot(visitorCountDocRef, (docSnap) => {
+                let count = 0;
+                if (docSnap.exists()) {
+                    count = docSnap.data().count;
+                }
+                updateHeartBottle(count);
+            }, (error) => {
+                console.error("Firestore 監聽失敗:", error);
+            });
+        }
+
+        // 4. 增加訪問次數
+        async function incrementVisitCount() {
+            if (sessionStorage.getItem('peacelove_has_visited')) return;
+            sessionStorage.setItem('peacelove_has_visited', 'true');
+            try {
+                await setDoc(visitorCountDocRef, {
+                    count: increment(1)
+                }, { merge: true });
+            } catch (e) {
+                console.error("Firestore 更新計數失敗:", e);
+            }
+        }
+
+        // 5. 更新 UI (CSS 動畫 + 動態尺寸 + 差異更新版本)
+        function updateHeartBottle(count) {
+            if (countText) countText.textContent = count;
+            if (!heartWrapper) return;
+
+            // 重新計算應該顯示的愛心組合
+            let remaining = count;
+
+            const targets = {
+                'heart-huge': Math.floor(remaining / 1000),
+                'heart-large': Math.floor((remaining % 1000) / 100),
+                'heart-medium': Math.floor((remaining % 100) / 20),
+                'heart-small': remaining % 20
+            };
+
+            // 輔助函式：建立愛心元素 (或聖誕襪、紅包)
+            const createHeart = (sizeClass, sizePx) => {
+                // 檢查主題
+                const isChristmas = document.documentElement.classList.contains('theme-christmas');
+                const isNewYear = document.documentElement.classList.contains('theme-newyear');
+
+                // 新年主題：使用 SVG 紅包 (確保福字顯示)
+                if (isNewYear) {
+                    const envelopeEl = document.createElement('div');
+                    envelopeEl.classList.add('heart-icon', sizeClass);
+
+                    // 使用 SVG 內容
+                    envelopeEl.innerHTML = `
+                        <svg viewBox="0 0 40 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0" y="0" width="40" height="50" rx="4" fill="#E63946" stroke="#991B1B" stroke-width="1"/>
+                            <path d="M0 0 C 0 0 10 20 20 20 C 30 20 40 0 40 0" fill="#D62828" stroke="#991B1B" stroke-width="1"/>
+                            <rect x="10" y="20" width="20" height="20" transform="rotate(45 20 30)" fill="#FFD700"/>
+                            <text x="20" y="36" font-family="'Kaiti', 'STKaiti', 'DFKai-SB', serif" font-size="16" fill="#B91C1C" text-anchor="middle" font-weight="bold">福</text>
+                        </svg>
+                    `;
+
+                    envelopeEl.style.position = 'absolute';
+                    // 確保內容物置中
+                    envelopeEl.style.display = 'flex';
+                    envelopeEl.style.alignItems = 'center';
+                    envelopeEl.style.justifyContent = 'center';
+
+                    // 覆蓋預設 CSS 大小，改為符合比例的大小 (或保持預設大小並讓 SVG 自適應)
+                    // 這裡我們直接使用 sizePx 作為寬度，高度自動
+                    envelopeEl.style.width = `${sizePx}px`;
+                    envelopeEl.style.height = `${sizePx * 1.25}px`;
+
+                    applyPosition(envelopeEl, sizePx, sizeClass);
+                    return envelopeEl;
+                }
+
+                // 其他主題：使用 SVG
+                const heartEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                heartEl.setAttribute('class', `heart-icon ${sizeClass}`);
+                heartEl.setAttribute('viewBox', '0 0 20 20');
+                heartEl.setAttribute('fill', 'currentColor');
+
+                if (isChristmas) {
+                    // 聖誕襪 SVG
+                    heartEl.innerHTML = '<path d="M6 2C5 2 4 3 4 4V10C4 10 3 10 2 11C1 12 1 14 3 15C5 16 8 15 9 13L11 11V4C11 3 10 2 9 2H6M6 0H9C10 0 11 0.5 11 1.5V3H4V1.5C4 0.5 5 0 6 0Z" transform="translate(4,2)"/>';
+                    if (sizeClass === 'heart-medium') heartEl.style.color = '#FF7096';
+                    if (sizeClass === 'heart-large') heartEl.style.color = '#FF97B7';
+                    if (sizeClass === 'heart-huge') heartEl.style.color = '#FFB3C1';
+                } else {
+                    // 原始愛心 SVG
+                    heartEl.innerHTML = '<path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />';
+                }
+
+                applyPosition(heartEl, sizePx, sizeClass);
+                return heartEl;
+            };
+
+            // 輔助函式：套用位置與動畫 (抽取共用邏輯)
+            const applyPosition = (el, sizePx, sizeClass) => {
+                // 水瓶寬度 250px, padding 20px -> 內部約 210px
+                const usableWidth = 210 - sizePx;
+                const randomLeft = Math.random() * Math.max(0, usableWidth);
+                const randomBottom = (Math.random() * 50);
+                const randomRotation = (Math.random() - 0.5) * 60;
+
+                el.style.left = `${randomLeft}px`;
+                el.style.bottom = `${randomBottom}px`;
+                el.style.transform = `rotate(${randomRotation}deg)`;
+
+                el.style.opacity = '0';
+                el.style.animation = `dropIn 0.5s ease-out forwards`;
+                if (sizeClass === 'heart-huge') {
+                    el.style.animation += ", pulse 2s infinite ease-in-out 1s";
+                }
+            };
+
+            // 核心邏輯：只對差異部分進行 DOM 操作
+            const syncHearts = (sizeClass, targetCount, sizePx) => {
+                const existing = heartWrapper.getElementsByClassName(sizeClass);
+                const currentCount = existing.length;
+                const diff = targetCount - currentCount;
+
+                if (diff > 0) {
+                    for (let i = 0; i < diff; i++) {
+                        const heart = createHeart(sizeClass, sizePx);
+                        heart.style.animationDelay = `${Math.random() * 0.5}s`;
+                        heartWrapper.appendChild(heart);
+                    }
+                } else if (diff < 0) {
+                    for (let i = 0; i < Math.abs(diff); i++) {
+                        if (existing[0]) existing[0].remove();
+                    }
+                }
+            };
+
+            syncHearts('heart-huge', targets['heart-huge'], 120);
+            syncHearts('heart-large', targets['heart-large'], 80);
+            syncHearts('heart-medium', targets['heart-medium'], 40);
+            syncHearts('heart-small', targets['heart-small'], 20);
+        }
+
+        // 6. 監聽主題變更 (MutationObserver)
+        // 這是為了在切換開關時，即時將現有的愛心變成襪子(或反之)，而不需要等待重新整理
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === "attributes" && mutation.attributeName === "class") {
+                    // 當 class 變更時，清空容器並重新繪製
+                    if (heartWrapper && countText) {
+                        heartWrapper.innerHTML = ''; // 清空
+                        // 重新呼叫 updateHeartBottle，這會觸發重新生成所有圖示
+                        // 使用目前顯示的數字
+                        const count = parseInt(countText.textContent.replace(/,/g, '')) || 0;
+                        updateHeartBottle(count); // 傳入當前數字，強制重繪
+                    }
+                }
+            });
+        });
+
+        // 開始監聽 html 標籤
+        observer.observe(document.documentElement, {
+            attributes: true //configure it to listen to attribute changes
+        });
+        // 禁止所有圖片的右鍵選單與拖拽
+        // 引入統一資安防護腳本 (Asset Protection & URL Masking)
+
+        /* --- 2026 Countdown Timer Logic --- */
+        (function () {
+            const timerEl = document.getElementById('countdown-timer');
+            if (!timerEl) return;
+
+            const targetDate = new Date('2026-01-01T00:00:00').getTime();
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance < 0) {
+                    timerEl.innerHTML = "🎉 新年快樂！ 🎉";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                timerEl.innerHTML = `進入2026還有 ${days}天 ${hours}時 ${minutes}分 ${seconds}秒`;
+            }
+
+            setInterval(updateTimer, 1000);
+            updateTimer(); // Initial call
+        })();
+    </script>
+    <script src="js/guard.js"></script>
+
+    <script>
+        // Use an IIFE to avoid polluting global scope
+        (function () {
+            const tv = document.getElementById('draggable-tv');
+            if (!tv) return;
+
+            let isDragging = false;
+            let isFloating = false; // flag to check if element has popped out of flow
+            let shiftX, shiftY;
+            let startX, startY; // to detect drag threshold
+
+            // Events
+            tv.addEventListener('mousedown', onMouseDown);
+            tv.addEventListener('touchstart', onTouchStart, { passive: false });
+
+            // Prevent default dragstart on images inside to avoid browser native drag
+            tv.querySelectorAll('img').forEach(img => {
+                img.addEventListener('dragstart', (e) => e.preventDefault());
+            });
+
+            function onMouseDown(e) {
+                // Only left click
+                if (e.button !== 0) return;
+                startDrag(e.clientX, e.clientY, e);
+            }
+
+            function onTouchStart(e) {
+                const touch = e.touches[0];
+                startDrag(touch.clientX, touch.clientY, e);
+            }
+
+            function startDrag(clientX, clientY, e) {
+                isDragging = true;
+                startX = clientX;
+                startY = clientY;
+
+                // Calculate offset from the element's top-left corner
+                const rect = tv.getBoundingClientRect();
+                shiftX = clientX - rect.left;
+                shiftY = clientY - rect.top;
+
+                // Attach global listeners
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+                document.addEventListener('touchmove', onTouchMove, { passive: false });
+                document.addEventListener('touchend', onTouchEnd);
+            }
+
+            function onMouseMove(e) {
+                if (!isDragging) return;
+                e.preventDefault(); // Prevent selection
+                moveAt(e.clientX, e.clientY);
+            }
+
+            function onTouchMove(e) {
+                if (!isDragging) return;
+                // prevent scrolling while dragging if we are floating
+                if (isFloating) e.preventDefault();
+                const touch = e.touches[0];
+                moveAt(touch.clientX, touch.clientY);
+            }
+
+            function moveAt(clientX, clientY) {
+                // Check threshold (5px) before detaching to allow simple clicks
+                if (!isFloating) {
+                    if (Math.abs(clientX - startX) > 5 || Math.abs(clientY - startY) > 5) {
+                        enableFloating();
+                    }
+                }
+
+                if (isFloating) {
+                    // Update position specific to page coordinates (supporting scroll)
+                    const newLeft = clientX - shiftX + window.scrollX;
+                    const newTop = clientY - shiftY + window.scrollY;
+
+                    tv.style.left = newLeft + 'px';
+                    tv.style.top = newTop + 'px';
+                }
+            }
+
+            function enableFloating() {
+                isFloating = true;
+                const rect = tv.getBoundingClientRect();
+
+                // 1. Lock dimensions to prevent resizing when reparented
+                tv.style.width = rect.width + 'px';
+                // Height is usually auto, but locking it prevents jumps if content shifts
+                tv.style.height = rect.height + 'px';
+
+                // 2. Set styles for absolute positioning
+                tv.style.position = 'absolute';
+                tv.style.zIndex = '9999';
+                tv.style.margin = '0';
+
+                // 3. Initial placement at current spot
+                tv.style.left = (rect.left + window.scrollX) + 'px';
+                tv.style.top = (rect.top + window.scrollY) + 'px';
+
+                // 4. Change cursor
+                tv.style.cursor = 'grabbing';
+
+                // 5. Move to body to escape parent overflow:hidden and let grid collapse
+                document.body.appendChild(tv);
+            }
+
+            function onMouseUp() { stopDrag(); }
+            function onTouchEnd() { stopDrag(); }
+
+            function stopDrag() {
+                isDragging = false;
+                if (isFloating) {
+                    tv.style.cursor = 'move';
+                } else {
+                    // If we released before threshold, nothing visually happens (it stays in flow)
+                }
+
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+                document.removeEventListener('touchmove', onTouchMove);
+                document.removeEventListener('touchend', onTouchEnd);
+            }
+        })();
+    </script>
+</body>
+
+</html>
