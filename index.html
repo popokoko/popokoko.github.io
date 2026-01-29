@@ -523,6 +523,27 @@
                         </span>
                         <div class="text-gray-500 text-sm tracking-widest mt-2 uppercase">Innovate with Elegance</div>
                     </div>
+
+                    <!-- 主要營運項目描述 -->
+                    <div class="mt-8 text-center max-w-2xl mx-auto px-4 animate-fadeIn" style="animation-delay: 0.5s;">
+                        <p class="text-gray-500 font-medium mb-3 tracking-wider text-sm">
+                            — 以科技與時尚結合 —
+                        </p>
+                        <div class="flex flex-wrap justify-center gap-2 md:gap-3">
+                            <a href="#core"
+                                class="inline-flex items-center px-3 py-1 rounded-full text-xs md:text-sm font-medium bg-blue-50 text-blue-700 border border-blue-100 shadow-sm hover:bg-blue-100 transition-colors cursor-pointer hover:scale-105 transform duration-200 decoration-0">
+                                資通安全協同解決方案
+                            </a>
+                            <a href="#core"
+                                class="inline-flex items-center px-3 py-1 rounded-full text-xs md:text-sm font-medium bg-purple-50 text-purple-700 border border-purple-100 shadow-sm hover:bg-purple-100 transition-colors cursor-pointer hover:scale-105 transform duration-200 decoration-0">
+                                AI本地應用
+                            </a>
+                            <a href="#hues"
+                                class="inline-flex items-center px-3 py-1 rounded-full text-xs md:text-sm font-medium bg-pink-50 text-pink-700 border border-pink-100 shadow-sm hover:bg-pink-100 transition-colors cursor-pointer hover:scale-105 transform duration-200 decoration-0">
+                                時尚 (服飾配件、藝術相關)
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <h1 class="font-heading text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6">
                     <span class="text-gradient-core">PEACE</span><span class="text-gray-800">LOVE</span>.
@@ -1170,6 +1191,34 @@
             themeToggleBtn.onclick = cycleTheme;
             document.body.appendChild(themeToggleBtn);
 
+            // 2.1 創建特效開關按鈕 (Effect Toggle)
+            let effectsEnabled = true;
+            const effectToggleBtn = document.createElement('button');
+            effectToggleBtn.className = 'fixed top-40 right-4 z-50 bg-white/90 backdrop-blur text-xl p-3 rounded-full shadow-xl border-4 border-gray-100 hover:scale-110 hover:shadow-2xl transition-all duration-300 group hidden';
+
+            // Effect Tooltip
+            const effectTooltip = document.createElement('span');
+            effectTooltip.className = 'absolute right-full top-1/2 -translate-y-1/2 mr-3 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none';
+            effectTooltip.innerText = '停止特效';
+            effectToggleBtn.appendChild(effectTooltip);
+
+            effectToggleBtn.onclick = () => {
+                effectsEnabled = !effectsEnabled;
+                if (effectsEnabled) {
+                    effectTooltip.innerText = '停止特效';
+                    effectToggleBtn.style.opacity = '1';
+                    effectToggleBtn.style.filter = 'grayscale(0%)';
+                    if (currentMode === 1) startSnow();
+                    else if (currentMode === 2) startRedEnvelopes();
+                } else {
+                    effectTooltip.innerText = '開啟特效';
+                    effectToggleBtn.style.opacity = '0.8';
+                    effectToggleBtn.style.filter = 'grayscale(100%)';
+                    clearEffects();
+                }
+            };
+            document.body.appendChild(effectToggleBtn);
+
             // 3. 特效樣式注入 (雪花 & 煙火/彩帶)
             const style = document.createElement('style');
             style.textContent = `
@@ -1294,7 +1343,15 @@
                     themeToggleBtn.style.borderColor = '#FF7096';
                     themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(255, 112, 150, 0.39)';
                     tooltip.innerText = 'Go to New Year 2026';
-                    startSnow();
+
+                    // Effect Button
+                    effectToggleBtn.style.display = 'block';
+                    effectToggleBtn.innerHTML = '❄️';
+                    if (!effectToggleBtn.contains(effectTooltip)) effectToggleBtn.appendChild(effectTooltip);
+
+                    if (effectsEnabled) startSnow();
+                    else clearEffects();
+
                 } else if (currentMode === 2) {
                     // New Year (Cloud Dancer)
                     html.classList.add('theme-newyear');
@@ -1304,7 +1361,15 @@
                     themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(0, 0, 0, 0.1)';
                     themeToggleBtn.style.background = '#FFF';
                     tooltip.innerText = 'Go to Original';
-                    startRedEnvelopes();
+
+                    // Effect Button
+                    effectToggleBtn.style.display = 'block';
+                    effectToggleBtn.innerHTML = '🧧';
+                    if (!effectToggleBtn.contains(effectTooltip)) effectToggleBtn.appendChild(effectTooltip);
+
+                    if (effectsEnabled) startRedEnvelopes();
+                    else clearEffects();
+
                 } else {
                     // Original
                     themeToggleBtn.innerHTML = '✨';
@@ -1313,6 +1378,10 @@
                     themeToggleBtn.style.borderColor = '#00c6ff';
                     themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(0, 198, 255, 0.39)';
                     tooltip.innerText = 'Go to Christmas';
+
+                    // Effect Button Hide
+                    effectToggleBtn.style.display = 'none';
+
                     clearEffects();
                 }
 
