@@ -1232,36 +1232,14 @@
             function createRedEnvelope() {
                 const el = document.createElement('div');
                 el.classList.add('red-envelope');
-
-                // 使用 SVG 替換 Emoji，確保【福】字在所有瀏覽器均可顯示
-                el.innerHTML = `
-                    <svg viewBox="0 0 40 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="overflow: visible;">
-                        <g>
-                            <!-- 紅包主體 -->
-                            <rect x="0" y="0" width="40" height="50" rx="4" fill="#E63946" stroke="#991B1B" stroke-width="1"/>
-                            <!-- 封口 -->
-                            <path d="M0 0 C 0 0 10 20 20 20 C 30 20 40 0 40 0" fill="#D62828" stroke="#991B1B" stroke-width="1"/>
-                            <!-- 金色菱形背景 -->
-                            <rect x="10" y="20" width="20" height="20" transform="rotate(45 20 30)" fill="#FFD700" stroke="#F59E0B" stroke-width="0.5"/>
-                            <!-- 福字 -->
-                            <text x="20" y="36" font-family="'Kaiti', 'STKaiti', 'DFKai-SB', serif" font-size="16" fill="#B91C1C" text-anchor="middle" font-weight="bold" style="user-select: none;">福</text>
-                        </g>
-                    </svg>
-                `;
-
+                el.textContent = '🧧';
                 el.style.position = 'fixed';
                 el.style.top = '-60px';
                 el.style.zIndex = '9999';
-
-                // 調整尺寸，div 包裹 SVG
-                const size = Math.random() * 30 + 30; // 30-60px
-                el.style.width = `${size}px`;
-                el.style.height = `${size * 1.25}px`; // 保持 4:5 比例
-
+                el.style.fontSize = (Math.random() * 20 + 30) + 'px';
                 el.style.left = Math.random() * 95 + 'vw';
                 el.style.userSelect = 'none';
                 el.style.pointerEvents = 'none';
-                // 使用 CSS filter 代替 SVG filter
                 el.style.filter = 'drop-shadow(2px 4px 4px rgba(0,0,0,0.2))';
 
                 const duration = Math.random() * 5 + 5;
@@ -1273,58 +1251,159 @@
 
             // --- 切換邏輯 ---
             function cycleTheme() {
-                // 順序: Christmas (1) -> New Year (2) -> Original (0) -> Christmas (1)
-                // 從目前狀態切換到下一個
-                if (currentMode === 1) currentMode = 2;      // Xmas -> NY
-                else if (currentMode === 2) currentMode = 0; // NY -> Org
-                else currentMode = 1;                        // Org -> Xmas
+                if (currentMode === 1) currentMode = 2;
+                else if (currentMode === 2) currentMode = 0;
+                else currentMode = 1;
 
                 updateUI();
             }
 
             function updateUI() {
-                // 清除所有主題 Class
                 html.classList.remove('theme-christmas', 'theme-newyear');
 
-                // 根據 Mode 應用樣式
                 if (currentMode === 1) {
-                    // Christmas
                     html.classList.add('theme-christmas');
                     themeToggleBtn.innerHTML = '🎅';
                     themeToggleBtn.style.borderColor = '#FF7096';
                     themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(255, 112, 150, 0.39)';
+                    themeToggleBtn.style.zIndex = '20000'; // Ensure it's above everything
                     tooltip.innerText = 'Go to New Year 2026';
                     startSnow();
                 } else if (currentMode === 2) {
-                    // New Year (Cloud Dancer)
                     html.classList.add('theme-newyear');
-                    themeToggleBtn.innerHTML = '☁️'; // Cloud icon
+                    themeToggleBtn.innerHTML = '☁️';
                     themeToggleBtn.style.color = '#333';
                     themeToggleBtn.style.borderColor = '#F0EEE9';
                     themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(0, 0, 0, 0.1)';
                     themeToggleBtn.style.background = '#FFF';
-                    tooltip.innerText = 'Go to Original';
+                    themeToggleBtn.style.zIndex = '20000';
+                    tooltip.innerText = '關閉特效 (Go to Original)';
                     startRedEnvelopes();
                 } else {
-                    // Original
                     themeToggleBtn.innerHTML = '✨';
                     themeToggleBtn.style.color = 'inherit';
                     themeToggleBtn.style.background = 'rgba(255,255,255,0.9)';
                     themeToggleBtn.style.borderColor = '#00c6ff';
                     themeToggleBtn.style.boxShadow = '0 4px 14px 0 rgba(0, 198, 255, 0.39)';
+                    themeToggleBtn.style.zIndex = '20000';
                     tooltip.innerText = 'Go to Christmas';
                     clearEffects();
                 }
 
-                // 確保 Tooltip 仍然存在
                 if (!themeToggleBtn.contains(tooltip)) themeToggleBtn.appendChild(tooltip);
             }
 
-            // --- 初始化 ---
             updateUI();
+
+            // --- 天降紅包詢問視窗 ---
+            // 若目前為新年主題，在頁面載入後短暫延遲後顯示詢問
+            if (currentMode === 2) {
+                window.__plKeepEffect = function () {
+                    document.getElementById('redpacket-modal').style.opacity = '0';
+                    setTimeout(function () {
+                        const m = document.getElementById('redpacket-modal');
+                        if (m) m.style.display = 'none';
+                    }, 400);
+                };
+                window.__plDisableEffect = function () {
+                    clearEffects(); // 僅清除飄落特效，保留 theme-newyear 風格
+                    document.getElementById('redpacket-modal').style.opacity = '0';
+                    setTimeout(function () {
+                        const m = document.getElementById('redpacket-modal');
+                        if (m) m.style.display = 'none';
+                    }, 400);
+                };
+                setTimeout(function () {
+                    const modal = document.getElementById('redpacket-modal');
+                    if (modal) {
+                        modal.style.display = 'flex';
+                        setTimeout(function () { modal.style.opacity = '1'; }, 30);
+                    }
+                }, 600);
+            }
 
         })();
     </script>
+
+    <!-- 天降福氣紅包詢問視窗 -->
+    <div id="redpacket-modal" style="
+        display: none;
+        opacity: 0;
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(4px);
+        transition: opacity 0.4s ease;
+    ">
+        <div style="
+            background: linear-gradient(135deg, #fff 60%, #fff9f0 100%);
+            border-radius: 28px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25), 0 0 0 2px rgba(230,57,70,0.15);
+            padding: 2.2rem 2.5rem 2rem;
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: modalPop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+        ">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem; line-height:1;">🧧</div>
+            <h2
+                style="font-size: 1.35rem; font-weight: 900; color: #B91C1C; margin: 0 0 0.5rem; letter-spacing: 0.02em;">
+                天降福氣紅包</h2>
+            <p style="color: #6b7280; font-size: 0.95rem; margin: 0 0 1.6rem; line-height: 1.6;">
+                新年吉祥！是否保留<br>
+                <strong style="color:#E63946;">天降紅包</strong>的飄落特效呢？
+            </p>
+            <div style="display: flex; gap: 0.75rem; justify-content: center;">
+                <button onclick="window.__plDisableEffect()" style="
+                    flex: 1;
+                    padding: 0.7rem 0;
+                    border-radius: 50px;
+                    border: 2px solid #e5e7eb;
+                    background: #f9fafb;
+                    color: #6b7280;
+                    font-size: 0.95rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                " onmouseover="this.style.background='#f3f4f6';this.style.borderColor='#d1d5db';"
+                    onmouseout="this.style.background='#f9fafb';this.style.borderColor='#e5e7eb';">
+                    關閉特效
+                </button>
+                <button onclick="window.__plKeepEffect()" style="
+                    flex: 1;
+                    padding: 0.7rem 0;
+                    border-radius: 50px;
+                    border: none;
+                    background: linear-gradient(135deg, #E63946, #ff6b35);
+                    color: white;
+                    font-size: 0.95rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    box-shadow: 0 4px 15px rgba(230,57,70,0.35);
+                    transition: all 0.2s;
+                " onmouseover="this.style.transform='scale(1.04)';" onmouseout="this.style.transform='scale(1)';">
+                    🎊 保留特效
+                </button>
+            </div>
+        </div>
+    </div>
+    <style>
+        @keyframes modalPop {
+            from {
+                transform: scale(0.85) translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
 
     <!-- 
       修正：Firebase 訪客計數器模組 (適用於 GitHub Pages)
@@ -1455,31 +1534,17 @@
                 const isChristmas = document.documentElement.classList.contains('theme-christmas');
                 const isNewYear = document.documentElement.classList.contains('theme-newyear');
 
-                // 新年主題：使用 SVG 紅包 (確保福字顯示)
+                // 新年主題：使用 Emoji 紅包 (非 SVG)
                 if (isNewYear) {
                     const envelopeEl = document.createElement('div');
                     envelopeEl.classList.add('heart-icon', sizeClass);
-
-                    // 使用 SVG 內容
-                    envelopeEl.innerHTML = `
-                        <svg viewBox="0 0 40 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="0" y="0" width="40" height="50" rx="4" fill="#E63946" stroke="#991B1B" stroke-width="1"/>
-                            <path d="M0 0 C 0 0 10 20 20 20 C 30 20 40 0 40 0" fill="#D62828" stroke="#991B1B" stroke-width="1"/>
-                            <rect x="10" y="20" width="20" height="20" transform="rotate(45 20 30)" fill="#FFD700"/>
-                            <text x="20" y="36" font-family="'Kaiti', 'STKaiti', 'DFKai-SB', serif" font-size="16" fill="#B91C1C" text-anchor="middle" font-weight="bold">福</text>
-                        </svg>
-                    `;
-
+                    envelopeEl.textContent = '🧧';
                     envelopeEl.style.position = 'absolute';
-                    // 確保內容物置中
                     envelopeEl.style.display = 'flex';
                     envelopeEl.style.alignItems = 'center';
                     envelopeEl.style.justifyContent = 'center';
-
-                    // 覆蓋預設 CSS 大小，改為符合比例的大小 (或保持預設大小並讓 SVG 自適應)
-                    // 這裡我們直接使用 sizePx 作為寬度，高度自動
-                    envelopeEl.style.width = `${sizePx}px`;
-                    envelopeEl.style.height = `${sizePx * 1.25}px`;
+                    envelopeEl.style.fontSize = `${sizePx}px`; //emoji size
+                    envelopeEl.style.lineHeight = '1';
 
                     applyPosition(envelopeEl, sizePx, sizeClass);
                     return envelopeEl;
