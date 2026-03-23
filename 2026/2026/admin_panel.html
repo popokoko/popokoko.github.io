@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEACELOVE | 後台管理 (Sakura Edition)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入圓潤可愛的字體 -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Varela+Round&display=swap"
+        rel="stylesheet">
+    <style>
+        /* --- 動物森友會：櫻花粉少女風格設定 --- */
+        :root {
+            --ac-main: #ffb7c5;
+            /* 主色：櫻花粉 */
+            --ac-main-dark: #ff8fa3;
+            /* 深色：深櫻花 */
+            --ac-cream: #fff9fa;
+            /* 卡片背景：透粉白 */
+            --ac-brown: #795548;
+            /* 文字：巧克力褐 */
+            --ac-accent: #ff80ab;
+            /* 強調：亮粉紅 */
+            --ac-bg-base: #fff0f5;
+            /* 背景：淡粉紅 (LavenderBlush) */
+            --ac-bg-stripe: #ffe6ea;
+            /* 背景條紋 */
+            --ac-border: #f8bbd0;
+            /* 邊框：玫瑰粉 */
+        }
+
+        body {
+            font-family: 'Varela Round', 'Nunito', sans-serif;
+            background-color: var(--ac-bg-base);
+            /* 櫻花信紙風格斜紋背景 */
+            background-image: repeating-linear-gradient(45deg,
+                    var(--ac-bg-base),
+                    var(--ac-bg-base) 20px,
+                    var(--ac-bg-stripe) 20px,
+                    var(--ac-bg-stripe) 40px);
+            color: var(--ac-brown);
+            overflow-x: hidden;
+            /* 防止拖曳出界導致卷軸 */
+        }
+
+        /* AC 風格卡片 */
+        .ac-card {
+            background-color: var(--ac-cream);
+            border-radius: 30px;
+            /* 柔和的粉色陰影 */
+            box-shadow: 6px 6px 0px rgba(255, 183, 197, 0.4), inset 0 0 0 4px #fff;
+            border: 4px solid var(--ac-border);
+        }
+
+        /* AC 風格輸入框 */
+        .ac-input {
+            background-color: #fff;
+            border: 3px solid var(--ac-border);
+            border-radius: 18px;
+            padding: 12px 18px;
+            color: var(--ac-brown);
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .ac-input:focus {
+            border-color: var(--ac-accent);
+            outline: none;
+            /* 粉紅光暈 */
+            box-shadow: 0 0 0 4px rgba(255, 128, 171, 0.25);
+        }
+
+        /* AC 風格按鈕 */
+        .ac-btn {
+            border-radius: 25px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.1s;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .ac-btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        .btn-leaf {
+            background-color: var(--ac-main);
+            color: #fff;
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-leaf:hover {
+            background-color: var(--ac-main-dark);
+        }
+
+        .btn-love {
+            background-color: var(--ac-accent);
+            color: #fff;
+        }
+
+        .btn-love:hover {
+            background-color: #ff4081;
+        }
+
+        .btn-cancel {
+            background-color: #ffebee;
+            /* 極淡粉 */
+            color: #ef9a9a;
+        }
+
+        .btn-cancel:hover {
+            background-color: #ffcdd2;
+            color: #d32f2f;
+        }
+
+        /* 花瓣裝飾圖示 (取代原本的葉子) */
+        .petal-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: var(--ac-main);
+            border-radius: 20px 0px 20px 0px;
+            /* 花瓣形狀 */
+            transform: rotate(45deg);
+            margin-right: 8px;
+            box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 選擇選單優化 */
+        select.ac-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff80ab' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 15px;
+        }
+
+        /* Logo 動森化風格 */
+        .ac-logo-container {
+            background-color: #fff;
+            border-radius: 50%;
+            padding: 25px;
+            border: 4px solid var(--ac-border);
+            /* 玫瑰粉邊框 */
+            box-shadow: 0 6px 0 rgba(255, 183, 197, 0.3);
+            display: inline-block;
+            margin-bottom: 10px;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .ac-logo-container:hover {
+            transform: rotate(10deg) scale(1.05);
+        }
+
+        .ac-logo-img {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.1));
+        }
+
+        /* 錯誤提示框 */
+        #permission-alert {
+            display: none;
+            border: 2px dashed #e57373;
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #permission-alert code {
+            display: block;
+            background: #fff;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 10px;
+            font-family: monospace;
+            text-align: left;
+            font-size: 0.85rem;
+            color: #333;
+            border: 1px solid #ffcdd2;
+        }
+
+        /* --- 電影小車車樣式 (可拖曳版) --- */
+        .movie-van-wrapper {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            /* 確保在最上層 */
+            width: 260px;
+            animation: car-float 3s ease-in-out infinite;
+            /* 移除 transition，避免拖曳時延遲 */
+            cursor: grab;
+            /* 顯示可抓取手勢 */
+            user-select: none;
+            /* 防止選中文字 */
+        }
+
+        .movie-van-wrapper:active {
+            cursor: grabbing;
+        }
+
+        /* 拖曳時暫停動畫 */
+        .movie-van-wrapper.dragging {
+            animation-play-state: paused;
+            transition: none;
+        }
+
+        @keyframes car-float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .van-body {
+            background: #fff;
+            border-radius: 20px 20px 10px 10px;
+            border: 4px solid var(--ac-brown);
+            padding: 8px;
+            position: relative;
+            background-image: linear-gradient(to bottom, #fff 50%, var(--ac-main) 50%);
+            /* 雙色車身 */
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+            /* 讓事件穿透到 wrapper */
+        }
+
+        /* 讓影片控制項可以點擊 */
+        .video-screen {
+            background: #000;
+            border: 3px solid var(--ac-brown);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            height: 140px;
+            /* 螢幕高度 */
+            pointer-events: auto;
+            /* 恢復影片點擊 */
+        }
+
+        .video-screen video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .van-roof {
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            right: 15px;
+            height: 12px;
+            background-color: var(--ac-main-dark);
+            border-radius: 8px 8px 0 0;
+            border: 4px solid var(--ac-brown);
+            border-bottom: none;
+        }
+
+        .van-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 5px 0 5px;
+        }
+
+        .headlight {
+            width: 14px;
+            height: 14px;
+            background-color: #fff9c4;
+            border: 3px solid var(--ac-brown);
+            border-radius: 50%;
+        }
+
+        .grill {
+            flex-grow: 1;
+            height: 6px;
+            margin: 0 10px;
+            background: repeating-linear-gradient(90deg,
+                    var(--ac-brown),
+                    var(--ac-brown) 3px,
+                    transparent 3px,
+                    transparent 6px);
+        }
+
+        .wheels {
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            padding: 0 20px;
+        }
+
+        .wheel {
+            width: 32px;
+            height: 32px;
+            background-color: #3e2723;
+            border: 3px solid var(--ac-brown);
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wheel::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: #d7ccc8;
+            border-radius: 50%;
+        }
+
+        /* 禁止圖片被拖拽或右鍵 */
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+            user-select: none;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- 登入區塊 -->
+    <div id="login-section" class="ac-card p-10 w-full max-w-md relative">
+        <!-- 裝飾：櫻花浮動 -->
+        <div
+            class="absolute -top-5 -left-5 transform -rotate-12 bg-white p-3 rounded-full shadow-md border-4 border-[#ffcdd2]">
+            <span class="text-3xl">🌸</span>
+        </div>
+
+        <div class="text-center mb-8">
+            <!-- 動森化 Logo -->
+            <div class="ac-logo-container">
+                <img src="./us.png" alt="PEACELOVE Logo" class="ac-logo-img">
+            </div>
+
+            <h1 class="text-3xl font-extrabold text-[#795548] mb-2 tracking-tight">
+                PEACELOVE
+            </h1>
+            <p
+                class="text-[#8d6e63] text-sm bg-[#ffebee] inline-block px-5 py-1.5 rounded-full font-bold text-pink-400">
+                滿滿愛意的後台
+            </p>
+        </div>
+        <form id="login-form" class="space-y-5" autocomplete="off">
+            <div>
+                <label class="block text-sm font-bold text-[#8d6e63] mb-2 ml-1">Nook ID (Email)</label>
+                <!-- 加入 autocomplete="off" -->
+                <input type="email" id="admin-email" required class="ac-input w-full" placeholder="love@peacelove.com"
+                    autocomplete="off">
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-[#8d6e63] mb-2 ml-1">密碼</label>
+                <!-- 加入 autocomplete="new-password" 防止自動填充 -->
+                <input type="password" id="admin-password" required class="ac-input w-full" placeholder="••••••••"
+                    autocomplete="new-password">
+            </div>
+            <button type="submit" class="ac-btn btn-leaf w-full py-3 mt-6 text-lg">
+                開啟心意
+            </button>
+            <div id="login-error"
+                class="hidden p-4 bg-red-50 border-2 border-red-200 text-red-500 text-sm rounded-2xl text-center font-bold">
+            </div>
+        </form>
+    </div>
+
+    <!-- 管理區塊 (預設隱藏) -->
+    <div id="admin-section" class="w-full max-w-6xl hidden">
+        <header
+            class="flex flex-col md:flex-row justify-between items-center mb-8 bg-[#fff9fa]/90 p-5 rounded-[30px] shadow-sm border-4 border-white">
+            <div class="flex items-center gap-4 mb-4 md:mb-0">
+                <!-- 頂部小 Logo -->
+                <div class="bg-pink-100 p-2 rounded-full border-4 border-white shadow-sm overflow-hidden bg-white">
+                    <img src="./us.png" alt="Logo" class="w-12 h-12 object-contain filter drop-shadow-sm">
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold text-[#795548]">P.L. HUES 倉庫管理</h1>
+                    <p class="text-sm text-pink-400 font-bold">今天也要傳遞思念與美好喔！🌸</p>
+                </div>
+            </div>
+            <button id="logout-btn" class="ac-btn btn-cancel px-6 py-2.5 text-sm">
+                休息一下 (登出)
+            </button>
+        </header>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- 上架/編輯表單 -->
+            <div class="lg:col-span-1">
+                <div class="ac-card p-6 sticky top-8 bg-[#fff9fa]">
+                    <!-- 標題會動態改變 -->
+                    <h2 id="form-title"
+                        class="text-xl font-extrabold mb-6 text-[#795548] flex items-center border-b-2 border-[#ffcdd2] pb-3">
+                        <span class="petal-icon"></span> 新增好物
+                    </h2>
+
+                    <form id="add-product-form" class="space-y-4">
+                        <input type="hidden" id="edit-id">
+
+                        <div class="bg-[#ffebee] p-4 rounded-2xl border-2 border-[#ffcdd2] border-dashed">
+                            <label
+                                class="block text-xs font-bold text-[#e57373] mb-2 uppercase tracking-wider">Category</label>
+                            <select id="p-category" class="ac-input w-full bg-white cursor-pointer">
+                                <option value="street">🧢 街頭潮流 (Street)</option>
+                                <option value="minimal">🌿 極簡主義 (Minimal)</option>
+                                <option value="limited">✨ 聯名限定 (Limited)</option>
+                                <option value="accessories">🎒 精選配件 (Accessories)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-[#8d6e63] mb-1 ml-1">產品名稱</label>
+                            <input type="text" id="p-name" required class="ac-input w-full" placeholder="例如：櫻花季限定 Tee">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-[#8d6e63] mb-1 ml-1">簡短說明</label>
+                            <input type="text" id="p-desc" required class="ac-input w-full" placeholder="寫下滿滿的思念...">
+                        </div>
+
+                        <div class="relative">
+                            <label class="block text-sm font-bold text-[#8d6e63] mb-1 ml-1">鈴錢 (價格)</label>
+                            <span class="absolute left-4 top-[38px] text-pink-300 font-bold">$</span>
+                            <input type="number" id="p-price" required class="ac-input w-full pl-8">
+                        </div>
+
+                        <!-- 恢復為 URL 輸入 -->
+                        <div>
+                            <label class="block text-sm font-bold text-[#8d6e63] mb-1 ml-1">照片 (URL)</label>
+                            <input type="url" id="p-image" required class="ac-input w-full" placeholder="https://...">
+                            <p class="text-xs text-[#a1887f] mt-1.5 ml-2">請輸入公開的圖片連結</p>
+                        </div>
+
+                        <!-- 購買連結 -->
+                        <div>
+                            <label class="block text-sm font-bold text-[#8d6e63] mb-1 ml-1">傳送門 (連結)</label>
+                            <input type="url" id="p-link" class="ac-input w-full" placeholder="https://shopee.tw/...">
+                            <p class="text-xs text-[#a1887f] mt-1.5 ml-2 flex items-center gap-1">
+                                <span>🔗</span> 點擊按鈕後會前往的地方
+                            </p>
+                        </div>
+
+                        <div class="flex gap-3 pt-4">
+                            <button type="submit" id="submit-btn"
+                                class="ac-btn btn-love w-full py-3 text-white shadow-md text-base">
+                                上架禮物
+                            </button>
+                            <button type="button" id="cancel-edit-btn"
+                                class="hidden ac-btn btn-cancel w-1/3 py-3 text-base">
+                                取消
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 產品列表 -->
+            <div class="lg:col-span-2">
+                <div class="ac-card p-6 min-h-[500px]">
+                    <h2
+                        class="text-xl font-extrabold mb-6 text-[#795548] flex items-center border-b-2 border-[#f0f0f0] pb-4">
+                        📦 現有收藏
+                    </h2>
+
+                    <!-- 權限警告 (預設隱藏) -->
+                    <div id="permission-alert">
+                        <h3 class="font-bold text-lg mb-2">🚧 哎呀！權限不足 🚧</h3>
+                        <p class="text-sm">系統無法讀取資料庫。請前往 Firebase Console 設定 Firestore 規則：</p>
+                        <code>
+                            allow read, write: if request.auth != null;
+                        </code>
+                        <p class="text-xs mt-2">設定完成後，請重新整理此頁面。</p>
+                    </div>
+
+                    <div id="product-list" class="space-y-4">
+                        <!-- 產品項目由 JS 生成 -->
+                        <div class="text-center text-[#a1887f] py-12 flex flex-col items-center">
+                            <span class="text-4xl mb-4 opacity-50">🎈</span>
+                            <p class="font-bold">正在從氣球禮物中讀取資料...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 電影小車車 (可拖曳) -->
+    <div class="movie-van-wrapper" id="movie-van">
+        <div class="van-roof"></div>
+        <div class="van-body">
+            <div class="video-screen">
+                <!-- 注意：為了拖曳順暢，影片預設靜音播放 -->
+                <video autoplay loop muted playsinline controls class="w-full h-full object-cover">
+                    <source src="./videoo/plove.mp4" type="video/mp4">
+                    您的瀏覽器不支援影片標籤。
+                </video>
+            </div>
+            <div class="van-details">
+                <div class="headlight"></div>
+                <div class="grill"></div>
+                <div class="headlight"></div>
+            </div>
+            <div class="wheels">
+                <div class="wheel"></div>
+                <div class="wheel"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, updateDoc, doc, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // 設定檔
+        import { firebaseConfig } from "./config.js";
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = 'peacelove';
+
+        // DOM 元素
+        const loginSection = document.getElementById('login-section');
+        const adminSection = document.getElementById('admin-section');
+        const loginForm = document.getElementById('login-form');
+        const logoutBtn = document.getElementById('logout-btn');
+        const addProductForm = document.getElementById('add-product-form');
+        const productList = document.getElementById('product-list');
+        const loginError = document.getElementById('login-error');
+        const permissionAlert = document.getElementById('permission-alert');
+
+        const formTitle = document.getElementById('form-title');
+        const submitBtn = document.getElementById('submit-btn');
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
+        const editIdInput = document.getElementById('edit-id');
+
+        // 1. 監聽登入狀態
+        onAuthStateChanged(auth, (user) => {
+            if (user && !user.isAnonymous) {
+                // 已登入且非匿名 (真正的管理者)
+                loginSection.classList.add('hidden');
+                adminSection.classList.remove('hidden');
+                loadProducts();
+            } else {
+                // 未登入 或 匿名登入 (視為未授權)
+                loginSection.classList.remove('hidden');
+                adminSection.classList.add('hidden');
+
+                // 如果是匿名登入，可以在背景安靜登出，避免干擾
+                // if (user && user.isAnonymous) {
+                //    signOut(auth).catch(err => console.log("清除匿名狀態", err));
+                // }
+            }
+        });
+
+        // 2. 登入功能
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+
+            loginError.classList.add('hidden');
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                console.error("登入錯誤:", error);
+                let errorMsg = "哎呀！登入失敗了...";
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    errorMsg = "帳號或密碼不對喔，請再檢查一下！";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMsg = "Email 格式好像怪怪的？";
+                }
+
+                loginError.textContent = errorMsg;
+                loginError.classList.remove('hidden');
+            }
+        });
+
+        // 3. 登出功能 (強化版)
+        logoutBtn.addEventListener('click', async () => {
+            await signOut(auth);
+            // 手動清除輸入框，確保不殘留
+            document.getElementById('admin-email').value = '';
+            document.getElementById('admin-password').value = '';
+            alert('👋 休息一下吧！已安全登出。');
+            window.location.reload(); // 重新整理確保狀態完全清除
+        });
+
+        // 4. 新增/更新產品
+        addProductForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const category = document.getElementById('p-category').value;
+            const name = document.getElementById('p-name').value;
+            const desc = document.getElementById('p-desc').value;
+            const price = document.getElementById('p-price').value;
+            const image = document.getElementById('p-image').value;
+            const link = document.getElementById('p-link').value;
+            const editId = editIdInput.value;
+
+            try {
+                const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+
+                if (editId) {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', editId);
+                    await updateDoc(docRef, {
+                        category: category,
+                        name: name,
+                        description: desc,
+                        price: price,
+                        image: image,
+                        link: link
+                    });
+                    alert("✨ 修改成功！這份禮物更完美了！ ✨");
+                    resetFormState();
+                } else {
+                    await addDoc(productsRef, {
+                        category: category,
+                        name: name,
+                        description: desc,
+                        price: price,
+                        image: image,
+                        link: link,
+                        timestamp: serverTimestamp()
+                    });
+                    alert("🎉 成功上架！村民們一定會喜歡的！ 🎉");
+                    addProductForm.reset();
+                }
+            } catch (error) {
+                console.error("操作錯誤:", error);
+                if (error.code === 'permission-denied') {
+                    permissionAlert.style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    alert("糟糕，發生錯誤了：" + error.message);
+                }
+            }
+        });
+
+        cancelEditBtn.addEventListener('click', () => {
+            resetFormState();
+        });
+
+        function resetFormState() {
+            addProductForm.reset();
+            editIdInput.value = "";
+            formTitle.innerHTML = '<span class="petal-icon"></span> 新增好物';
+            submitBtn.textContent = "上架禮物";
+            submitBtn.classList.remove('btn-leaf');
+            submitBtn.classList.add('btn-love');
+            cancelEditBtn.classList.add('hidden');
+            submitBtn.classList.remove('w-2/3');
+            submitBtn.classList.add('w-full');
+        }
+
+        window.editProduct = (id, category, name, desc, price, image, link) => {
+            document.getElementById('p-category').value = category;
+            document.getElementById('p-name').value = name;
+            document.getElementById('p-desc').value = desc;
+            document.getElementById('p-price').value = price;
+            document.getElementById('p-image').value = image;
+            document.getElementById('p-link').value = link || '';
+            editIdInput.value = id;
+
+            formTitle.innerHTML = '✏️ 修改內容';
+            submitBtn.textContent = "儲存修改";
+
+            submitBtn.classList.remove('btn-love');
+            submitBtn.classList.add('btn-leaf');
+
+            cancelEditBtn.classList.remove('hidden');
+            submitBtn.classList.remove('w-full');
+            submitBtn.classList.add('w-2/3');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        function loadProducts() {
+            const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+            const q = query(productsRef, orderBy("timestamp", "desc"));
+
+            onSnapshot(q, (snapshot) => {
+                productList.innerHTML = '';
+                permissionAlert.style.display = 'none';
+
+                if (snapshot.empty) {
+                    productList.innerHTML = '<div class="text-center text-gray-400 py-12 font-bold text-lg">🍃 這裡空空如也...<br>快去上架一些寶貝吧！</div>';
+                    return;
+                }
+
+                snapshot.forEach((docSnap) => {
+                    const p = docSnap.data();
+                    const id = docSnap.id;
+
+                    let catColor = "bg-gray-100 text-gray-600";
+                    let catIcon = "📦";
+                    if (p.category === 'street') { catColor = "bg-[#212121] text-[#f5f5f5]"; catIcon = "🧢"; }
+                    if (p.category === 'minimal') { catColor = "bg-[#d7ccc8] text-[#5d4037]"; catIcon = "🌿"; }
+                    if (p.category === 'limited') { catColor = "bg-[#fff9c4] text-[#fbc02d]"; catIcon = "✨"; }
+                    if (p.category === 'accessories') { catColor = "bg-[#e1bee7] text-[#8e24aa]"; catIcon = "🎒"; }
+
+                    const safeName = (p.name || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                    const safeDesc = (p.description || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                    const safeImage = (p.image || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                    const safeLink = (p.link || "").replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+
+                    const item = document.createElement('div');
+                    item.className = "flex items-center gap-4 bg-white p-4 rounded-[20px] border-2 border-[#ffebee] hover:border-[#ff80ab] transition-colors shadow-sm group";
+                    item.innerHTML = `
+                        <div class="relative w-16 h-16 flex-shrink-0">
+                            <img src="${p.image}" class="w-16 h-16 object-cover rounded-[15px] bg-gray-100 border-2 border-white shadow-sm">
+                            <div class="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm text-xs border border-gray-100">${catIcon}</div>
+                        </div>
+                        
+                        <div class="flex-grow min-w-0">
+                            <div class="flex items-center gap-2 mb-1 flex-wrap">
+                                <span class="text-[10px] px-2 py-0.5 rounded-full ${catColor} font-bold uppercase tracking-wider shadow-sm">${p.category || 'general'}</span>
+                                <h3 class="font-bold text-[#5d4037] truncate text-lg">${p.name}</h3>
+                                ${p.link ? '<a href="' + p.link + '" target="_blank" class="text-xs text-[#f48fb1] hover:text-[#e91e63] bg-[#fce4ec] px-1.5 py-0.5 rounded-md no-underline border border-[#f8bbd0]">🔗</a>' : ''}
+                            </div>
+                            <p class="text-sm text-[#a1887f] truncate">${p.description}</p>
+                            <p class="text-base font-extrabold text-[#ff80ab] mt-1">$${p.price}</p>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <button onclick="editProduct('${id}', '${p.category}', '${safeName}', '${safeDesc}', '${p.price}', '${safeImage}', '${safeLink}')" 
+                                    class="bg-[#e3f2fd] text-[#1e88e5] w-10 h-10 rounded-full flex items-center justify-center hover:bg-[#bbdefb] hover:scale-110 transition-transform shadow-sm border border-[#bbdefb]" title="編輯">
+                                ✏️
+                            </button>
+                            <button class="delete-btn bg-[#ffebee] text-[#e53935] w-10 h-10 rounded-full flex items-center justify-center hover:bg-[#ffcdd2] hover:scale-110 transition-transform shadow-sm border border-[#ffcdd2]" data-id="${id}" title="刪除">
+                                🗑️
+                            </button>
+                        </div>
+                    `;
+                    productList.appendChild(item);
+                });
+
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        if (confirm('💔 確定要讓這個寶貝離開嗎？')) {
+                            const id = e.target.dataset.id;
+                            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', id);
+                            try { await deleteDoc(docRef); }
+                            catch (err) { alert("刪除失敗：" + err.message); }
+                        }
+                    });
+                });
+            }, (error) => {
+                console.error("Firestore 監聽失敗:", error);
+                if (error.code === 'permission-denied') {
+                    productList.innerHTML = '';
+                    permissionAlert.style.display = 'block';
+                }
+            });
+        }
+
+        // --- 露營車拖曳邏輯 ---
+        const van = document.getElementById('movie-van');
+        let isDragging = false;
+        let startX, startY;
+
+        // 滑鼠/觸控 按下
+        const startDrag = (e) => {
+            // 忽略點擊影片控制項的情況
+            if (e.target.tagName === 'VIDEO') return;
+
+            isDragging = true;
+            van.classList.add('dragging');
+            van.style.cursor = 'grabbing';
+
+            // 取得游標位置
+            const clientX = e.clientX || e.touches[0].clientX;
+            const clientY = e.clientY || e.touches[0].clientY;
+
+            // 取得元素目前的 offset (相對於視窗)
+            const rect = van.getBoundingClientRect();
+
+            // 計算游標與元素左上角的距離
+            startX = clientX - rect.left;
+            startY = clientY - rect.top;
+
+            // 切換定位方式：從 bottom/right 改為 top/left 以便拖曳
+            // 注意：這會導致第一次點擊時位置微調，但對拖曳來說是必要的
+            van.style.bottom = 'auto';
+            van.style.right = 'auto';
+            van.style.left = rect.left + 'px';
+            van.style.top = rect.top + 'px';
+
+            e.preventDefault(); // 防止選取文字等預設行為
+        };
+
+        // 滑鼠/觸控 移動
+        const onDrag = (e) => {
+            if (!isDragging) return;
+
+            const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+
+            // 計算新位置
+            let newX = clientX - startX;
+            let newY = clientY - startY;
+
+            // 邊界檢查 (防止拖出視窗)
+            const winWidth = window.innerWidth;
+            const winHeight = window.innerHeight;
+            const vanWidth = van.offsetWidth;
+            const vanHeight = van.offsetHeight;
+
+            if (newX < 0) newX = 0;
+            if (newY < 0) newY = 0;
+            if (newX + vanWidth > winWidth) newX = winWidth - vanWidth;
+            if (newY + vanHeight > winHeight) newY = winHeight - vanHeight;
+
+            van.style.left = newX + 'px';
+            van.style.top = newY + 'px';
+        };
+
+        // 滑鼠/觸控 放開
+        const endDrag = () => {
+            if (isDragging) {
+                isDragging = false;
+                van.classList.remove('dragging');
+                van.style.cursor = 'grab';
+            }
+        };
+
+        // 綁定事件 (支援滑鼠與觸控)
+        van.addEventListener('mousedown', startDrag);
+        document.addEventListener('mousemove', onDrag);
+        document.addEventListener('mouseup', endDrag);
+
+        van.addEventListener('touchstart', startDrag, { passive: false });
+        document.addEventListener('touchmove', onDrag, { passive: false });
+        document.addEventListener('touchend', endDrag);
+
+        // 禁止所有圖片的右鍵選單與拖拽
+        // 引入統一資安防護腳本 (Asset Protection & URL Masking)
+    </script>
+    <script src="js/guard.js"></script>
+</body>
+
+</html>
