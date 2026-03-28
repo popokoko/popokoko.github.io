@@ -1402,20 +1402,23 @@
                 const isChristmas = document.documentElement.classList.contains('theme-christmas');
                 const isNewYear = document.documentElement.classList.contains('theme-newyear');
 
-                // 新年主題：使用 Emoji 紅包 (非 SVG)
+                // 新年主題：使用圓潤的愛心 SVG
                 if (isNewYear) {
-                    const envelopeEl = document.createElement('div');
-                    envelopeEl.classList.add('heart-icon', sizeClass);
-                    envelopeEl.textContent = '🧧';
-                    envelopeEl.style.position = 'absolute';
-                    envelopeEl.style.display = 'flex';
-                    envelopeEl.style.alignItems = 'center';
-                    envelopeEl.style.justifyContent = 'center';
-                    envelopeEl.style.fontSize = `${sizePx}px`; //emoji size
-                    envelopeEl.style.lineHeight = '1';
-
-                    applyPosition(envelopeEl, sizePx, sizeClass);
-                    return envelopeEl;
+                    const heartEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    heartEl.setAttribute('class', `heart-icon ${sizeClass}`);
+                    heartEl.setAttribute('viewBox', '0 0 24 24');
+                    heartEl.setAttribute('fill', 'currentColor');
+                    // 圓潤愛心路徑 (Material Design Style)
+                    heartEl.innerHTML = '<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />';
+                    
+                    // 使用暖紅色系，展現滿滿的愛與熱情
+                    if (sizeClass === 'heart-small') heartEl.style.color = '#FF8DA1'; // 嫩粉
+                    if (sizeClass === 'heart-medium') heartEl.style.color = '#FF4D8D'; // 俏皮粉
+                    if (sizeClass === 'heart-large') heartEl.style.color = '#E63946';  // 喜慶紅
+                    if (sizeClass === 'heart-huge') heartEl.style.color = '#D62828';   // 質感深紅
+                    
+                    applyPosition(heartEl, sizePx, sizeClass);
+                    return heartEl;
                 }
 
                 // 其他主題：使用 SVG
