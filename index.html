@@ -408,6 +408,36 @@
             background-color: #E2E8F0 !important;
         }
     </style>
+
+<style id="pl-spatial-style">
+:root{--pl-ink:#253347;--pl-paper:#f5f3ed;--pl-line:#d9dfdf}
+body{line-height:1.75}header{border-radius:0 0 24px 24px!important;box-shadow:0 6px 30px #2533470c!important}
+main>section{isolation:isolate} main>section>.container{max-width:1180px}
+#home{min-height:92svh;padding-top:60px;background:radial-gradient(ellipse at 15% 25%,#cce5eb80,transparent 50%),radial-gradient(ellipse at 90% 60%,#f6d4d680,transparent 45%),#f5f3ed!important}
+#home>.container{position:relative} #home h1{letter-spacing:-.045em}#home .newyear-text>span{font-size:clamp(1.1rem,3vw,2rem);letter-spacing:.17em;animation:none}
+#home img[alt="PEACELOVE 核心標誌"]{animation:none}#home .tv-set{filter:drop-shadow(0 28px 22px #25334720)}
+.pl-tools{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:14px 18px;margin:0 auto 36px;width:fit-content;max-width:100%;border:1px solid var(--pl-line);border-radius:18px;background:#ffffffdc;color:var(--pl-ink);font:500 14px/1.5 system-ui}
+.pl-tools button{padding:8px 14px;border:1px solid #cad4dc;border-radius:10px;background:white;color:#253347;cursor:pointer}.pl-tools button[aria-pressed="true"]{background:#253347;color:white}.pl-tools input{width:100px;accent-color:#476879}.pl-tools label{display:flex;align-items:center;gap:8px}
+.pl-scene{perspective:1400px;position:relative;padding:24px 0 36px}.pl-world{transform-style:preserve-3d;transform:rotateX(3deg) rotateY(var(--pl-y,0deg));transition:transform .35s ease;gap:28px!important}
+.pl-object{transform-style:preserve-3d;position:relative;transform:translateZ(var(--pl-z,0px));transition:transform .3s ease!important;border:1px solid #cbd5df!important;box-shadow:0 22px 32px -20px #25334760!important;background:#ffffff!important;border-radius:24px!important}
+.pl-object:nth-child(2){--pl-z:36px}.pl-object:before{content:'';position:absolute;inset:0;border-radius:inherit;background:#d4dce2;transform:translateZ(-12px);pointer-events:none}.pl-object:hover,.pl-object:focus-visible{transform:translateZ(62px) rotateX(-2deg)!important;outline:3px solid #56829b;outline-offset:4px}.pl-object h3{font-size:1.35rem;line-height:1.55;color:#253347}.pl-object p{line-height:1.8}
+#core,#hues{overflow:visible!important}#core{background:#edf2f4!important}#hues{background:#faf0ec!important}#core .text-gradient-core{background-image:linear-gradient(100deg,#376c87,#5a7f8c)}#hues .text-gradient-hues{background-image:linear-gradient(100deg,#a74f67,#bf7363)}
+#insights .grid>div{border:1px solid #e1e5e7;box-shadow:0 16px 32px #2533470a}.pl-flat .pl-world{transform:none;transform-style:flat}.pl-flat .pl-object,.pl-flat .pl-object:hover,.pl-flat .pl-object:focus-visible{transform:none!important}.pl-flat .pl-object:before{display:none}
+:focus-visible{outline:3px solid #387995;outline-offset:4px}footer{background:#253347!important}#contact input,#contact textarea{font:inherit}#contact .bg-gradient-core{background:linear-gradient(135deg,#456e83,#324e64)}#contact .bg-gradient-hues{background:linear-gradient(135deg,#ab6075,#925164)}
+@media(max-width:767px){.pl-world{display:grid;grid-template-columns:1fr!important;transform:none!important}.pl-object{transform:none!important}.pl-object:before{display:none}.pl-tools{font-size:13px;gap:8px}.pl-tools label{display:none}#home{min-height:auto;padding-bottom:56px}#contact .max-w-6xl{padding:20px}#contact .grid{gap:20px}#contact .grid>div{padding:20px}#home h1{font-size:2.8rem}header nav{height:64px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*:before,*:after{animation:none!important;transition:none!important}.snowflake,.confetti{display:none!important}.pl-world{transform:none!important}}
+</style>
+
+
+<style id="pl-logo-3d-style">
+.pl-logo-3d-stage{position:relative;display:inline-grid;place-items:center;perspective:900px;transform-style:preserve-3d;isolation:isolate;margin:0 auto 1rem}
+.pl-logo-3d-stage>img{grid-area:1/1;position:relative;z-index:3;transform:rotateX(7deg) rotateY(-5deg) translateZ(12px);transform-style:preserve-3d;filter:drop-shadow(0 5px 3px #29384b28);transition:transform .55s cubic-bezier(.2,.8,.2,1),filter .55s ease;animation:none!important}
+.pl-logo-3d-stage>.pl-logo-depth{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;z-index:2;transform:translateZ(-2px);filter:brightness(.70) saturate(.72) drop-shadow(0 12px 9px #26374933);opacity:.9}
+.pl-logo-3d-stage:hover>img,.pl-logo-3d-stage:focus-within>img{transform:rotateX(0deg) rotateY(0deg) translateZ(25px) scale(1.025);filter:drop-shadow(0 13px 10px #29384b35)}
+@media(max-width:767px){.pl-logo-3d-stage{perspective:700px}.pl-logo-3d-stage>img{transform:rotateX(4deg) rotateY(-3deg) translateZ(9px)}}
+@media(prefers-reduced-motion:reduce){.pl-logo-3d-stage>img{transition:none!important;transform:none!important}}
+</style>
+
 </head>
 
 <body class="font-body bg-white text-gray-800">
@@ -1501,6 +1531,26 @@
             }
         })();
     </script>
+
+<script id="pl-spatial-script">
+(()=>{
+const root=document.documentElement;let flat=matchMedia('(prefers-reduced-motion: reduce)').matches;const controls=[];
+for(const id of ['core','hues']){
+const section=document.getElementById(id),world=section.querySelector('.grid');if(!world)continue;
+const toolbar=document.createElement('div');toolbar.className='pl-tools';toolbar.innerHTML='<span>空間展廊</span><button type="button" class="pl-mode" aria-pressed="false">平面模式</button><label>視角 <input type="range" min="-10" max="10" value="0" aria-label="'+(id==='core'?'CORE':'HUES')+' 展廊視角"></label><button type="button" class="pl-reset">重設視角</button>';
+const scene=document.createElement('div');scene.className='pl-scene';world.before(toolbar,scene);scene.append(world);world.classList.add('pl-world');for(const card of world.children)card.classList.add('pl-object');
+const mode=toolbar.querySelector('.pl-mode'),slider=toolbar.querySelector('input');controls.push({mode,slider});mode.onclick=()=>{flat=!flat;sync()};slider.oninput=()=>world.style.setProperty('--pl-y',slider.value+'deg');toolbar.querySelector('.pl-reset').onclick=()=>{slider.value=0;world.style.setProperty('--pl-y','0deg')};
+}
+function sync(){root.classList.toggle('pl-flat',flat);for(const {mode,slider} of controls){mode.setAttribute('aria-pressed',String(flat));mode.textContent=flat?'開啟 3D 展廊':'平面模式';slider.disabled=flat}}sync();
+const menu=document.getElementById('menu-btn');menu.setAttribute('aria-label','開啟導覽選單');menu.setAttribute('aria-controls','mobile-menu');menu.setAttribute('aria-expanded','false');new MutationObserver(()=>menu.setAttribute('aria-expanded',String(!document.getElementById('mobile-menu').classList.contains('hidden')))).observe(document.getElementById('mobile-menu'),{attributes:true,attributeFilter:['class']});
+})();
+</script>
+
+
+<script id="pl-logo-3d-script">
+(()=>{const logo=document.querySelector('#home img[alt="PEACELOVE 核心標誌"]');if(!logo||logo.closest('.pl-logo-3d-stage'))return;const stage=document.createElement('span');stage.className='pl-logo-3d-stage';stage.setAttribute('aria-label','PEACELOVE 核心標誌');logo.parentNode.insertBefore(stage,logo);stage.appendChild(logo);const depth=logo.cloneNode(false);depth.removeAttribute('alt');depth.setAttribute('aria-hidden','true');depth.removeAttribute('onerror');depth.className='pl-logo-depth';depth.tabIndex=-1;stage.insertBefore(depth,logo);})();
+</script>
+
 </body>
 
 </html>
